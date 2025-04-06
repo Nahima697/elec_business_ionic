@@ -1,0 +1,7 @@
+{
+  "name": "ElecBusiness",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
