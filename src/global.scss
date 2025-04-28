@@ -1,112 +1,73 @@
-@import 'tailwindcss/base';
+/* global.scss */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@import 'tailwindcss/components';
-
-@import 'tailwindcss/utilities';
-
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
-
-/* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
-
-/* Basic CSS for apps built with Ionic */
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
 @import "@ionic/angular/css/display.css";
-
-/* Optional CSS utils that can be commented out */
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
-
-
-
-
-
-/* Define custom colors and other properties using CSS variables */
 :root {
-  --background: #ffffff;
-  --foreground: #1F2A44;
-  --primary: #00A3E0;
-  --accent: #27A443;
-  --secondary: #E5E7EB;
-}
-
-/* Applying custom theme colors to Tailwind CSS */
-@theme {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-accent: var(--accent);
-  --color-secondary: var(--secondary);
-}
-
-/* Optionally define the fonts for titles and text */
-@theme inline {
+  --color-background: #ffffff;
+  --color-foreground: #1F2A44;
+  --color-primary: #00A3E0;
+  --color-accent: #27A443;
+  --color-secondary: #E5E7EB;
+  --color-scheme: light;
   --font-title: 'Montserrat', sans-serif;
   --font-text: 'Roboto', sans-serif;
 }
 
-/* Media queries for dark mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ededed;
-    --foreground:  #1F2A44;
-  }
-}
-
-/* General styling */
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-family: var(--font-text);
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-title);
+ion-content, ion-card, ion-card-header, ion-card-content, ion-item, ion-input, ion-textarea, ion-select, ion-datetime {
+  --background: var(--color-background);
+  --color: var(--color-foreground);
 }
 
-.btn-accent {
-  background-color: var(--color-accent);
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  font-size: 1rem;
+ion-button {
+  --background: var(--color-primary);
+  --background-hover: var(--color-accent);
+  --background-activated: var(--color-accent);
+  --background-focused: var(--color-accent);
+  --color: white;
+  --border-radius: 0.75rem;
+  --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  --ripple-color: var(--color-accent);
 }
 
-/* Button hover effect */
-.btn-accent:hover {
-  background-color: var(--color-primary);
+ion-item {
+  --background: var(--color-background);
+
+
 }
 
-.btn-accent:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(39, 164, 67, 0.5);
+
+ion-header, ion-toolbar {
+  --background: var(--color-background);
+  --color: var(--color-foreground);
+}
+
+ion-label {
+  color: var(--color-foreground);
+}
+
+ion-input, ion-textarea, ion-datetime, ion-select {
+  --background: var(--color-background);
+  --color: var(--color-foreground);
+
+
 }
 
 a.link {
@@ -114,12 +75,6 @@ a.link {
   color: var(--color-foreground);
 }
 
-/* Link hover effect */
 a.link:hover {
   color: var(--color-accent);
 }
-
-/* autre background */
-
-
-@import 'swiper/swiper-bundle.css';

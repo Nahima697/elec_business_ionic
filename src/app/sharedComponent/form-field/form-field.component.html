@@ -1,0 +1,68 @@
+<ion-item no-lines class="flex flex-col my-6">
+  @if (icon) {
+    <ion-icon
+      [name]="icon"
+      slot="start"
+    ></ion-icon>
+  }
+
+  <!-- <ion-label  >{{ label }}</ion-label> -->
+
+  @if (controlType === ControlType.Input) {
+    <ion-input
+      [type]="type"
+      [placeholder]="placeholder"
+      (ionInput)="setValue($event)"
+      (ionBlur)="onTouched()"
+      fill="solid"
+      [placeholder]="placeholder"
+      class="ion-text-wrap"
+      label="{{ label }}"
+      labelPlacement="stacked"
+
+    ></ion-input>
+  }
+
+  @if (controlType === ControlType.Textarea) {
+    <ion-textarea
+      [placeholder]="placeholder"
+      (ionTextarea)="setValue($event)"
+      (ionBlur)="onTouched()"
+      fill="outline"
+      autoGrow="true"
+      class="text-base border rounded-xl p-3"
+      [placeholder]="placeholder"
+    ></ion-textarea>
+  }
+
+  @if (controlType === ControlType.Date) {
+    <ion-datetime
+      presentation="date"
+      (ionDatetime)="setValue($event)"
+      (ionBlur)="onTouched()"
+      class="text-base border rounded-xl p-3"
+    ></ion-datetime>
+  }
+
+  @if (controlType === ControlType.Select) {
+    <ion-select
+      [placeholder]="placeholder"
+      (ionSelect)="setValue($event)"
+      (ionBlur)="onTouched()"
+      interface="popover"
+      class="text-base border rounded-xl p-3"
+    >
+      @for (option of options; track option.value) {
+        <ion-select-option [value]="option.value">{{ option.label }}</ion-select-option>
+      }
+    </ion-select>
+  }
+</ion-item>
+
+@if (this.formControl?.invalid && (this.formControl?.dirty || this.formControl?.touched)) {
+  <div class="flex pl-3 pt-1">
+    <span class="bg-red-100 text-red-700 text-xs font-medium mr-2 px-2.5 py-0.5">
+      {{ getErrorMessage() }}
+    </span>
+  </div>
+}
