@@ -1,0 +1,40 @@
+.map-wrap {
+  height: 100%;
+  width: 100%;
+  position:absolute;
+  top:0;
+}
+
+.map {
+  height: 100%;
+}
+
+
+
+.charger-marker {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 204, 204, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid white;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.charger-marker img {
+  width: 24px;
+  height: 24px;
+}
+
+
+ion-searchbar {
+  z-index: 9999;
+  position: relative;
+  padding:0!important;
+}
+
+
+
