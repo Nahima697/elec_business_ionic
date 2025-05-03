@@ -1,0 +1,68 @@
+<header>
+  <nav class="bg-secondary pb-6"> <!-- Menu du haut -->
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <img src="assets/images/eb-logo.png" alt="logo electricity business">
+      </a>
+      <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+          <button type="button" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 " id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+            <span class="sr-only">Open user menu</span>
+            <img class="w-8 h-8 rounded-full" src="data:image/png;base64,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" alt="user photo">
+          </button>
+          <!-- Dropdown menu -->
+          <div class="z-50 hidden my-4 text-base list-none divide-y divide-gray-100 rounded-lg shadow-sm" id="user-dropdown">
+            <div class="px-4 py-3">
+              <span class="block text-sm text-gray-900 ">Bonnie Green</span>
+              <span class="block text-sm  text-gray-500 truncate"></span>
+            </div>
+            <ul class="py-2" aria-labelledby="user-menu-button">
+              <li>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
+              </li>
+              <li>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Paramètre</a>
+              </li>
+              <li>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mes réservations</a>
+              </li>
+              <li>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Se déconnecter</a>
+              </li>
+            </ul>
+          </div>
+          <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 " aria-controls="navbar-user" aria-expanded="false">
+            <span class="sr-only">Open main menu</span>
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+            </svg>
+        </button>
+      </div>
+      <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+        <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0  ">
+          <li><a class="link" routerLink="/services" routerLinkActive="active" ariaCurrentWhenActive="page">Services</a></li>
+          <li><a class="link" routerLink="/société" routerLinkActive="active" ariaCurrentWhenActive="page">Société</a></li>
+          <li><a class="link" routerLink="/assistance" routerLinkActive="active" ariaCurrentWhenActive="page">Assistance</a></li>
+          <li><a class="link" routerLink="/account" routerLinkActive="active" ariaCurrentWhenActive="page">Votre compte</a></li>
+        </ul>
+      </div>
+      </div>
+
+    <!-- Div pour le champ de recherche sous l'image -->
+    <div class="search-container mt-6 flex justify-center items-center w-full my-6 h-full relative sticky top-0 ">
+      <div class="relative flex w-full max-w-lg">
+        <input
+          type="search"
+          id="default-search"
+          class="w-full p-4 pl-12 text-sm border border-secondary-300 rounded-r-lg bg-white-50"
+          placeholder="Rechercher une borne"
+        />
+        <button
+          class=" btn-accent absolute right-0 top-0 bottom-0 p-4 text-white bg-accent rounded-r-lg"
+          type="submit"
+        >
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>

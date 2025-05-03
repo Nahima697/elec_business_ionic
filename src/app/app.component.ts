@@ -1,17 +1,24 @@
-import { Component } from '@angular/core';
-import { IonApp, IonRouterOutlet,Platform } from '@ionic/angular/standalone';
-import { register } from 'swiper/element/bundle';
+import { Component, inject, OnInit } from '@angular/core';
+import { PlatformService } from './sharedComponent/services/platform.service';
+import { Router} from '@angular/router';
+import { IonApp, IonRouterOutlet } from "@ionic/angular/standalone";
 
 
-register();
 @Component({
   selector: 'app-root',
-  templateUrl: 'app.component.html',
-  imports: [IonApp, IonRouterOutlet],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  imports: [IonRouterOutlet,  IonApp]
 })
-export class AppComponent {
-  isMobile: boolean;
-  constructor(private platform: Platform) {
-    this.isMobile = this.platform.is('mobile');
+export class AppComponent implements OnInit {
+  private platformService = inject(PlatformService);
+  private router = inject(Router);
+
+  ngOnInit() {
+    // if (this.platformService.isWeb()) {
+    //   this.router.navigate(['/home']);
+    // } else {
+    //   this.router.navigate(['/onboarding']);
+    // }
   }
 }

@@ -1,27 +1,42 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">onboarding</ion-title>
+      <ion-title size="large">Onboarding</ion-title>
     </ion-toolbar>
   </ion-header>
-  <swiper-container pagination="true">
-    <swiper-slide>
-      <img src="assets/images/eleccar.png" class="slide-image" />
-      <h2>Bienvenue sur <strong>Electricity Business</strong></h2>
-      <p>Louez ou proposez une borne de recharge entre particuliers.</p>
+
+  <swiper-container pagination="true" class="bg-secondary text-foreground ">
+    <swiper-slide class="flex flex-col h-full items-center">
+      <div class="w-full">
+        <img src="assets/images/slide1.png" class="w-full h-1/2 object-cover" />
+      </div>
+      <div class="flex flex-col justify-center items-center text-center px-6 py-8 grow">
+        <h2 class="text-2xl font-bold mb-4">Bienvenue sur <strong>Electricity Business</strong></h2>
+        <p>Louez ou proposez une borne de recharge entre particuliers.</p>
+      </div>
     </swiper-slide>
 
-    <swiper-slide>
-      <ion-icon name="car-sport-outline" size="large"></ion-icon>
-      <h2>Trouvez une borne partout</h2>
-      <p>Recherchez une borne selon votre localisation ou vos préférences.</p>
+    <swiper-slide class="flex flex-col h-full items-center">
+      <div class="w-full">
+        <img src="assets/images/slide2.png" class="w-full h-1/2 object-cover" />
+      </div>
+      <div class="flex flex-col justify-center items-center text-center px-6 pb-8 grow">
+        <h2 class="text-2xl font-bold mb-4">Trouvez une borne partout</h2>
+        <p>Recherchez une borne selon votre localisation ou vos préférences.</p>
+      </div>
     </swiper-slide>
 
-    <swiper-slide>
-      <ion-icon name="flash-outline" size="large"></ion-icon>
-      <h2>Rechargez l’esprit léger</h2>
-      <p>Une communauté fiable et des réservations sécurisées.</p>
-      <ion-button expand="block" color="primary" routerLink="/home">Commencer</ion-button>
+    <swiper-slide class="flex flex-col h-full items-center">
+      <div class="w-full">
+        <img src="assets/images/slide3.png" class="w-full h-1/2 object-cover" />
+      </div>
+      <div class="flex flex-col justify-center items-center text-center px-6 py-8 grow">
+        <h2 class="text-2xl font-bold mb-4">Rechargez l’esprit léger</h2>
+        <p class="mb-6">Une communauté fiable et des réservations sécurisées.</p>
+        <ion-button routerLink="/login" class="mt-6">
+          Continuer
+        </ion-button>
+      </div>
     </swiper-slide>
   </swiper-container>
 </ion-content>
