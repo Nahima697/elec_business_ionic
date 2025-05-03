@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
+
+
 @import "@ionic/angular/css/core.css";
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
@@ -49,7 +53,12 @@ ion-button {
 
 ion-item {
   --background: var(--color-background);
-
+  --padding-start: 0px !important;
+  --padding-end: 0px !important;
+  --inner-padding-start: 0px !important;
+  --inner-padding-end: 0px !important;
+  --background: transparent !important;
+  --ion-item-background: transparent !important;
 
 }
 

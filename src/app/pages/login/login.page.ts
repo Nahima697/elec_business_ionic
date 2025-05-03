@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule,FormGroup,Validators, FormControl } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar,IonItem,
-  IonList,IonButton, IonCardHeader,IonCard,IonCardTitle,IonCardSubtitle,IonCardContent,IonInputPasswordToggle } from '@ionic/angular/standalone';
+  IonList,IonButton, IonCardHeader,IonCard,IonCardTitle,IonCardSubtitle,IonCardContent } from '@ionic/angular/standalone';
 import { FormFieldComponent } from 'src/app/sharedComponent/form-field/form-field.component';
 import { ControlType } from 'src/app/sharedComponent/form-field/form-field.enum.';
+import { Router, RouterModule } from '@angular/router';
 
 
 @Component({
@@ -15,11 +16,12 @@ import { ControlType } from 'src/app/sharedComponent/form-field/form-field.enum.
 
   imports: [IonCardHeader, IonContent, IonHeader,
     IonTitle, IonToolbar,IonItem,IonList,
-    IonButton,IonCard,IonCardHeader,IonCardTitle,IonCardSubtitle,IonCardTitle,IonCardContent,IonInputPasswordToggle,
-    CommonModule, FormsModule,ReactiveFormsModule,FormFieldComponent,ReactiveFormsModule]
+    IonButton,IonCard,IonCardHeader,IonCardTitle,IonCardSubtitle,IonCardTitle,IonCardContent,
+    CommonModule, FormsModule,ReactiveFormsModule,FormFieldComponent,ReactiveFormsModule,RouterModule,RouterModule]
 })
 export class LoginPage  {
 ControlType: typeof ControlType = ControlType;
+router = inject(Router);
 
 loginForm = new FormGroup({
   email: new FormControl('',{ validators: [Validators.required, Validators.email]}),
@@ -29,6 +31,7 @@ loginForm = new FormGroup({
 onSubmit() {
   if (this.loginForm.valid) {
     console.log('Formulaire envoyé :', this.loginForm.value);
+    this.router.navigateByUrl('/tabs', { replaceUrl: true });
 
   }
 }
@@ -41,7 +44,3 @@ get password(): FormControl {
 }
 }
 
- export interface LoginForm {
-  email: FormControl<string | null>;
-  password: FormControl<string | null>;
-}

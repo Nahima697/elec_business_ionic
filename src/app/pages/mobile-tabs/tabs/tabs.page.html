@@ -1,0 +1,25 @@
+<ion-tabs>
+  <ion-router-outlet></ion-router-outlet>
+
+  <ion-tab-bar slot="bottom" class="bg-white rounded-t-3xl shadow-lg h-20">
+    <ion-tab-button tab="search" [routerLink]="['/tabs/map']">
+      <ion-icon name="search-outline"></ion-icon>
+      <ion-label>Recherche</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="messages" [routerLink]="['/tabs/messages']">
+      <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+      <ion-label>Messages</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="reservations" [routerLink]="['/tabs/reservations']">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <ion-label>Réservations</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="profile" [routerLink]="['/tabs/profile']">
+      <ion-icon name="person-outline"></ion-icon>
+      <ion-label>Profil</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

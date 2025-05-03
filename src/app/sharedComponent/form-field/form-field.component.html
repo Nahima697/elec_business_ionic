@@ -6,7 +6,7 @@
     ></ion-icon>
   }
 
-  <!-- <ion-label  >{{ label }}</ion-label> -->
+
 
   @if (controlType === ControlType.Input) {
     <ion-input
@@ -21,6 +21,14 @@
       labelPlacement="stacked"
 
     ></ion-input>
+  }
+
+  @if (controlType === ControlType.Search) {
+    <ion-searchbar
+      [placeholder]="placeholder"
+      [value]="value"
+      (ionInput)="setValue($event)"
+    ></ion-searchbar>
   }
 
   @if (controlType === ControlType.Textarea) {

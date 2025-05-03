@@ -1,13 +1,13 @@
 import { Component, forwardRef, Injector, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NgControl, ReactiveFormsModule } from '@angular/forms';
-import { IonInput, IonTextarea, IonDatetime, IonItem, IonIcon, IonLabel, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
+import { IonInput, IonTextarea, IonDatetime, IonItem, IonIcon, IonSelect, IonSelectOption, IonSearchbar } from '@ionic/angular/standalone';
 import { ControlType } from './form-field.enum.';
 
 @Component({
   selector: 'app-form-field',
   standalone: true,
-  imports: [
+  imports: [IonSearchbar,
     CommonModule,
     ReactiveFormsModule,
     IonInput,
@@ -15,9 +15,9 @@ import { ControlType } from './form-field.enum.';
     IonDatetime,
     IonItem,
     IonIcon,
-    IonLabel,
     IonSelect,
     IonSelectOption,
+    IonSearchbar
   ],
   providers: [
     {
@@ -34,7 +34,7 @@ export class FormFieldComponent implements ControlValueAccessor, OnInit {
   @Input() label!: string;
   @Input() placeholder!: string;
   @Input() type: string = 'text';
-  @Input() controlType: ControlType = ControlType.Input;
+  @Input() controlType!: ControlType;;
   @Input() icon?: string;
   @Input() options: { label: string; value: any }[] = [];
 
@@ -69,10 +69,11 @@ export class FormFieldComponent implements ControlValueAccessor, OnInit {
   }
 
   setValue(event: any) {
-    const value = event?.target?.value ?? event?.detail?.value ?? event?.detail?.data?.value ?? event?.detail ?? event;
+    const value = event?.detail?.value;
     this.value = value;
-    this.onChange(this.value);
+    this.onChange(value);
   }
+
 
   getErrorMessage(): string {
     if (!this.formControl) return '';

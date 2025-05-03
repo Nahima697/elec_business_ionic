@@ -86,3 +86,8 @@ ion-button {
   --background-hover: var(--accent);
   --background-activated: var(--accent);
 }
+
+.item-native::after
+{
+  padding:0;
+}
