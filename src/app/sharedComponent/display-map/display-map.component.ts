@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Output, ViewChild, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import { LngLatLike, Map, GeolocateControl } from 'maplibre-gl';
 import { Station, STATION } from '../station/station.component';
 import { FormFieldComponent } from '../form-field/form-field.component';
 import { ControlType } from '../form-field/form-field.enum.';
-import { IonInput } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-display-map',
@@ -17,7 +16,6 @@ import { IonInput } from '@ionic/angular/standalone';
       placeholder="Votre adresse"
       [controlType]="ControlType.Search"
       type="search"
-      #ionInputEl
       (ionInput)="onLocalSearch($event)"
     ></app-form-field>
 
@@ -83,8 +81,6 @@ export class DisplayMapComponent implements OnInit {
   hoverStation?: Station;
   ControlType = ControlType;
 
-  @Output() ionInput = new EventEmitter<any>();
-  @ViewChild('ionInputEl', { static: true }) ionInputEl!: IonInput;
 
   ngOnInit(): void {
     this.filteredStations = this.stations;
