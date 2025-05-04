@@ -19,10 +19,6 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage),
   },
   {
-    path: 'map',
-    loadComponent: () => import('./sharedComponent/display-map/display-map.component').then(m => m.DisplayMapComponent),
-  },
-  {
     path: 'home',
     canActivate: [WebOnlyGuard],
     loadComponent: () => import('./pages/web-home/home.page').then(m => m.HomePage),
