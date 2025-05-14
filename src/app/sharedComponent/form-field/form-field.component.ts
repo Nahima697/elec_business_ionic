@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { IonInput, IonTextarea, IonDatetime, IonItem, IonIcon, IonSelect, IonSelectOption, IonSearchbar } from '@ionic/angular/standalone';
 import { ControlType } from './form-field.enum.';
+import { EventEmitter, Output } from '@angular/core';
+
 
 @Component({
   selector: 'app-form-field',
@@ -37,10 +39,12 @@ export class FormFieldComponent implements ControlValueAccessor, OnInit {
   @Input() controlType!: ControlType;;
   @Input() icon?: string;
   @Input() options: { label: string; value: any }[] = [];
+  @Output() valueChange = new EventEmitter<any>();
+
 
   ControlType = ControlType;
   value: any;
-
+ 
   onChange = (value: any) => {};
   onTouched = () => {};
 
@@ -69,9 +73,11 @@ export class FormFieldComponent implements ControlValueAccessor, OnInit {
   }
 
   setValue(event: any) {
-    const value = event?.detail?.value;
-    this.value = value;
-    this.onChange(value);
+    const newValue = event?.detail?.value;
+    if (newValue !== this.value) {
+      this.value = newValue;
+      this.onChange(this.value);
+    }
   }
 
 
