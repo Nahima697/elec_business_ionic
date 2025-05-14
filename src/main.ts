@@ -6,6 +6,8 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 import { register as registerSwiperElements } from 'swiper/element/bundle';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
+import { jwtInterceptor } from './app/pages/auth/jwt.interceptor';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 registerSwiperElements();
 
@@ -13,8 +15,9 @@ bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular({
-      
+
     }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
+    provideHttpClient(    withInterceptors([jwtInterceptor]),  )
   ],
 });

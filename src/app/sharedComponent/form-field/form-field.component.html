@@ -10,17 +10,17 @@
 
   @if (controlType === ControlType.Input) {
     <ion-input
-      [type]="type"
-      [placeholder]="placeholder"
-      (ionInput)="setValue($event)"
-      (ionBlur)="onTouched()"
-      fill="solid"
-      [placeholder]="placeholder"
-      class="ion-text-wrap"
-      label="{{ label }}"
-      labelPlacement="stacked"
+    [type]="type"
+    [placeholder]="placeholder"
+    [value]="value"
+    (ionInput)="setValue($event)"
+    (ionBlur)="onTouched()"
+    fill="solid"
+    class="ion-text-wrap"
+    label="{{ label }}"
+    labelPlacement="stacked"
+  ></ion-input>
 
-    ></ion-input>
   }
 
   @if (controlType === ControlType.Search) {
@@ -29,6 +29,7 @@
       [value]="value"
       (ionInput)="setValue($event)"
     ></ion-searchbar>
+    <ng-content select="[end-slot]"></ng-content>
   }
 
   @if (controlType === ControlType.Textarea) {
@@ -42,10 +43,9 @@
       [placeholder]="placeholder"
     ></ion-textarea>
   }
-
   @if (controlType === ControlType.Date) {
     <ion-datetime
-      presentation="date"
+      presentation="date-time"
       (ionDatetime)="setValue($event)"
       (ionBlur)="onTouched()"
       class="text-base border rounded-xl p-3"

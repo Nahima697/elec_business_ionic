@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { IonTabs, IonTabBar, IonRouterOutlet, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import { Component} from '@angular/core';
+import { IonTabs, IonTabBar, IonRouterOutlet, IonTabButton, IonIcon, IonLabel} from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { searchOutline,chatboxEllipsesOutline,calendarOutline,personOutline} from 'ionicons/icons';
@@ -9,7 +9,7 @@ import { searchOutline,chatboxEllipsesOutline,calendarOutline,personOutline} fro
   templateUrl: './tabs.page.html',
   styleUrls: ['./tabs.page.scss'],
   standalone: true,
-  imports: [IonRouterOutlet, IonTabBar, IonTabs, IonTabButton, IonIcon, IonLabel, RouterLink],
+  imports: [ IonRouterOutlet, IonTabBar, IonTabs, IonTabButton, IonIcon, IonLabel, RouterLink],
 })
 export class TabsPage  {
 

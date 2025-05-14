@@ -1,6 +1,8 @@
 // sharedComponent/web/services/platform.service.ts
 import { Injectable } from '@angular/core';
 
+import { Capacitor } from '@capacitor/core';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,5 +13,9 @@ export class PlatformService {
 
   isDesktop(): boolean {
     return !this.isMobile();
+  }
+
+  isNative(): boolean {
+    return Capacitor.isNativePlatform();
   }
 }

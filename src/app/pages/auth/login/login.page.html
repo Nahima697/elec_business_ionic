@@ -17,11 +17,11 @@
       <form [formGroup]="loginForm" class="flex flex-col gap-4 " (ngSubmit)="onSubmit()">
       <ion-list >
           <app-form-field
-          label="Email"
+          label="username"
           placeholder="Renseignez"
           [controlType]="ControlType.Input"
-          [formControl]="email"
-          type="email"
+          [formControl]="username"
+          type="username"
 
         >
       </app-form-field>

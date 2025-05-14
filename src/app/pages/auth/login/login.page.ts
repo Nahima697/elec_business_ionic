@@ -6,6 +6,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar,IonItem,
 import { FormFieldComponent } from 'src/app/sharedComponent/form-field/form-field.component';
 import { ControlType } from 'src/app/sharedComponent/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 
 @Component({
@@ -22,21 +23,31 @@ import { Router, RouterModule } from '@angular/router';
 export class LoginPage  {
 ControlType: typeof ControlType = ControlType;
 router = inject(Router);
+authservice=inject(AuthService);
 
 loginForm = new FormGroup({
-  email: new FormControl('',{ validators: [Validators.required, Validators.email]}),
+  username: new FormControl('',{ validators: [Validators.required]}),
   password: new FormControl('',{ validators: [Validators.required] })
 })
 
 onSubmit() {
   if (this.loginForm.valid) {
-    console.log('Formulaire envoyé :', this.loginForm.value);
-    this.router.navigateByUrl('/tabs', { replaceUrl: true });
 
+    this.authservice.login(this.username.value,this.password.value).subscribe({
+      next: (response) => {
+        console.log('Connexion réussie :', response);
+        this.authservice.storeToken(response.token);
+        this.router.navigateByUrl('/tabs', { replaceUrl: true });
+      },
+      error: (err) => {
+        console.error('Erreur de connexion :', err);
+       
+      }
+    });
   }
 }
-get email(): FormControl {
-  return this.loginForm.get('email') as FormControl;
+get username(): FormControl {
+  return this.loginForm.get('username') as FormControl;
 }
 
 get password(): FormControl {
