@@ -1,0 +1,17 @@
+
+.bottom-sheet .modal-wrapper {
+  max-height: 100%;  /* Limite la hauteur de la modal */
+  overflow-y: auto; /* Permet le scroll vertical si nécessaire */
+  height: auto;
+}
+
+.ion-content {
+  padding: 16px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+
+.ion-backdrop {
+  z-index: 1;
+}

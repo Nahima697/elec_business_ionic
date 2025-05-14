@@ -30,11 +30,35 @@
 }
 
 
-ion-searchbar {
-  z-index: 9999;
-  position: relative;
-  padding:0!important;
+  ::ng-deep app-form-field {
+    position: relative;
+
+    .searchbar-search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%!important;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: #999;
+    }
+
+    .searchbar-input {
+      padding-left: 30px; /* Ajoute de l'espace à gauche pour l'icône */
+      width: 0%; /* Assure que l'input occupe toute la largeur disponible */
+    }
+  }
+
+
+ion-icon {
+  position: absolute;
+  top: 18px;
+  right: 40px;
+  font-size: 30px;
+  color: #000;
+  z-index: 100000;
 }
 
-
-
+ion-searchbar {
+  z-index: 99999999;
+  position: relative;
+}

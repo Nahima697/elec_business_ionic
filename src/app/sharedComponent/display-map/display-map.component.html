@@ -1,0 +1,74 @@
+
+
+  <app-form-field
+  label="Rechercher"
+  placeholder="Votre adresse"
+  [controlType]="ControlType.Search"
+  type="search"
+  (ionInput)="onLocalSearch($event)"
+
+  >      <ion-icon
+  end-slot
+  name="filter-outline"
+  (click)="openFilterModal()"
+  style="cursor: pointer;"
+  ></ion-icon>  </app-form-field>
+
+
+  <app-filter-modal (filterChanged)="onFilterChange($event)"></app-filter-modal>
+
+  <div class="map-wrap">
+  <mgl-map
+    class="map"
+    [style]="'https://api.maptiler.com/maps/streets-v2/style.json?key=pUgm4NlEXg3amyAe53SH'"
+    [zoom]="[14]"
+    [center]="center"
+    (mapLoad)="onMapLoad($event)"
+  >
+    @for (station of filteredStations; track station.id) {
+      <mgl-marker
+        [lngLat]="[station.longitude, station.latitude]"
+        [className]="'charger-marker'"
+      >
+        <div
+          class="charger-marker"
+          (mouseenter)="onHover(station)"
+          (mouseleave)="onLeave()"
+          (click)="onHover(station)"
+        >
+          <img
+            src="assets/icons/battery.png"
+            alt="Borne"
+          />
+        </div>
+      </mgl-marker>
+
+      @if (hoverStation?.id === station.id) {
+        <mgl-popup
+          [lngLat]="[station.longitude, station.latitude]"
+          [closeButton]="true"
+          [closeOnClick]="true"
+          [anchor]="'top'"
+        >
+          <div>
+            <h3>{{ station.nom }}</h3>
+            <p>{{ station.adresse }}</p>
+            <p><strong>Puissance:</strong> {{ station.puissance }}</p>
+          </div>
+        </mgl-popup>
+      }
+    }
+
+    <mgl-control mglNavigation
+    mglGeolocate
+    [positionOptions]="{ enableHighAccuracy: true }"
+    [trackUserLocation]="true"
+    [showUserLocation]="true"
+    position="top-right"
+
+    />
+
+  </mgl-map>
+  </div>
+
+
