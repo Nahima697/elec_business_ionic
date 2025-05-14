@@ -9,11 +9,14 @@ import { HeroComponent } from './component/hero/hero.component';
 import { FooterComponent } from 'src/app/sharedComponent/web/footer/footer.component';
 import { TestimonialComponent } from './component/testimonial/testimonial.component';
 import { RouterModule } from '@angular/router';
+import { IonContent } from "@ionic/angular/standalone";
+import { TextCarouselComponent } from "./component/text-carousel/text-carousel.component";
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent,PresentationComponent,
-    CardComponent,IconCardComponent,ContactBannerComponent,AccordeonComponent,HeroComponent,FooterComponent,TestimonialComponent,RouterModule],
+  imports: [IonContent, HeaderComponent, PresentationComponent,
+    CardComponent, IconCardComponent, ContactBannerComponent, AccordeonComponent, HeroComponent, FooterComponent, TestimonialComponent, RouterModule, TextCarouselComponent],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss'
 })
