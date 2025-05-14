@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { MobileOnlyGuard } from './sharedComponent/guards/mobile-only.guard';
-import { WebOnlyGuard } from './sharedComponent/guards/mobweb-only.guard copy';
+import { WebOnlyGuard } from './sharedComponent/guards/web-only.guard copy';
 import { TabsPage } from './pages/mobile-tabs/tabs/tabs.page';
 
 export const routes: Routes = [
@@ -16,12 +16,16 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage),
+    loadComponent: () => import('./pages/auth/login/login.page').then(m => m.LoginPage),
   },
   {
     path: 'home',
     canActivate: [WebOnlyGuard],
     loadComponent: () => import('./pages/web-home/home.page').then(m => m.HomePage),
+  },
+  {
+    path: 'map',
+    loadComponent: () => import('./pages/map/map.page').then(m => m.MapPage),
   },
   {
     path: 'tabs',
@@ -50,23 +54,6 @@ export const routes: Routes = [
       }
     ]
   },
-
-  {
-    path: 'messages',
-    loadComponent: () => import('./pages/messages/messages.page').then( m => m.MessagesPage)
-  },
-  {
-    path: 'profile',
-    loadComponent: () => import('./pages/profile/profile.page').then( m => m.ProfilePage)
-  },
-  {
-    path: 'map',
-    loadComponent: () => import('./pages/map/map.page').then( m => m.MapPage)
-  },
-  {
-    path: 'reservations',
-    loadComponent: () => import('./pages/reservations/reservations.page').then( m => m.ReservationsPage)
-  }
 
 ];
 
