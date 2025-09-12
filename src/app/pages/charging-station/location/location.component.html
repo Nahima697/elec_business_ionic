@@ -1,0 +1,107 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Lieux de recharge</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Lieux de recharge</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+    @for( location of locations; track location.id) {
+<ion-card>
+<ion-card-header>
+    <ion-card-title>{{location.name}}</ion-card-title>
+    <ion-card-subtitle>{{location.city}}</ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list>
+      @for (station of stationsByLocation[location.id] ?? []; track station.id) {
+        <ion-item>
+        <ion-thumbnail slot="start">
+          @if (station?.imageUrl && station.imageUrl !== 'default.png') {
+          <img
+          [src]="'http://localhost:8080/uploads/thumbnail-' + station.imageUrl"
+          alt="Image de la station"
+          />
+          }
+          @else {
+                <img
+          [src]="'http://localhost:8080/uploads/default.png'"
+          alt="Image de la station"
+          />
+          }
+
+        </ion-thumbnail>
+        <ion-label>{{station.name}}</ion-label>
+        <a [routerLink]="['/location/', location.id]" class="">Détails</a>
+      </ion-item>
+
+      }
+    </ion-list>
+  </ion-card-content>
+
+</ion-card>
+  }
+  <form [formGroup]="locationForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <ion-list class="space-y-4">
+      <app-form-field
+              label="Nom du lieu"
+              placeholder="Nom du lieu"
+              [controlType]="ControlType.Input"
+              [formControl]="name"
+              type="text">
+      </app-form-field>
+
+       <app-form-field
+              label="Adresse"
+              placeholder="Adresse"
+              [controlType]="ControlType.Input"
+              [formControl]="adressLine"
+              type="text">
+      </app-form-field>
+
+       <app-form-field
+              label="Ville"
+              placeholder="Ville"
+              [controlType]="ControlType.Input"
+              [formControl]="city"
+              type="text">
+      </app-form-field>
+
+      <app-form-field
+              label="Code postal"
+              placeholder="Code Postal"
+              [controlType]="ControlType.Input"
+              [formControl]="postalCode"
+              type="text">
+      </app-form-field>
+
+      <app-form-field
+              label="Pays"
+              placeholder="Pays"
+              [controlType]="ControlType.Input"
+              [formControl]="country"
+              type="text">
+      </app-form-field>
+
+      <!-- Submit -->
+      <ion-item lines="none" class="mt-4">
+        <ion-button type="submit"
+                    expand="block"
+                    shape="round"
+                    size="large"
+                    color="primary"
+                    class="rounded-xl"
+                    [disabled]="locationForm.invalid">
+          Créer un compte
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>
+

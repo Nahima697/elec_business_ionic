@@ -1,0 +1,76 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Détail de la station</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg-gray-50">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{ station?.name || 'Station' }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  @if (station) {
+    <div class="p-4">
+      <ion-card class="rounded-2xl shadow-md overflow-hidden">
+
+        <!-- Image -->
+        @if (station.imageUrl) {
+          <img [src]="station.imageUrl" alt="{{ station.name }}"
+               class="w-full h-48 object-cover" />
+        }
+
+        <ion-card-header class="bg-white">
+          <ion-card-title class="text-xl font-bold text-gray-800">
+            {{ station.name }}
+          </ion-card-title>
+          <ion-card-subtitle class="text-sm text-gray-500">
+            {{ station.description || 'Pas de description' }}
+          </ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content class="bg-white space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">⚡ Puissance</span>
+            <span class="font-semibold text-gray-800">{{ station.powerKw }} kW</span>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">💶 Prix</span>
+            <span class="font-semibold text-green-600">{{ station.price | currency:'EUR':'symbol':'1.2-2' }}</span>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">📅 Créée le</span>
+            <span class="font-semibold text-gray-800">{{ station.createdAt | date:'longDate' }}</span>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">📍 Coordonnées</span>
+            <span class="font-semibold text-gray-800">{{ station.lat }}, {{ station.lng }}</span>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">🆔 Location ID</span>
+            <span class="font-mono text-gray-700">{{ station.locationId }}</span>
+          </div>
+        </ion-card-content>
+
+        <div class="p-4 bg-gray-50 flex gap-2">
+          <ion-button expand="block" class="flex-1 rounded-xl" color="primary">
+            Réserver
+          </ion-button>
+          <ion-button expand="block" class="flex-1 rounded-xl" color="secondary" fill="outline">
+            Retour
+          </ion-button>
+        </div>
+      </ion-card>
+    </div>
+  } @else {
+    <div class="flex flex-col items-center justify-center h-full space-y-4">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p class="text-gray-500">Chargement des détails...</p>
+    </div>
+  }
+</ion-content>

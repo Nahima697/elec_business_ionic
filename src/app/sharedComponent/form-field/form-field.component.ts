@@ -44,10 +44,9 @@ export class FormFieldComponent implements ControlValueAccessor, OnInit {
 
   ControlType = ControlType;
   value: any;
- 
+
   onChange = (value: any) => {};
   onTouched = () => {};
-
   formControl?: FormControl;
 
   constructor(private injector: Injector) {}
@@ -79,7 +78,6 @@ export class FormFieldComponent implements ControlValueAccessor, OnInit {
       this.onChange(this.value);
     }
   }
-
 
   getErrorMessage(): string {
     if (!this.formControl) return '';

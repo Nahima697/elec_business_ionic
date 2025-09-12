@@ -1,0 +1,68 @@
+<ion-content [fullscreen]="true" class="flex justify-center items-center bg-gray-50">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Login</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Container -->
+  <div class="w-full max-w-5xl flex flex-col md:flex-row items-center md:items-stretch bg-white shadow-lg rounded-2xl overflow-hidden m-4">
+
+    <!-- Image (en haut sur mobile, à gauche sur desktop) -->
+    <div class="w-full md:w-1/2 flex justify-center items-center bg-gray-100 p-6">
+      <img alt="Electric car charging"
+           src="assets/images/hero_img.png"
+           class="w-full max-h-80 object-contain md:object-cover rounded-lg" />
+    </div>
+
+    <!-- Formulaire -->
+    <div class="w-full md:w-1/2 p-6 flex flex-col justify-center">
+      <ion-card-header class="mb-6 text-center">
+        <ion-card-title class="font-bold text-2xl md:text-3xl text-gray-800">
+          Bienvenue chez Elec Business
+        </ion-card-title>
+        <ion-card-subtitle class="text-base md:text-lg text-gray-500">
+          Merci de créer votre compte
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content class="w-full">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+          <ion-list class="space-y-4">
+
+            <!-- Username -->
+            <app-form-field
+              label="Nom d'utilisateur"
+              placeholder="Renseignez votre identifiant"
+              [controlType]="ControlType.Input"
+              [formControl]="username"
+              type="text">
+            </app-form-field>
+
+            <!-- Password -->
+            <app-form-field
+              label="Mot de passe"
+              placeholder="Renseignez votre mot de passe"
+              [controlType]="ControlType.Input"
+              [formControl]="password"
+              type="password">
+            </app-form-field>
+
+            <!-- Bouton -->
+            <ion-item lines="none" class="mt-4">
+              <ion-button type="submit"
+                          expand="block"
+                          shape="round"
+                          size="large"
+                          color="primary"
+                          class="rounded-xl"
+                          [disabled]="loginForm.invalid">
+                Se connecter
+              </ion-button>
+            </ion-item>
+          </ion-list>
+        </form>
+      </ion-card-content>
+    </div>
+  </div>
+</ion-content>
