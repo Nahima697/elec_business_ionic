@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable, tap, catchError, of } from 'rxjs';
 import { AuthResponse } from '../models/auth.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private cookieService = inject(CookieService);
   private apiUrl = environment.apiUrl;
+  private router = inject(Router);
 
   private _isLoggedIn = signal(this.hasToken());
   isLoggedIn = computed(() => this._isLoggedIn());
@@ -21,7 +23,7 @@ export class AuthService {
 
   constructor() {
     if (this.hasToken()) {
-      this.fetchCurrentUser().subscribe();
+      this.getToken();
     }
   }
 
@@ -62,13 +64,30 @@ export class AuthService {
   }
 
   private hasToken(): boolean {
-    return this.cookieService.check('authToken');
+    return !! this.getToken();
   }
 
   private storeToken(token: string): void {
     this.cookieService.set('authToken', token, 1, '/');
     this._isLoggedIn.set(true);
   }
+
+  refreshToken(): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${this.apiUrl}/refreshToken`,
+      null,
+      { withCredentials: true }
+    ).pipe(
+      tap(response => this.storeToken(response.message)),
+      catchError(error => {
+        if (error.status === 403) {
+          this.logout();
+          this.router.navigate(['login']);
+        }
+        throw error;
+      })
+    );
+}
 
   fetchCurrentUser(): Observable<AuthResponse['user'] | null> {
     return this.http.get<AuthResponse['user']>(`${this.apiUrl}/me`, { withCredentials: true }).pipe(

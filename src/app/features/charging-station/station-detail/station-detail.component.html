@@ -5,55 +5,59 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="bg-gray-50">
-  <ion-header collapse="condense">
+    @if(station.isLoading()) {
+    <p> Chargement</p>
+    }
+
+  @if (station.hasValue()) {
+  @let stat = station.value();
+      <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">{{ station?.name || 'Station' }}</ion-title>
+      <ion-title size="large">{{ stat?.name || 'Station' }}</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  @if (station) {
     <div class="p-4">
       <ion-card class="rounded-2xl shadow-md overflow-hidden">
 
         <!-- Image -->
-        @if (station.imageUrl) {
-          <img [src]="station.imageUrl" alt="{{ station.name }}"
+        @if (stat.imageUrl) {
+          <img [src]="stat.imageUrl" alt="{{ stat.name }}"
                class="w-full h-48 object-cover" />
         }
 
         <ion-card-header class="bg-white">
           <ion-card-title class="text-xl font-bold text-gray-800">
-            {{ station.name }}
+            {{ stat.name }}
           </ion-card-title>
           <ion-card-subtitle class="text-sm text-gray-500">
-            {{ station.description || 'Pas de description' }}
+            {{ stat.description || 'Pas de description' }}
           </ion-card-subtitle>
         </ion-card-header>
 
         <ion-card-content class="bg-white space-y-3">
           <div class="flex justify-between items-center">
             <span class="text-gray-600">⚡ Puissance</span>
-            <span class="font-semibold text-gray-800">{{ station.powerKw }} kW</span>
+            <span class="font-semibold text-gray-800">{{ stat.powerKw }} kW</span>
           </div>
 
           <div class="flex justify-between items-center">
             <span class="text-gray-600">💶 Prix</span>
-            <span class="font-semibold text-green-600">{{ station.price | currency:'EUR':'symbol':'1.2-2' }}</span>
+            <span class="font-semibold text-green-600">{{ stat.price | currency:'EUR':'symbol':'1.2-2' }}</span>
           </div>
 
           <div class="flex justify-between items-center">
             <span class="text-gray-600">📅 Créée le</span>
-            <span class="font-semibold text-gray-800">{{ station.createdAt | date:'longDate' }}</span>
+            <span class="font-semibold text-gray-800">{{ stat.createdAt | date:'longDate' }}</span>
           </div>
 
           <div class="flex justify-between items-center">
             <span class="text-gray-600">📍 Coordonnées</span>
-            <span class="font-semibold text-gray-800">{{ station.lat }}, {{ station.lng }}</span>
+            <span class="font-semibold text-gray-800">{{ stat.lat }}, {{ stat.lng }}</span>
           </div>
 
           <div class="flex justify-between items-center">
             <span class="text-gray-600">🆔 Location ID</span>
-            <span class="font-mono text-gray-700">{{ station.locationId }}</span>
+            <span class="font-mono text-gray-700">{{ stat.locationId }}</span>
           </div>
         </ion-card-content>
 

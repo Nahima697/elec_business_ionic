@@ -1,26 +1,32 @@
-import { HttpHandlerFn, HttpRequest, HttpEvent } from '@angular/common/http';
+import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { Observable } from 'rxjs';
+import { HttpErrorResponse, HttpEvent, HttpRequest } from '@angular/common/http';
+import { Observable, catchError, concatMap, throwError } from 'rxjs';
 
-export function jwtInterceptor(
+export const jwtInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
-  next: HttpHandlerFn
-): Observable<HttpEvent<unknown>> {
+  next
+): Observable<HttpEvent<unknown>> => {
   const authService = inject(AuthService);
   const jwtToken = authService.getToken();
 
-  // Si pas de token, ne rien ajouter
-  if (!jwtToken) {
+  if (!jwtToken || req.url.includes('refreshToken')) {
     return next(req);
   }
-console.log('Adding auth header:', `Bearer ${jwtToken}`);
-  // Sinon, cloner la requête avec le token
+
   const newReq = req.clone({
-  headers: req.headers.set('Authorization', `Bearer ${jwtToken}`),
-});
-console.log('Intercepteur actif, token ajouté :', jwtToken);
+    headers: req.headers.set('Authorization', `Bearer ${jwtToken}`),
+  });
 
-
-  return next(newReq);
-}
+  return next(newReq).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 403) {
+        return authService.refreshToken().pipe(
+          concatMap(() => next(newReq))
+        );
+      }
+      return throwError(() => error);
+    })
+  );
+};

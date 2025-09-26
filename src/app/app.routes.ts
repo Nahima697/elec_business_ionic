@@ -93,7 +93,7 @@ export const routes: Routes = [
       {
         path: 'location',
         loadComponent: () =>
-          import('./pages/charging-station/location/location.component').then(
+          import('./features/charging-station/location/location.component').then(
             (m) => m.LocationComponent
           ),
       },
@@ -101,13 +101,13 @@ export const routes: Routes = [
         path: 'location/:id',
         loadComponent: () =>
           import(
-            './pages/charging-station/location-detail/location-detail.component'
+            './features/charging-station/location-detail/location-detail.component'
           ).then((m) => m.LocationDetailComponent),
       },
       {
         path: 'station',
         loadComponent: () =>
-          import('./pages/charging-station/charging-station.component').then(
+          import('./features/charging-station/charging-station.component').then(
             (m) => m.ChargingStationComponent
           ),
       },
@@ -115,7 +115,7 @@ export const routes: Routes = [
         path: 'station/:id',
         loadComponent: () =>
           import(
-            './pages/charging-station/station-detail/station-detail.component'
+            './features/charging-station/station-detail/station-detail.component'
           ).then((m) => m.StationDetailComponent),
       },
 
