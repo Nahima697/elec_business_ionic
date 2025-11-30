@@ -1,21 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
-import { DisplayMapComponent } from 'src/app/sharedComponent/display-map/display-map.component';
+import { Component, inject } from '@angular/core';
+import { IonContent} from '@ionic/angular/standalone';
+import { DisplayMapComponent } from 'src/app/features/display-map/display-map.component';
+import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.page.html',
   styleUrls: ['./map.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule,DisplayMapComponent,FormsModule]
+  imports: [ DisplayMapComponent,IonContent]
 })
-export class MapPage implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
+export class MapPage  {
+  private stationService =inject(StationApiService)
+  readonly stations = this.stationService.getAll();
 
 }

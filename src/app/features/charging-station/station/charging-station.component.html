@@ -1,0 +1,60 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Lieux de recharge</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg-gray-50">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Stations</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="p-4 space-y-4">
+    @for (station of stations.value(); track station.id) {
+      <ion-card class="rounded-2xl shadow-md overflow-hidden">
+
+        <!-- Image -->
+        @if (station?.imageUrl && station.imageUrl !== 'default.png') {
+          <img
+            [src]="'http://localhost:8080/uploads/thumbnail-' + station.imageUrl"
+            alt="Image de la station"
+            class="w-full h-40 object-cover"
+          />
+        } @else {
+          <img
+            src="http://localhost:8080/uploads/default.png"
+            alt="Image par défaut"
+            class="w-full h-40 object-cover"
+          />
+        }
+
+        <ion-card-header class="bg-white">
+          <ion-card-title class="text-lg font-bold text-gray-800">
+            {{ station.name }}
+          </ion-card-title>
+          <ion-card-subtitle class="text-sm text-gray-500">
+            Créée le {{ station.createdAt | date:'longDate' }}
+          </ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content class="bg-white space-y-2">
+          <p class="text-gray-600"><strong>⚡</strong> {{ station.powerKw }} kW</p>
+          <p class="text-gray-600"><strong>💶</strong> {{ station.price | currency:'EUR' }}</p>
+        </ion-card-content>
+
+        <div class="p-4 bg-gray-50">
+          <ion-button
+            expand="block"
+            class="w-full rounded-xl"
+            color="primary"
+            [routerLink]="['/station', station.id]"
+          >
+            Voir les détails
+          </ion-button>
+        </div>
+      </ion-card>
+    }
+  </div>
+</ion-content>

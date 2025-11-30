@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Réservations</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="p-4 space-y-6">
+
+    <!-- FORM -->
+    <app-booking-form (formSubmit)="handleFormSubmit($event)"></app-booking-form>
+
+    <!-- LIST -->
+    <section>
+      <h2 class="text-lg font-semibold mb-2">Mes réservations</h2>
+
+      @if (loading) {
+        <div class="flex justify-center py-6">
+          <ion-spinner></ion-spinner>
+        </div>
+      } @else if (bookings.length === 0) {
+        <p class="italic text-gray-500 text-sm">Aucune réservation.</p>
+      } @else {
+        <ion-list>
+          @for (b of bookings; track b.id) {
+            <ion-item class="rounded-xl shadow mb-2">
+              <ion-label class="flex flex-col gap-1">
+
+                <span class="font-semibold">{{ b.stationName }}</span>
+
+                <span class="text-xs text-gray-500">
+                  Du {{ b.startDate | date:'short' }}
+                  au {{ b.endDate | date:'short' }}
+                </span>
+
+                <span class="text-xs font-medium" [ngClass]="{
+                  'text-green-600': b.statusLabel === 'ACCEPTED',
+                  'text-red-600': b.statusLabel === 'REJECTED',
+                  'text-yellow-600': b.statusLabel === 'PENDING'
+                }">
+                  {{ b.statusLabel }}
+                </span>
+
+              </ion-label>
+            </ion-item>
+          }
+        </ion-list>
+      }
+    </section>
+
+  </div>
+
+</ion-content>

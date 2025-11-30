@@ -1,14 +1,64 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>profile</ion-title>
+    <ion-title>Mon Profil</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">profile</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <p>Informations du profil utilisateur...</p>
+<ion-content class="bg-gray-50 p-4">
+
+  @if (isLoading) {
+    <div class="flex justify-center py-10">
+      <ion-spinner></ion-spinner>
+    </div>
+  } @else {
+
+    <!-- USER INFO CARD -->
+    <div class="bg-white p-5 rounded-2xl shadow-md mb-6 max-w-md mx-auto">
+      <h2 class="text-xl font-bold text-gray-800">{{ userSignal()?.username }}</h2>
+      <p class="text-sm text-gray-500">{{ userSignal()?.email }}</p>
+    </div>
+
+    <!-- FORM -->
+    <form [formGroup]="form" class="space-y-5 max-w-md mx-auto">
+
+      <!-- USERNAME -->
+      <app-form-field
+        label="Nom d'utilisateur"
+        placeholder="Votre identifiant"
+        [controlType]="ControlType.Input"
+        [formControl]="form.controls.username">
+      </app-form-field>
+
+      <!-- PHONE -->
+      <app-form-field
+        label="Téléphone"
+        placeholder="Votre numéro"
+        [controlType]="ControlType.Input"
+        [formControl]="form.controls.phoneNumber">
+      </app-form-field>
+
+      <!-- SAVE BUTTON -->
+      <ion-button
+        expand="block"
+        class="rounded-xl h-12 font-semibold bg-teal-600 text-white"
+        (click)="save()"
+        [disabled]="isSaving"
+      >
+        @if (isSaving) { <ion-spinner></ion-spinner> } @else { Sauvegarder }
+      </ion-button>
+    </form>
+
+    <!-- LOGOUT BUTTON -->
+    <div class="max-w-md mx-auto">
+      <ion-button
+        expand="block"
+        color="danger"
+        class="mt-6 rounded-xl h-12"
+        (click)="logout()"
+      >
+        Déconnexion
+      </ion-button>
+    </div>
+
+  }
 </ion-content>

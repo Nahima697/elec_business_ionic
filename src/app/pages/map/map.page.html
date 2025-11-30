@@ -1,10 +1,7 @@
-
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">map</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <app-display-map></app-display-map>
+  @if(stations.hasValue()) {
+<app-display-map [stations]="stations.value()"></app-display-map>
+  }
+  
+
 </ion-content>

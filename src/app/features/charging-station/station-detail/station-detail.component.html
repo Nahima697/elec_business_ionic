@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Détail de la station</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="bg-gray-50">
+  @if (station.value(); as state) {
+    @if (station.isLoading()) {
+      <div class="flex justify-center items-center h-full">
+        <ion-spinner></ion-spinner>
+      </div>
+    } @else if (station.error()) {
+      <div class="flex flex-col items-center justify-center h-full text-red-500">
+        <p>Erreur lors du chargement de la station.</p>
+      </div>
+    } @else {
+      <div class="p-4 flex flex-col gap-6">
+        <!-- CARD STATION CENTRÉE -->
+        <div class="max-w-md mx-auto w-full">
+          <app-station-card [station]="state"></app-station-card>
+        </div>
+
+        <!-- BOUTON RÉSERVER CENTRÉ & LARGE -->
+        <div class="max-w-md mx-auto w-full">
+          <ion-button
+            expand="block"
+            (click)="openModal()"
+            class="w-full h-12 rounded-full font-semibold text-base
+                   bg-teal-500 text-white shadow-md
+                   hover:opacity-90 active:scale-95
+                   transition-all duration-150"
+          >
+            RÉSERVER
+          </ion-button>
+        </div>
+      </div>
+
+      <!-- MODAL DE RÉSERVATION -->
+      <ion-modal #modal class="booking-modal">
+        <ng-template>
+          <app-booking-form
+            (formSubmit)="onFormSubmit($event)"
+          ></app-booking-form>
+        </ng-template>
+      </ion-modal>
+
+      <!-- TOAST -->
+      <ion-toast
+        [isOpen]="toastVisible()"
+        [message]="toastMessage()"
+        duration="2000"
+        (didDismiss)="toastVisible.set(false)"
+      ></ion-toast>
+    }
+  } @else {
+    <div class="flex justify-center items-center h-full">
+      <ion-spinner></ion-spinner>
+    </div>
+  }
+</ion-content>

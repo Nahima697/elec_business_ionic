@@ -1,47 +1,27 @@
-<div class="space-y-4">
-  <!-- Accordéon Item 1 -->
-  <div class="bg-gray-800 p-4 rounded-lg">
-    <button (click)="toggle(0)" class="w-full text-left font-bold text-lg flex justify-between items-center">
-      Comment réserver une borne ?
-      <svg [class.transform]="isOpen(0) ? 'rotate-180' : ''" class="w-4 h-4 transition-transform">
-        <path d="M5 7l4 4 4-4H5z"></path>
-      </svg>
-    </button>
-    @if(isOpen(0)) {
-      <div class="mt-2 p-4 text-gray-300">
-        Recherchez une borne disponible près de chez vous, sélectionnez un créneau horaire et validez votre réservation.
-      </div>
-    }
-  </div>
 
-  <!-- Accordéon Item 2 -->
-  <div class="bg-gray-800 p-4 rounded-lg">
-    <button (click)="toggle(1)" class="w-full text-left font-bold text-lg flex justify-between items-center">
-      Comment louer ma borne ?
-      <svg [class.transform]="isOpen(1) ? 'rotate-180' : ''" class="w-4 h-4 transition-transform">
-        <path d="M5 7l4 4 4-4H5z"></path>
-      </svg>
-    </button>
-    @if(isOpen(1)) {
-      <div class="mt-2 p-4 text-gray-300">
-        Créez un compte, ajoutez les informations de votre borne et définissez vos tarifs pour commencer à recevoir des réservations.
-      </div>
-    }
-  </div>
-
-  <!-- Accordéon Item 3 -->
-  <div class="bg-gray-800 p-4 rounded-lg">
-    <button (click)="toggle(2)" class="w-full text-left font-bold text-lg flex justify-between items-center">
-      Quelles sont les garanties ?
-      <svg [class.transform]="isOpen(2) ? 'rotate-180' : ''" class="w-4 h-4 transition-transform">
-        <path d="M5 7l4 4 4-4H5z"></path>
-      </svg>
-    </button>
-
-    @if(isOpen(2)) {
-      <div class="mt-2 p-4 text-gray-300">
-        Nous offrons une garantie de sécurité et d'assurance pour toutes les transactions effectuées sur notre plateforme.
-      </div>
-    }
-  </div>
-</div>
+<ion-accordion-group class="mb-40">
+  <ion-accordion value="first">
+    <ion-item slot="header" color=""class="bg-gray-800 p-4  border-b border-foreground">
+      <ion-label class="font-bold text-lg ">Comment réserver une borne ?</ion-label>
+    </ion-item>
+    <div class="ion-padding mt-2 p-4 text-gray-300" slot="content">
+      Recherchez une borne disponible près de chez vous, sélectionnez un créneau horaire et validez votre réservation.
+    </div>
+  </ion-accordion>
+  <ion-accordion value="second">
+    <ion-item slot="header" class="bg-gray-800 p-4  border-b border-foreground">
+      <ion-label class="font-bold text-lg ">Comment louer ma borne ?</ion-label>
+    </ion-item>
+    <div class="ion-padding mt-2 p-4 text-gray-300" slot="content">
+      Créez un compte, ajoutez les informations de votre borne et définissez vos tarifs pour commencer à recevoir des réservations.
+    </div>
+  </ion-accordion>
+  <ion-accordion value="third">
+    <ion-item slot="header" class="bg-gray-800 p-4  border-b border-foreground">
+      <ion-label class="font-bold text-lg ">Quelles sont les garanties ?</ion-label>
+    </ion-item>
+    <div class="ion-padding mt-2 p-4 text-gray-300" slot="content">
+       Nous offrons une garantie de sécurité et d'assurance pour toutes les transactions effectuées sur notre plateforme.
+    </div>
+  </ion-accordion>
+</ion-accordion-group>

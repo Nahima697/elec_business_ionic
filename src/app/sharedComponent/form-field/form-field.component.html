@@ -1,75 +1,85 @@
-<ion-item no-lines class="flex flex-col my-6">
-  @if (icon) {
-    <ion-icon
-      [name]="icon"
-      slot="start"
-    ></ion-icon>
-  }
+@if (controlType !== ControlType.Date) {
+  <ion-item lines="none" class="flex flex-col w-full px-0 py-2">
+    <!-- L'espacement vertical (my-6) est retiré de l'ion-item pour être géré par le conteneur parent. -->
 
+    @if (controlType === ControlType.Input) {
+      <!-- Style Tailwind sur ion-input pour un meilleur contrôle du design -->
+      <ion-input
+        [type]="type"
+        [placeholder]="placeholder"
+        [value]="value"
+        (ionInput)="setValue($event)"
+        (ionBlur)="onTouched()"
+        label="{{ label }}"
+        labelPlacement="stacked"
+        class="custom-input-field"
+      ></ion-input>
+    }
 
+    @if (controlType === ControlType.Search) {
+      <ion-searchbar
+        [placeholder]="placeholder"
+        [value]="value"
+        (ionInput)="setValue($event)"
+        (ionBlur)="onTouched()"
+        class="custom-search-field"
+      >
+        <!-- L'icône est gérée directement par ion-searchbar et ne doit pas être ajoutée manuellement ici -->
+      </ion-searchbar>
+      <!-- ng-content doit rester après ion-searchbar si vous voulez ajouter du contenu à la fin -->
+      <ng-content select="[end-slot]"></ng-content>
+    }
 
-  @if (controlType === ControlType.Input) {
-    <ion-input
-      [type]="type"
-      [placeholder]="placeholder"
-      (ionInput)="setValue($event)"
-      (ionBlur)="onTouched()"
-      fill="solid"
-      [placeholder]="placeholder"
-      class="ion-text-wrap"
-      label="{{ label }}"
-      labelPlacement="stacked"
+    @if (controlType === ControlType.Textarea) {
+      <ion-textarea
+        [placeholder]="placeholder"
+        [value]="value"
+        (ionInput)="setValue($event)"
+        (ionBlur)="onTouched()"
+        autoGrow="true"
+        label="{{ label }}"
+        labelPlacement="stacked"
+        class="custom-textarea-field"
+      ></ion-textarea>
+    }
 
-    ></ion-input>
-  }
+    @if (controlType === ControlType.Select) {
+      <ion-label position="stacked" class="text-sm font-medium mb-1">{{ label }}</ion-label>
+      <ion-select
+        [placeholder]="placeholder"
+        [value]="value"
+        (ionChange)="setValue($event)"
+        (ionBlur)="onTouched()"
+        interface="popover"
+        class="custom-select-field"
+      >
+        @for (option of options; track option.value) {
+          <ion-select-option [value]="option.value">{{ option.label }}</ion-select-option>
+        }
+      </ion-select>
+    }
+  </ion-item>
+}
 
-  @if (controlType === ControlType.Search) {
-    <ion-searchbar
-      [placeholder]="placeholder"
-      [value]="value"
-      (ionInput)="setValue($event)"
-    ></ion-searchbar>
-  }
-
-  @if (controlType === ControlType.Textarea) {
-    <ion-textarea
-      [placeholder]="placeholder"
-      (ionTextarea)="setValue($event)"
-      (ionBlur)="onTouched()"
-      fill="outline"
-      autoGrow="true"
-      class="text-base border rounded-xl p-3"
-      [placeholder]="placeholder"
-    ></ion-textarea>
-  }
-
-  @if (controlType === ControlType.Date) {
+<!-- Date SÉPARÉ pour éviter les problèmes de hauteur -->
+@if (controlType === ControlType.Date) {
+  <!-- L'item est remplacé par une div simple pour le datetime, gérant le label -->
+  <div class="py-2">
+    <ion-label class="ion-padding-start block mb-2 font-medium text-sm">{{ label }}</ion-label>
     <ion-datetime
+      [value]="value"
       presentation="date"
-      (ionDatetime)="setValue($event)"
+      (ionChange)="setValue($event)"
       (ionBlur)="onTouched()"
-      class="text-base border rounded-xl p-3"
+      class="w-full custom-datetime-field"
     ></ion-datetime>
-  }
+  </div>
+}
 
-  @if (controlType === ControlType.Select) {
-    <ion-select
-      [placeholder]="placeholder"
-      (ionSelect)="setValue($event)"
-      (ionBlur)="onTouched()"
-      interface="popover"
-      class="text-base border rounded-xl p-3"
-    >
-      @for (option of options; track option.value) {
-        <ion-select-option [value]="option.value">{{ option.label }}</ion-select-option>
-      }
-    </ion-select>
-  }
-</ion-item>
-
+<!-- Message d'erreur -->
 @if (this.formControl?.invalid && (this.formControl?.dirty || this.formControl?.touched)) {
   <div class="flex pl-3 pt-1">
-    <span class="bg-red-100 text-red-700 text-xs font-medium mr-2 px-2.5 py-0.5">
+    <span class="bg-red-100 text-red-700 text-xs font-medium px-2.5 py-0.5 rounded-lg">
       {{ getErrorMessage() }}
     </span>
   </div>

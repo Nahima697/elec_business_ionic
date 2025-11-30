@@ -1,4 +1,75 @@
-ion-searchbar {
-  z-index: 9999;
-  position: relative;
+/* Styles généraux pour un meilleur contrôle visuel */
+.custom-input-field, .custom-select-field, .custom-textarea-field {
+  --background: #fff;
+  --border-radius: 0.75rem; /* rounded-xl */
+  --border-color: #e5e7eb; /* gray-200 */
+  --border-width: 1px;
+  --box-shadow: none;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  --padding-top: 1rem;
+  --padding-bottom: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+/* Correction spécifique pour ion-searchbar (conservée pour référence future) */
+.custom-search-field {
+  --background: #fff;
+  --border-radius: 0.75rem;
+  --box-shadow: none;
+  border: 1px solid var(--border-color);
+  padding: 0;
+
+  /* NOUVEAUX STYLES : Assurer que le champ de recherche interne a le même padding que les inputs */
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --inner-border-radius: 0.75rem;
+  --icon-color: var(--color-secondary);
+
+  /* Cible l'input à l'intérieur de la barre de recherche pour un padding cohérent */
+  .searchbar-input-container {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+  }
+}
+
+/* Assurer que ion-datetime a une hauteur gérable sur mobile */
+.custom-datetime-field {
+  --background: #fff;
+  --border-radius: 0.75rem;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  border: 1px solid var(--border-color);
+
+  /* CORRECTION CLÉ POUR L'AFFICHAGE DANS LES MODALES */
+  /* 1. Supprimer la hauteur fixe qui peut entrer en conflit avec le dimensionnement interne d'Ionic. */
+  height: auto;
+  min-height: auto;
+  /* 2. Assurer que la présentation est 'cover' dans la modale pour afficher le calendrier complet. */
+  --wheel-width: 100%;
+  --border-width: 0; /* Suppression des bordures internes si elles sont en conflit */
+
+  /* 3. Forcer l'affichage en mode calendrier pour garantir l'espace nécessaire */
+  /* Ceci est la solution la plus courante pour ce type de bug. */
+  --width: 100%;
+  display: block;
+
+  /* Rétablir les paddings au minimum pour éviter les conflits */
+  padding: 0;
+  overflow: visible;
+
+  /* Cibler l'élément calendrier interne et forcer un display:block */
+  .datetime-calendar {
+    display: block !important;
+  }
+}
+
+ion-item {
+  --min-height: auto;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+
+  ion-label {
+    padding-bottom: 0.5rem;
+  }
 }

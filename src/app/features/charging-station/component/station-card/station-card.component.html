@@ -1,0 +1,21 @@
+<ion-card class="rounded-2xl shadow-lg p-4">
+  <ion-card-header>
+    <ion-card-title>{{ station().name }}</ion-card-title>
+    <ion-card-subtitle>{{ station().description }}</ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content class="space-y-2">
+    <div class="flex justify-between text-sm">
+      <span>⚡ Puissance</span>
+      <span>{{ station().powerKw }} kW</span>
+    </div>
+    <div class="flex justify-between text-sm">
+      <span>💶 Prix</span>
+      <span>{{ station().price | currency:'EUR' }}</span>
+    </div>
+    <div class="flex justify-between text-sm">
+      <span> Coordonnées</span>
+      <span>{{ station().lat }}, {{ station().lng }}</span>
+    </div>
+  </ion-card-content>
+</ion-card>

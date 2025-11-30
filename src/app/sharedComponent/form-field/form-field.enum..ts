@@ -6,5 +6,4 @@ Select='select',
 Date='date',
 Checkbox='checkbox',
 Search='search'
-
 }
