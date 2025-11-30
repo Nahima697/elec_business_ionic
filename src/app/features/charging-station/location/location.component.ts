@@ -1,8 +1,8 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { ChargingLocation } from 'src/app/sharedComponent/models/chargingLocation.model';
-import { ChargingStation } from 'src/app/sharedComponent/models/chargingStation.model';
-import { ChargingLocationService } from 'src/app/sharedComponent/services/charging-location.service';
-import { ChargingStationService } from 'src/app/sharedComponent/services/charging-station.service';
+import { ChargingLocation } from 'src/app/features/charging-station/models/chargingLocation.model';
+import { ChargingStation } from 'src/app/features/charging-station/models/chargingStation.model';
+import { ChargingLocationService } from 'src/app/features/charging-station/services/charging-location.service';
+import { ChargingStationService } from 'src/app/features/charging-station/services/charging-station.service';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader, IonCardSubtitle,
   IonCardContent, IonCardTitle, IonList, IonItem, IonLabel,IonThumbnail, IonButton } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
@@ -63,7 +63,7 @@ export class LocationComponent implements OnInit {
     this.isLoading = true;
     this.locationForm = new FormGroup({
     name:new FormControl('',{ validators: [Validators.required]}),
-    adressLine:new FormControl('',{ validators: [Validators.required]}),
+    addressLine:new FormControl('',{ validators: [Validators.required]}),
     postalCode:new FormControl(null,{ validators: [Validators.required]}),
     city:new FormControl('',{ validators: [Validators.required]}),
     country:new FormControl('',{ validators: [Validators.required]})
@@ -98,8 +98,8 @@ export class LocationComponent implements OnInit {
      return this.locationForm.get('name') as FormControl;
   }
 
-  get adressLine():FormControl{
-    return this.locationForm.get('adressLine') as FormControl;
+  get addressLine():FormControl{
+    return this.locationForm.get('addressLine') as FormControl;
   }
 
   get postalCode():FormControl {
@@ -114,18 +114,18 @@ export class LocationComponent implements OnInit {
     return this.locationForm.get('country') as FormControl;
   }
 
-  
+
   onSubmit() {
     if(this.locationForm.valid && this.user !== null) {
       const nameValue = this.name?.value ?? '';
-      const adressLineValue = this.adressLine?.value ?? '';
+      const addressLineValue = this.addressLine?.value ?? '';
       const cityValue = this.city?.value ?? '';
       const countryValue = this.country?.value ?? '';
       const postalCodeValue = this.postalCode?.value ?? '';
 
       const locationData = {
         name: nameValue,
-        adressLine: adressLineValue,
+        addressLine: addressLineValue,
         postalCode : postalCodeValue,
         city:cityValue,
         country:countryValue,

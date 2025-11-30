@@ -1,34 +1,65 @@
-<ion-content [fullscreen]="true" class="flex justify-center items-center bg-gray-50">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Register</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="bg-gray-50">
 
-  <!-- Container -->
-  <div class="w-full max-w-5xl flex flex-col md:flex-row items-center md:items-stretch bg-white shadow-lg rounded-2xl overflow-hidden m-4">
+  <!-- Conteneur principal: Centré et adapté pour mobile/desktop -->
+  <div class="w-full max-w-5xl mx-auto flex flex-col items-center justify-center p-0 md:p-8">
 
-    <!-- Image -->
-    <div class="w-full md:w-1/2 flex justify-center items-center bg-gray-100 p-6">
-      <img alt="Electric car charging"
-           src="assets/images/hero_img.png"
-           class="w-full max-h-80 object-contain md:object-cover rounded-lg" />
-    </div>
+    <!-- 1. En-tête (Visible sur mobile uniquement) -->
+    <ion-header class="ion-no-border w-full md:hidden">
+      <ion-toolbar class="bg-[var(--color-primary)] text-white">
+        <ion-title>Elec Business</ion-title>
+      </ion-toolbar>
+    </ion-header>
 
-    <!-- Formulaire -->
-    <div class="w-full md:w-1/2 p-6 flex flex-col justify-center">
-      <ion-card-header class="mb-6 text-center">
-        <ion-card-title class="font-bold text-2xl md:text-3xl text-gray-800">
-          Bienvenue chez Elec Business
-        </ion-card-title>
-        <ion-card-subtitle class="text-base md:text-lg text-gray-500">
-          Créez votre compte pour commencer
-        </ion-card-subtitle>
-      </ion-card-header>
+    <!-- 2. Section Auth Card (Split View sur Desktop, Stacked sur Mobile) -->
+    <div class="w-full md:flex md:flex-row md:items-stretch bg-white shadow-xl rounded-2xl overflow-hidden m-0 md:m-4">
 
-      <ion-card-content class="w-full">
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
-          <ion-list class="space-y-4">
+      <!-- A. Bloc Visuel (Gauche sur Desktop, Haut sur Mobile avec dégradé) -->
+      <div class="w-full md:w-5/12 flex justify-center items-center p-4
+                  bg-gradient-to-br from-green-400 to-cyan-400
+                  md:rounded-l-2xl">
+
+        <div class="flex flex-col items-center p-4">
+          <!-- Illustration -->
+          <img src="assets/images/hero_img.png"
+               alt="Illustration de voiture électrique"
+               class="h-40 w-auto object-contain z-10 md:h-64"
+          />
+          <!-- Titre visible uniquement sur Desktop -->
+          <h1 class="hidden md:block text-2xl font-bold text-white tracking-wide mt-4 text-center">
+            Rejoignez<br>Elec Business
+          </h1>
+        </div>
+      </div>
+
+      <!-- B. Bloc Formulaire (Droite sur Desktop) -->
+      <div class="w-full md:w-7/12 p-6 sm:p-8 flex flex-col justify-center">
+
+        <header class="mb-6 text-center md:text-left">
+          <h2 class="text-3xl font-bold text-[var(--color-foreground)]">
+            Inscription
+          </h2>
+          <p class="text-base text-[var(--color-secondary)] mt-1">
+            Créez votre compte en quelques étapes.
+          </p>
+        </header>
+
+        <ion-card-content class="p-0">
+
+          <!-- Connexion Sociale -->
+          <ion-button expand="block" fill="outline" class="w-full h-14 border-2 border-gray-200 text-[var(--color-foreground)] hover:bg-gray-50 font-medium mb-6">
+            <img src="/assets/icons/google.svg" alt="Icône Google" class="w-5 h-5 mr-3" />
+            S'inscrire avec Google
+          </ion-button>
+
+          <!-- Séparateur 'ou' -->
+          <div class="flex items-center mb-6">
+            <div class="flex-grow border-t border-[var(--color-secondary)] opacity-50"></div>
+            <span class="flex-shrink mx-4 text-sm text-[var(--color-secondary)]">OU</span>
+            <div class="flex-grow border-t border-[var(--color-secondary)] opacity-50"></div>
+          </div>
+
+          <!-- Formulaire d'Inscription -->
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-col space-y-0">
 
             <!-- Username -->
             <app-form-field
@@ -42,7 +73,7 @@
             <!-- Email -->
             <app-form-field
               label="Email"
-              placeholder="Votre email"
+              placeholder="Votre email professionnel"
               [controlType]="ControlType.Input"
               [formControl]="email"
               type="email">
@@ -51,35 +82,46 @@
             <!-- Password -->
             <app-form-field
               label="Mot de passe"
-              placeholder="Votre mot de passe"
+              placeholder="Minimum 8 caractères"
               [controlType]="ControlType.Input"
               [formControl]="password"
               type="password">
             </app-form-field>
 
-            <!-- Submit -->
-            <ion-item lines="none" class="mt-4">
-              <ion-button type="submit"
-                          expand="block"
-                          shape="round"
-                          size="large"
-                          color="primary"
-                          class="rounded-xl"
-                          [disabled]="registerForm.invalid">
+            <!-- Checkbox CGU -->
+            <div class="py-2">
+              <ion-item lines="none" class="flex items-center justify-start --padding-start-0">
+                <ion-checkbox slot="start" color="primary" class="mr-2"></ion-checkbox>
+                <ion-label class="text-sm text-[var(--color-foreground)] whitespace-normal">
+                  J'accepte les
+                  <a href="#" class="text-[var(--color-primary)] font-medium hover:underline">Conditions Générales d'Utilisation</a>
+                </ion-label>
+              </ion-item>
+            </div>
+
+            <!-- Bouton Valider -->
+            <div class="mt-4">
+              <ion-button
+                type="submit"
+                expand="block"
+                class="w-full h-14 font-bold text-lg transition-transform"
+                [disabled]="registerForm.invalid"
+              >
                 Créer un compte
               </ion-button>
-            </ion-item>
-          </ion-list>
-        </form>
+            </div>
+          </form>
 
-        <!-- Déjà inscrit ? -->
-        <div class="mt-6 text-center text-gray-600">
-          Déjà un compte ?
-          <a routerLink="/login" class="text-blue-600 font-semibold hover:underline">
-            Se connecter
-          </a>
-        </div>
-      </ion-card-content>
+          <!-- Déjà inscrit ? -->
+          <div class="mt-8 text-center text-sm text-[var(--color-secondary)]">
+            Déjà un compte ?
+            <a routerLink="/login" class="text-[var(--color-primary)] font-semibold hover:underline">
+              Se connecter
+            </a>
+          </div>
+
+        </ion-card-content>
+      </div>
     </div>
   </div>
 </ion-content>

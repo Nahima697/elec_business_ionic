@@ -4,125 +4,72 @@ import { WebOnlyGuard } from './sharedComponent/guards/web-only.guard copy';
 import { TabsPage } from './pages/mobile-tabs/tabs/tabs.page';
 import { EmailVerifiedComponent } from './core/auth/pages/verif-method/verif-email.component';
 
-export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full',
-  },
+// Import direct des composants
+import { HomePage } from './pages/web-home/home/home.page';
+import { OnboardingPage } from './pages/onboarding/onboarding.page';
+import { MapPage } from './pages/map/map.page';
+import { MessagesPage } from './pages/messages/messages.page';
+import { ProfilePage } from './pages/profile/profile.page';
+import { LoginPage } from './core/auth/pages/login/login.page';
+import { RegisterPage } from './core/auth/pages/register/register.page';
+import { VerifMethodPage } from './core/auth/pages/verif-method/verif-method.page';
+import { LocationComponent } from './features/charging-station/location/location.component';
+import { LocationDetailComponent } from './features/charging-station/location-detail/location-detail.component';
+import { ChargingStationComponent } from './features/charging-station/station/charging-station.component';
+import { StationDetailComponent } from './features/charging-station/station-detail/station-detail.component';
+import { BookingPageComponent } from './features/booking/page/booking-page.component';
+import { AuthGuard } from './core/auth/guards/auth.guard';
 
-  // --- Web only ---
+export const routes: Routes = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+
+  // --- WEB ---
   {
     path: 'home',
     canActivate: [WebOnlyGuard],
-    loadComponent: () =>
-      import('./pages/web-home/home.page').then((m) => m.HomePage),
+    component: HomePage,
   },
 
-  // --- Mobile only ---
+  // PAGE RÉSERVATIONS DESKTOP
+  {
+    path: 'reservations',
+    canActivate: [WebOnlyGuard],
+    component: BookingPageComponent
+  },
+
+  // --- MOBILE ---
   {
     path: 'onboarding',
     canActivate: [MobileOnlyGuard],
-    loadComponent: () =>
-      import('./pages/onboarding/onboarding.page').then(
-        (m) => m.OnboardingPage
-      ),
+    component: OnboardingPage,
   },
+
   {
     path: 'tabs',
-    component: TabsPage,
     canActivate: [MobileOnlyGuard],
+    component: TabsPage,
     children: [
-      {
-        path: 'reservations',
-        loadComponent: () =>
-          import('./pages/reservations/reservations.page').then(
-            (m) => m.ReservationsPage
-          ),
-      },
-      {
-        path: 'map',
-        loadComponent: () =>
-          import('./pages/map/map.page').then((m) => m.MapPage),
-      },
-      {
-        path: 'messages',
-        loadComponent: () =>
-          import('./pages/messages/messages.page').then(
-            (m) => m.MessagesPage
-          ),
-      },
-      {
-        path: 'profile',
-        loadComponent: () =>
-          import('./pages/profile/profile.page').then(
-            (m) => m.ProfilePage
-          ),
-      },
+      { path: 'map', component: MapPage },
+      { path: 'messages', component: MessagesPage },
+      { path: 'reservations', component: BookingPageComponent }, // version mobile
+      { path: 'profile', component: ProfilePage },
       { path: '', redirectTo: '/tabs/map', pathMatch: 'full' },
     ],
   },
 
-  // --- Shared (web + mobile) ---
-  {
-    path: 'login',
-    loadComponent: () =>
-      import('./core/auth/pages/login/login.page').then((m) => m.LoginPage),
-  },
-  {
-    path: 'register',
-    loadComponent: () =>
-      import('./core/auth/pages/register/register.page').then(
-        (m) => m.RegisterPage
-      ),
-  },
-  {
-    path: 'verify-email-info',
-    loadComponent: () =>
-      import('./core/auth/pages/verif-method/verif-method.page').then(
-        (m) => m.VerifMethodPage
-      ),
-  },
+  // Auth
+  { path: 'login', component: LoginPage },
+  { path: 'register', component: RegisterPage },
+  { path: 'verify-email-info', component: VerifMethodPage },
+  { path: 'email-verified', component: EmailVerifiedComponent },
 
-  { path: 'email-verified',loadComponent: () =>
-    import('./core/auth/pages/verif-method/verif-email.component')
-    .then((m) =>m.EmailVerifiedComponent),
-   },
+  // Charging Stations
+  { path: 'location', component: LocationComponent },
+  { path: 'location/:id', component: LocationDetailComponent },
+  { path: 'station', component: ChargingStationComponent },
+  { path: 'station/:id', component: StationDetailComponent },
 
-  // --- Charging station
-      {
-        path: 'location',
-        loadComponent: () =>
-          import('./features/charging-station/location/location.component').then(
-            (m) => m.LocationComponent
-          ),
-      },
-      {
-        path: 'location/:id',
-        loadComponent: () =>
-          import(
-            './features/charging-station/location-detail/location-detail.component'
-          ).then((m) => m.LocationDetailComponent),
-      },
-      {
-        path: 'station',
-        loadComponent: () =>
-          import('./features/charging-station/charging-station.component').then(
-            (m) => m.ChargingStationComponent
-          ),
-      },
-      {
-        path: 'station/:id',
-        loadComponent: () =>
-          import(
-            './features/charging-station/station-detail/station-detail.component'
-          ).then((m) => m.StationDetailComponent),
-      },
-
-  // --- Map standalone (si besoin hors tabs) ---
-  {
-    path: 'map',
-    loadComponent: () =>
-      import('./pages/map/map.page').then((m) => m.MapPage),
-  },
+  // Map web
+  { path: 'map', component: MapPage },
 ];
+

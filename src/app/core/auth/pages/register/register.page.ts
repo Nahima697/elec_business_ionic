@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule,FormGroup,Validators, FormControl, Form } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar,IonItem,
-  IonList,IonButton, IonCardHeader,IonCard,IonCardTitle,IonCardSubtitle,IonCardContent } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar,
+  IonList,IonButton, IonCardHeader,IonCardTitle,IonCardSubtitle,IonCardContent, IonItem, IonCheckbox, IonLabel } from '@ionic/angular/standalone';
 import { FormFieldComponent } from 'src/app/sharedComponent/form-field/form-field.component';
 import { ControlType } from 'src/app/sharedComponent/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
@@ -14,9 +14,9 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [IonCardHeader, IonContent, IonHeader,
-    IonTitle, IonToolbar,IonItem,IonList,
-    IonButton,IonCardHeader,IonCardTitle,IonCardSubtitle,IonCardTitle,IonCardContent,
+  imports: [IonLabel, IonCheckbox, IonItem, IonContent, IonHeader,IonItem,
+    IonTitle, IonToolbar,
+    IonButton,IonCardContent,
     CommonModule, FormsModule,ReactiveFormsModule,FormFieldComponent,ReactiveFormsModule,RouterModule,RouterModule]
 })
 export class RegisterPage  {

@@ -1,41 +1,42 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { CookieService } from 'ngx-cookie-service';
 import { Observable, tap, catchError, of } from 'rxjs';
 import { AuthResponse } from '../models/auth.model';
 import { Router } from '@angular/router';
+import { PlatformService } from 'src/app/sharedComponent/services/platform.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-  private cookieService = inject(CookieService);
-  private apiUrl = environment.apiUrl;
   private router = inject(Router);
+  private platformService = inject(PlatformService);
+  private apiUrl = environment.apiUrl;
 
-  private _isLoggedIn = signal(this.hasToken());
+  private _isLoggedIn = signal(false);
   isLoggedIn = computed(() => this._isLoggedIn());
 
   private _user = signal<AuthResponse['user'] | null>(null);
   user = computed(() => this._user());
 
-  constructor() {
-    if (this.hasToken()) {
-      this.getToken();
+  private tokenKey = 'authToken';
+
+  private storeToken(token: string) {
+    if (this.platformService.isMobile()) {
+      localStorage.setItem(this.tokenKey, token);
     }
+  }
+
+  getToken(): string | null {
+      return localStorage.getItem(this.tokenKey);
   }
 
   login(username: string, password: string): Observable<AuthResponse> {
     const body = { username, password };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, body, {
-      headers,
-      withCredentials: true
-    }).pipe(
-      tap((response: AuthResponse) => {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, body, { headers }).pipe(
+      tap((response) => {
         this.storeToken(response.token);
         this._user.set(response.user);
         this._isLoggedIn.set(true);
@@ -46,51 +47,22 @@ export class AuthService {
   register(username: string, email: string, password: string): Observable<AuthResponse> {
     const body = { username, email, password };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, body, {
-      headers,
-      withCredentials: true
-    });
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, body, { headers });
   }
 
   logout(): void {
-    this.cookieService.delete('authToken');
+    if (this.platformService.isMobile()) {
+      localStorage.removeItem(this.tokenKey);
+    }
     this._user.set(null);
     this._isLoggedIn.set(false);
+    if (this.platformService.isBrowser()) {
+      this.router.navigate(['login']);
+    }
   }
-
-  getToken(): string | null {
-    return this.cookieService.get('authToken') || null;
-  }
-
-  private hasToken(): boolean {
-    return !! this.getToken();
-  }
-
-  private storeToken(token: string): void {
-    this.cookieService.set('authToken', token, 1, '/');
-    this._isLoggedIn.set(true);
-  }
-
-  refreshToken(): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(
-      `${this.apiUrl}/refreshToken`,
-      null,
-      { withCredentials: true }
-    ).pipe(
-      tap(response => this.storeToken(response.message)),
-      catchError(error => {
-        if (error.status === 403) {
-          this.logout();
-          this.router.navigate(['login']);
-        }
-        throw error;
-      })
-    );
-}
 
   fetchCurrentUser(): Observable<AuthResponse['user'] | null> {
-    return this.http.get<AuthResponse['user']>(`${this.apiUrl}/me`, { withCredentials: true }).pipe(
+    return this.http.get<AuthResponse['user']>(`${this.apiUrl}/me`).pipe(
       tap(user => this._user.set(user)),
       catchError(() => {
         this._user.set(null);
@@ -99,4 +71,13 @@ export class AuthService {
       })
     );
   }
+
+  updateProfile(data: Partial<AuthResponse['user']>) {
+  return this.http.put<AuthResponse['user']>(`${this.apiUrl}/me`, data).pipe(
+    tap(updated => {
+      this._user.set(updated);
+    })
+  );
+}
+
 }

@@ -7,6 +7,7 @@ import { FormFieldComponent } from 'src/app/sharedComponent/form-field/form-fiel
 import { ControlType } from 'src/app/sharedComponent/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { PlatformService } from 'src/app/sharedComponent/services/platform.service';
 
 
 @Component({
@@ -15,15 +16,16 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.page.scss'],
   standalone: true,
 
-  imports: [IonCardHeader, IonContent, IonHeader,
-    IonTitle, IonToolbar,IonItem,IonList,
-    IonButton,IonCardHeader,IonCardTitle,IonCardSubtitle,IonCardTitle,IonCardContent,
-    CommonModule, FormsModule,ReactiveFormsModule,FormFieldComponent,ReactiveFormsModule,RouterModule,RouterModule]
+  imports: [ IonContent, IonHeader,
+    IonTitle, IonToolbar,
+    IonButton,IonCardContent,
+    CommonModule, FormsModule,ReactiveFormsModule,FormFieldComponent,RouterModule,RouterModule]
 })
 export class LoginPage  {
 ControlType: typeof ControlType = ControlType;
 router = inject(Router);
 authservice=inject(AuthService);
+platformService = inject(PlatformService);
 
 loginForm = new FormGroup({
   username: new FormControl('',{ validators: [Validators.required]}),
@@ -36,7 +38,10 @@ onSubmit() {
     this.authservice.login(this.username.value,this.password.value).subscribe({
       next: (response) => {
         console.log('Connexion réussie :', response);
-        this.router.navigateByUrl('/tabs', { replaceUrl: true });
+        if(this.platformService.isDesktop()) {
+          this.router.navigateByUrl('/map', { replaceUrl: true });
+        }
+          this.router.navigateByUrl('/tabs/map', { replaceUrl: true });
       },
       error: (err) => {
         console.error('Erreur de connexion :', err);

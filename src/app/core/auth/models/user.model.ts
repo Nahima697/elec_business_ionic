@@ -3,6 +3,7 @@ export interface User {
   username:string,
   email:string,
   password:string,
-  email_verified:boolean
+  email_verified:boolean,
+  phoneNumber:string
 
 }

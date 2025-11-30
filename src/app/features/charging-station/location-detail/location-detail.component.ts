@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ChargingLocation } from 'src/app/sharedComponent/models/chargingLocation.model';
-import { ChargingLocationService } from 'src/app/sharedComponent/services/charging-location.service';
+import { ChargingLocation } from 'src/app/features/charging-station/models/chargingLocation.model';
+import { ChargingLocationService } from 'src/app/features/charging-station/services/charging-location.service';
 import { IonCard, IonButton, IonTitle, IonHeader, IonContent,IonCardContent,IonCardHeader,IonCardSubtitle,IonCardTitle,IonToolbar } from "@ionic/angular/standalone";
 
 @Component({

@@ -1,0 +1,49 @@
+<div class="map-wrap w-full h-64 rounded-xl overflow-hidden">
+
+  @if (station()) {
+    <mgl-map
+      class="w-full h-full"
+      [style]="'https://api.maptiler.com/maps/streets-v2/style.json?key=pUgm4NlEXg3amyAe53SH'"
+      [zoom]="[14]"
+      [center]="center"
+      (mapLoad)="onMapLoad($event)"
+    >
+
+      <!-- Marker -->
+      <mgl-marker
+        [lngLat]="[station()!.lng, station()!.lat]"
+        (mouseenter)="onMarkerEnter(station()!)"
+        (mouseleave)="onMarkerLeave()"
+      >
+        <img src="assets/icons/battery.png" alt="Station" class="w-8 h-8" />
+      </mgl-marker>
+
+      <!-- Popup -->
+      @if (hoverStation()) {
+        <mgl-popup
+          [lngLat]="[hoverStation()!.lng, hoverStation()!.lat]"
+          [closeButton]="true"
+          [closeOnClick]="true"
+          [anchor]="'top'"
+        >
+          <div class="p-2">
+            <h3 class="font-bold">{{ hoverStation()!.name }}</h3>
+            <p>{{ hoverStation()!.locationDTO.addressLine }}</p>
+            <p><strong>Puissance:</strong> {{ hoverStation()!.powerKw }} kW</p>
+          </div>
+        </mgl-popup>
+      }
+
+      <!-- Controls -->
+      <mgl-control mglNavigation position="top-right"></mgl-control>
+      <mgl-control
+        mglGeolocate
+        [positionOptions]="{ enableHighAccuracy: true }"
+        [trackUserLocation]="true"
+        position="top-right"
+      ></mgl-control>
+
+    </mgl-map>
+  }
+
+</div>

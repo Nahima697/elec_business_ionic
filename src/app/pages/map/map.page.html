@@ -1,3 +1,7 @@
 <ion-content [fullscreen]="true">
-  <app-display-map></app-display-map>
+  @if(stations.hasValue()) {
+<app-display-map [stations]="stations.value()"></app-display-map>
+  }
+  
+
 </ion-content>

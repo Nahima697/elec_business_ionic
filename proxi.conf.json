@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "https://elec-business-spring.onrender.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

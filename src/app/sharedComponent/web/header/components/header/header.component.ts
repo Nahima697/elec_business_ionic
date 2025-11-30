@@ -1,38 +1,64 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, computed, input, model } from '@angular/core';
 import { FormFieldComponent } from 'src/app/sharedComponent/form-field/form-field.component';
-import { STATION, Station } from 'src/app/sharedComponent/station/station.component';
 import { ControlType } from 'src/app/sharedComponent/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
+import { ChargingStation } from 'src/app/features/charging-station/models/chargingStation.model';
+import { PlatformService } from 'src/app/sharedComponent/services/platform.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [FormFieldComponent,RouterModule],
+  imports: [FormFieldComponent, RouterModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  filteredStations: Station[] = [];
-  stations: Station[] = STATION;
+  private router = inject(Router);
+  private platformService = inject(PlatformService);
+
+  readonly stations = input<ChargingStation[]>();
   ControlType = ControlType;
 
-  private router = inject(Router);
+  protected readonly searchFilter = signal('');
+
+  protected readonly filteredStations = computed(() =>
+    (this.stations() ?? []).filter(station =>
+      station.name?.toLowerCase().includes(this.searchFilter()?.toLowerCase() ?? '') ||
+      station.locationDTO?.name?.toLowerCase().includes(this.searchFilter()?.toLowerCase() ?? '')
+    )
+  );
+
+   open = model.required<boolean>();
+
+  close() {
+    this.open.set(false);
+  }
+
+   openMenu() {
+    this.open.set(true);
+  }
+
+  toggleMenu() {
+    this.open.update(value => !value);
+  }
+
+  protected readonly links = computed(() => [
+    { path: '/', name: 'Home' },
+    { path: '/map', name: 'Carte' },
+    { path: '/login', name: 'Se connecter' },
+    { path: '/profile', name: 'Votre compte' }
+  ]);
 
   onLocalSearch(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
+    const inputValue = (event.target as HTMLInputElement).value || '';
+    this.searchFilter.set(inputValue);
 
-    const value = inputElement.value?.toLowerCase() || '';
-    this.filteredStations = this.stations.filter(station =>
-      station.nom.toLowerCase().includes(value) ||
-      station.adresse.toLowerCase().includes(value)
-    );
-    console.log(this.filteredStations);
-    if (this.filteredStations.length > 0) {
+    if (!this.platformService.isBrowser) return;
+
+    if (this.filteredStations().length > 0) {
       this.router.navigate(['/map'], {
-        state: { stations: this.filteredStations }
+        state: { stations: this.filteredStations() }
       });
     }
-
-
   }
 }

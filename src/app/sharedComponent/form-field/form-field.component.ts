@@ -1,22 +1,20 @@
 import { Component, forwardRef, Injector, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NgControl, ReactiveFormsModule } from '@angular/forms';
-import { IonInput, IonTextarea, IonDatetime, IonItem, IonIcon, IonSelect, IonSelectOption, IonSearchbar } from '@ionic/angular/standalone';
+import { IonInput, IonTextarea, IonDatetime, IonItem,IonSelect, IonSelectOption, IonSearchbar, IonLabel } from '@ionic/angular/standalone';
 import { ControlType } from './form-field.enum.';
 import { EventEmitter, Output } from '@angular/core';
 
 
 @Component({
   selector: 'app-form-field',
-  standalone: true,
-  imports: [IonSearchbar,
+  imports: [IonLabel, IonSearchbar,
     CommonModule,
     ReactiveFormsModule,
     IonInput,
     IonTextarea,
     IonDatetime,
     IonItem,
-    IonIcon,
     IonSelect,
     IonSelectOption,
     IonSearchbar
@@ -40,7 +38,6 @@ export class FormFieldComponent implements ControlValueAccessor, OnInit {
   @Input() icon?: string;
   @Input() options: { label: string; value: any }[] = [];
   @Output() valueChange = new EventEmitter<any>();
-
 
   ControlType = ControlType;
   value: any;
@@ -72,12 +69,16 @@ export class FormFieldComponent implements ControlValueAccessor, OnInit {
   }
 
   setValue(event: any) {
-    const newValue = event?.detail?.value;
-    if (newValue !== this.value) {
-      this.value = newValue;
-      this.onChange(this.value);
-    }
+  const newValue = event?.detail?.value ?? event?.target?.value ?? event;
+
+  if (newValue !== this.value) {
+    this.value = newValue;
+    this.onChange(this.value);
+    this.valueChange.emit(this.value);  
+    console.log('setValue appelé avec :', this.value);
   }
+}
+
 
   getErrorMessage(): string {
     if (!this.formControl) return '';

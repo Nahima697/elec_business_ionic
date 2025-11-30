@@ -1,0 +1,65 @@
+<div class="booking-modal-wrapper">
+  <div class="modal-header">
+    <h2>Réservation</h2>
+    <button class="close-btn" (click)="closeModal()">✕</button>
+  </div>
+
+  <div class="modal-content">
+    <form [formGroup]="form" (ngSubmit)="handleSubmit()">
+
+      <!-- DATE -->
+      <div class="form-section">
+        <label class="section-label">Date de recharge</label>
+        <ion-datetime
+          presentation="date"
+          [value]="form.controls.date.value"
+          (ionChange)="onDateChanged($event)"
+          class="datetime-picker"
+        ></ion-datetime>
+      </div>
+
+      <!-- HEURE DE DÉBUT -->
+      <app-form-field
+        label="Heure de début"
+        placeholder="Sélectionnez l'heure"
+        [controlType]="ControlType.Select"
+        [options]="startOptions()"
+        [formControl]="form.controls.startHour"
+      ></app-form-field>
+
+      <!-- HEURE DE FIN -->
+      <app-form-field
+        label="Heure de fin"
+        placeholder="Sélectionnez l'heure"
+        [controlType]="ControlType.Select"
+        [options]="endOptions()"
+        [formControl]="form.controls.endHour"
+      ></app-form-field>
+
+      <!-- MESSAGE DE CHARGEMENT -->
+      @if (loadingSlots()) {
+        <div class="loading-message">
+          <ion-spinner name="crescent"></ion-spinner>
+          <p>Chargement des créneaux disponibles...</p>
+        </div>
+      }
+
+      <!-- MESSAGE SI AUCUN CRÉNEAU -->
+      @if (!loadingSlots() && startOptions().length === 0 && form.controls.date.value) {
+        <div class="no-slots-message">
+          <p>Aucun créneau disponible pour cette date.</p>
+        </div>
+      }
+
+      <!-- SUBMIT -->
+      <button
+        type="submit"
+        class="submit-button"
+        [disabled]="form.invalid || loadingSlots()"
+      >
+        Confirmer la réservation
+      </button>
+
+    </form>
+  </div>
+</div>

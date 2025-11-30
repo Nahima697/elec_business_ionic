@@ -1,4 +1,4 @@
-// guards/platform.guard.ts
+
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { PlatformService } from '../services/platform.service';

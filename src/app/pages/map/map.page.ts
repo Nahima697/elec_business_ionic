@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { IonContent} from '@ionic/angular/standalone';
-import { DisplayMapComponent } from 'src/app/sharedComponent/display-map/display-map.component';
+import { DisplayMapComponent } from 'src/app/features/display-map/display-map.component';
+import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
 
 @Component({
   selector: 'app-map',
@@ -9,11 +10,8 @@ import { DisplayMapComponent } from 'src/app/sharedComponent/display-map/display
   standalone: true,
   imports: [ DisplayMapComponent,IonContent]
 })
-export class MapPage implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
+export class MapPage  {
+  private stationService =inject(StationApiService)
+  readonly stations = this.stationService.getAll();
 
 }
