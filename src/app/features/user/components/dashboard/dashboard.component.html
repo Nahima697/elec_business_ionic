@@ -1,0 +1,45 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Tableau de bord</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="p-4">
+
+  @if (isOwner()) {
+    <div class="bg-white rounded-xl shadow p-4 mb-4">
+      <h2 class="text-lg font-semibold mb-2">Espace Propriétaire</h2>
+      <button
+        class="w-full py-3 bg-blue-600 text-white rounded-lg mt-2"
+        routerLink="/user/owner/dashboard"
+      >
+        Gérer mes stations
+      </button>
+    </div>
+  }
+
+  @if (isRenter()) {
+    <div class="bg-white rounded-xl shadow p-4 mb-4">
+      <h2 class="text-lg font-semibold mb-2">Espace Loueur</h2>
+      <button
+        class="w-full py-3 bg-green-600 text-white rounded-lg mt-2"
+        routerLink="/user/renter/dashboard"
+      >
+        Mes réservations
+      </button>
+    </div>
+  }
+
+  @if (!isOwner() && !isRenter()) {
+    <div class="bg-yellow-100 text-yellow-800 p-3 rounded-lg">
+      <p>Vous n'avez pas encore sélectionné de rôle.</p>
+      <button
+        class="w-full py-3 bg-purple-600 text-white rounded-lg mt-3"
+        routerLink="/user/select-role"
+      >
+        Choisir mon rôle
+      </button>
+    </div>
+  }
+
+</ion-content>

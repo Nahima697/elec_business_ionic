@@ -1,0 +1,63 @@
+<ion-content class="p-5">
+
+  <!-- HEADER -->
+  <div class="text-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">
+      Tableau de bord propriétaire
+    </h1>
+    <p class="text-gray-500 text-sm">Gérez vos lieux, bornes et disponibilités</p>
+  </div>
+
+  <!-- CARTE : MES LIEUX -->
+  <ion-card class="shadow-md mb-4">
+    <ion-card-header>
+      <ion-card-title>📍 Mes lieux</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Gérez les adresses où se trouvent vos bornes de recharge.
+      <ion-button expand="block" class="mt-3" (click)="goToLocations()">
+        Gérer les lieux
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- CARTE : MES STATIONS -->
+  <ion-card class="shadow-md mb-4">
+    <ion-card-header>
+      <ion-card-title>⚡ Mes bornes</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Ajoutez ou modifiez vos bornes disponibles.
+      <ion-button expand="block" class="mt-3" (click)="goToStations()">
+        Gérer les bornes
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- CARTE : RÈGLES DE DISPONIBILITÉ -->
+  <ion-card class="shadow-md mb-4">
+    <ion-card-header>
+      <ion-card-title>🕒 Disponibilités</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Définissez vos horaires de disponibilité pour la réservation.
+      <ion-button expand="block" class="mt-3" (click)="goToAvailabilityRules()">
+        Gérer mes règles
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- CARTE : RÉSERVATIONS REÇUES -->
+  <ion-card class="shadow-md">
+    <ion-card-header>
+      <ion-card-title>📅 Réservations reçues</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Consultez et validez les réservations effectuées par des utilisateurs.
+      <ion-button expand="block" class="mt-3" (click)="goToBookings()">
+        Voir les réservations
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

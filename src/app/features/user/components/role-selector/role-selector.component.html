@@ -1,0 +1,33 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Choisir un rôle</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="p-6">
+
+  <div class="text-center mb-6">
+    <h3 class="text-xl font-semibold">Voulez-vous devenir :</h3>
+  </div>
+
+  <ion-button
+    expand="block"
+    color="primary"
+    shape="round"
+    (click)="setRole('owner')"
+    class="mb-4 py-3 text-lg"
+  >
+    🌐 Devenir Propriétaire
+  </ion-button>
+
+  <ion-button
+    expand="block"
+    color="secondary"
+    shape="round"
+    (click)="setRole('renter')"
+    class="py-3 text-lg"
+  >
+    🚗 Devenir Loueur
+  </ion-button>
+
+</ion-content>
