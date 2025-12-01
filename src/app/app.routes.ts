@@ -1,43 +1,40 @@
 import { Routes } from '@angular/router';
-import { MobileOnlyGuard } from './sharedComponent/guards/mobile-only.guard';
-import { WebOnlyGuard } from './sharedComponent/guards/web-only.guard copy';
-import { TabsPage } from './pages/mobile-tabs/tabs/tabs.page';
-import { EmailVerifiedComponent } from './core/auth/pages/verif-method/verif-email.component';
-
-// Import direct des composants
-import { HomePage } from './pages/web-home/home/home.page';
-import { OnboardingPage } from './pages/onboarding/onboarding.page';
-import { MapPage } from './pages/map/map.page';
-import { MessagesPage } from './pages/messages/messages.page';
-import { ProfilePage } from './pages/profile/profile.page';
+import { AuthGuard } from './core/auth/guards/auth.guard';
 import { LoginPage } from './core/auth/pages/login/login.page';
 import { RegisterPage } from './core/auth/pages/register/register.page';
+import { EmailVerifiedComponent } from './core/auth/pages/verif-method/verif-email.component';
 import { VerifMethodPage } from './core/auth/pages/verif-method/verif-method.page';
-import { LocationComponent } from './features/charging-station/location/location.component';
-import { LocationDetailComponent } from './features/charging-station/location-detail/location-detail.component';
-import { ChargingStationComponent } from './features/charging-station/station/charging-station.component';
-import { StationDetailComponent } from './features/charging-station/station-detail/station-detail.component';
 import { BookingPageComponent } from './features/booking/page/booking-page.component';
-import { AuthGuard } from './core/auth/guards/auth.guard';
+import { LocationDetailComponent } from './features/charging-station/location-detail/location-detail.component';
+import { LocationComponent } from './features/charging-station/location/location.component';
+import { StationDetailComponent } from './features/charging-station/station-detail/station-detail.component';
+import { ChargingStationComponent } from './features/charging-station/station/charging-station.component';
+import { MapPage } from './pages/map/map.page';
+import { MessagesPage } from './pages/messages/messages.page';
+import { TabsPage } from './pages/mobile-tabs/tabs/tabs.page';
+import { OnboardingPage } from './pages/onboarding/onboarding.page';
+import { ProfilePage } from './pages/profile/profile.page';
+import { HomePage } from './pages/web-home/home/home.page';
+import { MobileOnlyGuard } from './sharedComponent/guards/mobile-only.guard';
+import { WebOnlyGuard } from './sharedComponent/guards/web-only.guard copy';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
-  // --- WEB ---
+  // WEB
   {
     path: 'home',
     canActivate: [WebOnlyGuard],
     component: HomePage,
   },
 
-  // PAGE RÉSERVATIONS DESKTOP
   {
     path: 'reservations',
     canActivate: [WebOnlyGuard],
     component: BookingPageComponent
   },
 
-  // --- MOBILE ---
+  // MOBILE
   {
     path: 'onboarding',
     canActivate: [MobileOnlyGuard],
@@ -51,25 +48,32 @@ export const routes: Routes = [
     children: [
       { path: 'map', component: MapPage },
       { path: 'messages', component: MessagesPage },
-      { path: 'reservations', component: BookingPageComponent }, // version mobile
+      { path: 'reservations', component: BookingPageComponent },
       { path: 'profile', component: ProfilePage },
       { path: '', redirectTo: '/tabs/map', pathMatch: 'full' },
     ],
   },
 
-  // Auth
+  // AUTH
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegisterPage },
   { path: 'verify-email-info', component: VerifMethodPage },
   { path: 'email-verified', component: EmailVerifiedComponent },
 
-  // Charging Stations
+  // USER MODULE
+  {
+    path: 'user',
+    loadChildren: () => import('./features/user/user.routes')
+      .then(m => m.USER_ROUTES),
+    canActivate: [AuthGuard]
+  },
+
+  // STATIONS
   { path: 'location', component: LocationComponent },
   { path: 'location/:id', component: LocationDetailComponent },
   { path: 'station', component: ChargingStationComponent },
   { path: 'station/:id', component: StationDetailComponent },
 
-  // Map web
-  { path: 'map', component: MapPage },
+  // WEB MAP
+  { path: 'map', component: MapPage},
 ];
-
