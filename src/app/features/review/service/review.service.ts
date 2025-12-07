@@ -1,0 +1,19 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Router } from 'express';
+import { Observable } from 'rxjs';
+import { reviewResponseDTO } from '../models/review.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ReviewService {
+
+ private http = inject(HttpClient);
+  private router = inject(Router);
+  private apiUrl = '/reviews';
+  submitReview(CreateReviewDTO: { reviewtitle: string; reviewContent: string; reviewRating: number; stationId: string; }) :Observable<reviewResponseDTO> {
+    const body = { reviewtitle: CreateReviewDTO.reviewtitle, reviewContent: CreateReviewDTO.reviewContent, reviewRating: CreateReviewDTO.reviewRating, stationId: CreateReviewDTO.stationId };
+    return this.http.post<reviewResponseDTO>(`${this.apiUrl}/submit`, body);
+  }
+}

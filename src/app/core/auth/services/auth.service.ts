@@ -11,7 +11,6 @@ export class AuthService {
 
   private http = inject(HttpClient);
   private router = inject(Router);
-  private platformService = inject(PlatformService);
 
   private apiUrl = environment.apiUrl;
 
