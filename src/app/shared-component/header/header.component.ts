@@ -1,9 +1,9 @@
 import { Component, inject, signal, computed, input, model } from '@angular/core';
-import { FormFieldComponent } from 'src/app/sharedComponent/form-field/form-field.component';
-import { ControlType } from 'src/app/sharedComponent/form-field/form-field.enum.';
+import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
+import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
 import { ChargingStation } from 'src/app/features/charging-station/models/chargingStation.model';
-import { PlatformService } from 'src/app/sharedComponent/services/platform.service';
+import { PlatformService } from 'src/app/shared-component/services/platform.service';
 
 @Component({
   selector: 'app-header',

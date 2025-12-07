@@ -16,4 +16,8 @@ export class ReviewService {
     const body = { reviewtitle: CreateReviewDTO.reviewtitle, reviewContent: CreateReviewDTO.reviewContent, reviewRating: CreateReviewDTO.reviewRating, stationId: CreateReviewDTO.stationId };
     return this.http.post<reviewResponseDTO>(`${this.apiUrl}/submit`, body);
   }
+
+  getReviewsByStation(stationId: string): Observable<reviewResponseDTO[]> {
+    return this.http.get<reviewResponseDTO[]>(`${this.apiUrl}/station/${stationId}`);
+  }
 }

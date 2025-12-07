@@ -10,6 +10,9 @@ import { BookingRequestDTO } from '../../booking/models/booking';
 import { StationCardComponent } from "../component/station-card/station-card.component";
 import { StationMapComponent } from "../component/station-map/station-map.component";
 import { httpResource } from '@angular/common/http';
+import { ReviewService } from '../../review/service/review.service';
+import { reviewResponseDTO } from '../../review/models/review.model';
+import { ReviewFormComponent } from '../../review/review-form/review-form.component';
 @Component({
   selector: 'app-station-detail',
   templateUrl: './station-detail.component.html',
@@ -21,22 +24,23 @@ import { httpResource } from '@angular/common/http';
     IonButton,
     IonToolbar,
     IonModal,
-    BookingFormComponent, StationCardComponent]
+    BookingFormComponent, StationCardComponent,ReviewFormComponent]
 })
 export class StationDetailComponent  {
 readonly id = input<string>();
 private readonly idSignal = signal('');
 private readonly stationApi = inject(StationApiService);
 protected station!: ReturnType<typeof httpResource<ChargingStation>>;
-private bookingService= inject(BookingService);
+protected readonly bookingService = inject(BookingService);
 protected readonly serverError = signal(false);
 readonly toastVisible = signal(false);
 readonly toastMessage = signal('');
 private route = inject(ActivatedRoute);
 @ViewChild('modal', { read: IonModal }) modal!: IonModal;
-@ViewChild(BookingFormComponent)
-bookingForm!: BookingFormComponent;
-
+private reviewService = inject(ReviewService);
+protected reviews = signal<reviewResponseDTO[]>([]);
+@ViewChild('reviewModal', { read: IonModal }) reviewModal!: IonModal;
+canReview = signal(false);
  constructor() {
 
     const idFromInput = this.id();
@@ -48,25 +52,22 @@ bookingForm!: BookingFormComponent;
     if (!realId) {
       throw new Error('ID introuvable pour StationDetailComponent');
     }
+    this.checkEligibility(realId);
 
     this.idSignal.set(realId);
 
     this.station = this.stationApi.getOne(this.idSignal);
   }
+checkEligibility(stationId: string) {
+    this.bookingService.hasUserBookedStation(stationId).subscribe(allowed => {
+      this.canReview.set(allowed);
+      console.log('Droit de commenterpour cette station ?', allowed);
+    });
+  }
 
  openModal() {
   this.modal.present();
-
-  const stationValue = this.station.value();
-  if (stationValue) {
-
-    setTimeout(() => {
-      this.bookingForm.setStationId(stationValue.id);
-    });
   }
-}
-
-
 
   closeModal() {
     this.modal.dismiss(null, 'cancel');
@@ -86,6 +87,17 @@ bookingForm!: BookingFormComponent;
         this.serverError.set(true);
       }
     });
+  }
+
+  openReviewModal() {
+    this.reviewModal.present();
+  }
+
+  onReviewSubmitSuccess() {
+    this.reviewModal.dismiss(null, 'confirm');
+    this.toastMessage.set('Merci pour votre avis ! ⭐');
+    this.toastVisible.set(true);
+    // this.loadReviews();
   }
 
   onWillDismiss(event: CustomEvent<OverlayEventDetail>) {

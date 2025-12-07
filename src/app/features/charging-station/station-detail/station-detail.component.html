@@ -37,14 +37,40 @@
       </div>
 
       <!-- MODAL DE RÉSERVATION -->
-      <ion-modal #modal class="booking-modal">
-        <ng-template>
-          <app-booking-form
-            (formSubmit)="onFormSubmit($event)"
-          ></app-booking-form>
-        </ng-template>
-      </ion-modal>
 
+<ion-modal #modal class="booking-modal">
+  <ng-template>
+    @if (station.value(); as state) {
+      <app-booking-form
+        [stationId]="state.id"
+        (formSubmit)="onFormSubmit($event)"
+      ></app-booking-form>
+    }
+  </ng-template>
+</ion-modal>
+
+      <!-- SECTION AVIS-->
+       <div class="flex justify-between items-center mb-4">
+  <h3 class="text-lg font-bold text-gray-800">Avis utilisateurs</h3>
+
+  @if (canReview()) {
+    <ion-button fill="clear" size="small" (click)="openReviewModal()">
+      Laisser un avis
+    </ion-button>
+  }
+</div>
+
+<ion-modal #reviewModal ...>
+  <ng-template>
+    @if (station.value(); as s) {
+      <app-review-form
+        [stationId]="s.id"
+        (formSubmit)="onReviewSubmitSuccess()"
+        (cancel)="reviewModal.dismiss()"
+      ></app-review-form>
+    }
+  </ng-template>
+</ion-modal>
       <!-- TOAST -->
       <ion-toast
         [isOpen]="toastVisible()"

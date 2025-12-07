@@ -6,8 +6,8 @@ import {
 } from '@ionic/angular/standalone';
 
 import { AuthService } from 'src/app/core/auth/services/auth.service';
-import { FormFieldComponent } from 'src/app/sharedComponent/form-field/form-field.component';
-import { ControlType } from 'src/app/sharedComponent/form-field/form-field.enum.';
+import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
+import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 
 @Component({
   selector: 'app-profile',
@@ -46,7 +46,6 @@ export class ProfilePage implements OnInit {
         if (user) {
           this.form.patchValue({
             username: user.username,
-            phoneNumber: user.phoneNumber ?? ''
           });
         }
         this.isLoading = false;
@@ -63,7 +62,6 @@ export class ProfilePage implements OnInit {
   const payload = {
     ...this.form.getRawValue(),
     username: this.form.value.username?? undefined,
-    phoneNumber: this.form.value.phoneNumber ?? undefined,
   };
 
   this.auth.updateProfile(payload).subscribe({

@@ -1,16 +1,16 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { HeaderComponent } from 'src/app/shared-component/header/header.component';
-import { PresentationComponent } from 'src/app/features/web-home/component/presentation/presentation.component';
-import { CardComponent } from 'src/app/features/web-home/component/card/card.component';
-import { IconCardComponent } from 'src/app/features/web-home/component/icon-card/icon-card.component';
-import { ContactBannerComponent } from 'src/app/features/web-home/component/contact-banner/contact-banner.component';
-import { AccordeonComponent } from 'src/app/features/web-home/component/accordeon/accordeon.component';
-import { HeroComponent } from 'src/app/features/web-home/component/hero/hero.component';
+import { PresentationComponent } from '../component/presentation/presentation.component';
+import { CardComponent } from '../component/card/card.component';
+import { IconCardComponent } from '../component/icon-card/icon-card.component';
+import { ContactBannerComponent } from '../component/contact-banner/contact-banner.component';
+import { AccordeonComponent } from '../component/accordeon/accordeon.component';
+import { HeroComponent } from '../component/hero/hero.component';
 import { FooterComponent } from 'src/app/shared-component/footer/footer.component';
-import { TestimonialComponent } from 'src/app/features/web-home/component/testimonial/testimonial.component';
+import { TestimonialComponent } from '../component/testimonial/testimonial.component';
 import { RouterModule } from '@angular/router';
 import { IonContent } from "@ionic/angular/standalone";
-import { TextCarouselComponent } from 'src/app/features/web-home/component/text-carousel/text-carousel.component';
+import { TextCarouselComponent } from '../component/text-carousel/text-carousel.component';
 import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
 
 @Component({

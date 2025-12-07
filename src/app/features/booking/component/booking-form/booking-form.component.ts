@@ -7,8 +7,8 @@ import {
 import { BookingRequestDTO } from '../../models/booking';
 import { BookingService } from '../../service/booking.service';
 import { TimeSlotService } from '../../service/time-slot.service';
-import { FormFieldComponent } from 'src/app/sharedComponent/form-field/form-field.component';
-import { ControlType } from 'src/app/sharedComponent/form-field/form-field.enum.';
+import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
+import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { TimeSlotResponseDTO } from '../../models/timeSlot';
 
 @Component({
@@ -31,13 +31,22 @@ export class BookingFormComponent implements OnInit {
   readonly formSubmit = output<{ booking: BookingRequestDTO }>();
 
   // --- SIGNALS ---
-  stationId = signal<string>('');
+  stationId = input.required<string>();
   availableSlots = signal<TimeSlotResponseDTO[]>([]);
   startOptions = signal<{ label: string; value: string }[]>([]);
   endOptions = signal<{ label: string; value: string }[]>([]);
   loadingSlots = signal(false);
   ControlType = ControlType;
 
+  constructor() {
+  effect(() => {
+    const id = this.stationId();
+    if (id) {
+      this.form.patchValue({ stationId: id });
+
+    }
+  });
+}
   // --- FORM ---
   form = new FormGroup({
     stationId: new FormControl('', Validators.required),
@@ -51,13 +60,6 @@ export class BookingFormComponent implements OnInit {
     this.form.controls.date.valueChanges.subscribe(v => {
       console.log('valueChanges date =>', v);
     });
-  }
-
-  // appelé par StationDetail
-  setStationId(id: string) {
-    console.log('setStationId appelé avec:', id);
-    this.stationId.set(id);
-    this.form.patchValue({ stationId: id });
   }
 
   onDateChanged(ev: any) {
@@ -74,7 +76,7 @@ export class BookingFormComponent implements OnInit {
     console.log('Chargement des slots pour', this.stationId(), date);
     this.timeSlotService.getSlotsForDate(this.stationId(), date).subscribe({
       next: (res) => {
-        const slots = res.content;
+        const slots = res;
         console.log('Slots reçus :', slots);
         this.availableSlots.set(slots);
         this.startOptions.set(

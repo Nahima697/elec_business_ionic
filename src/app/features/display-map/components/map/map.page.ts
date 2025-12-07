@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { IonContent} from '@ionic/angular/standalone';
-import { DisplayMapComponent } from 'src/app/features/display-map/display-map.component';
+import { DisplayMapComponent } from 'src/app/features/display-map/pages/display-map.component';
 import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
 
 @Component({

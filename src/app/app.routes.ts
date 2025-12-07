@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './core/auth/guards/auth.guard';
+import { AuthGuard } from './core/guards/auth.guard';
 import { LoginPage } from './core/auth/pages/login/login.page';
 import { RegisterPage } from './core/auth/pages/register/register.page';
 import { EmailVerifiedComponent } from './core/auth/pages/verif-method/verif-email.component';
@@ -9,14 +9,14 @@ import { LocationDetailComponent } from './features/charging-station/location-de
 import { LocationComponent } from './features/charging-station/location/location.component';
 import { StationDetailComponent } from './features/charging-station/station-detail/station-detail.component';
 import { ChargingStationComponent } from './features/charging-station/station/charging-station.component';
-import { MapPage } from './pages/map/map.page';
-import { MessagesPage } from './pages/messages/messages.page';
-import { TabsPage } from './pages/mobile-tabs/tabs/tabs.page';
-import { OnboardingPage } from './pages/onboarding/onboarding.page';
-import { ProfilePage } from './pages/profile/profile.page';
-import { HomePage } from './pages/web-home/home/home.page';
-import { MobileOnlyGuard } from './sharedComponent/guards/mobile-only.guard';
-import { WebOnlyGuard } from './sharedComponent/guards/web-only.guard copy';
+import { MapPage } from './features/display-map/components/map/map.page';
+import { MessagesPage } from './features/messages/messages.page';
+import { TabsPage } from './shared-component/mobile-tabs/tabs/tabs.page';
+import { OnboardingPage } from './features/onboarding/onboarding.page';
+import { ProfilePage } from './features/user/pages/dashboard/profile/profile.page';
+import { HomePage } from './features/web-home/home/home.page';
+import { MobileOnlyGuard } from './core/guards/mobile-only.guard';
+import { WebOnlyGuard } from './core/guards/web-only.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -31,7 +31,7 @@ export const routes: Routes = [
   {
     path: 'reservations',
     canActivate: [WebOnlyGuard],
-    component: BookingPageComponent
+    loadComponent: () => import('./features/booking/page/booking-page.component').then(m => m.BookingPageComponent) 
   },
 
   // MOBILE

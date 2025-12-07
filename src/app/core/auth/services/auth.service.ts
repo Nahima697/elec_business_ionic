@@ -4,7 +4,6 @@ import { environment } from 'src/environments/environment';
 import { Observable, tap, catchError, of } from 'rxjs';
 import { AuthResponse, UserDTO } from '../models/auth.model';
 import { Router } from '@angular/router';
-import { PlatformService } from 'src/app/sharedComponent/services/platform.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

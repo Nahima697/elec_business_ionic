@@ -3,7 +3,7 @@ import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { REQUEST } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../auth/services/auth.service';
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next): Observable<HttpEvent<any>> => {
   const platformId = inject(PLATFORM_ID);

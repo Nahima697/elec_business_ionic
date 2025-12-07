@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule,FormGroup,Validators, FormControl } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar,IonItem,
-  IonList,IonButton, IonCardHeader,IonCard,IonCardTitle,IonCardSubtitle,IonCardContent } from '@ionic/angular/standalone';
-import { FormFieldComponent } from 'src/app/sharedComponent/form-field/form-field.component';
-import { ControlType } from 'src/app/sharedComponent/form-field/form-field.enum.';
+import { IonContent, IonHeader, IonTitle, IonToolbar,IonButton, IonCardContent } from '@ionic/angular/standalone';
+import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
+import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { PlatformService } from 'src/app/sharedComponent/services/platform.service';
+import { PlatformService } from 'src/app/shared-component/services/platform.service';
 
 
 @Component({

@@ -2,11 +2,11 @@ import { Component, inject, OnInit, signal, computed, input } from '@angular/cor
 import { Router, RouterModule } from '@angular/router';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import { LngLatLike, Map, GeolocateControl } from 'maplibre-gl';
-import { FormFieldComponent } from '../../sharedComponent/form-field/form-field.component';
-import { ControlType } from '../../sharedComponent/form-field/form-field.enum.';
+import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
+import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { IonIcon, ModalController } from '@ionic/angular/standalone';
-import { FilterModalComponent } from '../../sharedComponent/filter-modal/filter-modal.component';
-import { PlatformService } from '../../sharedComponent/services/platform.service';
+import { FilterModalComponent } from 'src/app/shared-component/filter-modal/filter-modal.component';
+import { PlatformService } from 'src/app/shared-component/services/platform.service';
 import { ChargingStation } from 'src/app/features/charging-station/models/chargingStation.model';
 
 @Component({
