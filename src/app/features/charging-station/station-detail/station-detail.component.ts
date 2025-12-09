@@ -12,7 +12,7 @@ import { StationMapComponent } from "../component/station-map/station-map.compon
 import { httpResource } from '@angular/common/http';
 import { ReviewService } from '../../review/service/review.service';
 import { reviewResponseDTO } from '../../review/models/review.model';
-import { ReviewFormComponent } from '../../review/review-form/review-form.component';
+import { ReviewFormComponent } from '../../review/components/review-form/review-form.component';
 @Component({
   selector: 'app-station-detail',
   templateUrl: './station-detail.component.html',
@@ -37,7 +37,6 @@ readonly toastVisible = signal(false);
 readonly toastMessage = signal('');
 private route = inject(ActivatedRoute);
 @ViewChild('modal', { read: IonModal }) modal!: IonModal;
-private reviewService = inject(ReviewService);
 protected reviews = signal<reviewResponseDTO[]>([]);
 @ViewChild('reviewModal', { read: IonModal }) reviewModal!: IonModal;
 canReview = signal(false);

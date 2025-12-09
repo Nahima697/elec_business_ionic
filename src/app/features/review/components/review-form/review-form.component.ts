@@ -2,7 +2,7 @@ import { Component, inject, input, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
 import { IonIcon, IonButton, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonText } from '@ionic/angular/standalone';
-import { ReviewService } from '../service/review.service';
+import { ReviewService } from '../../service/review.service';
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
@@ -13,7 +13,7 @@ import { star, starOutline, close } from 'ionicons/icons';
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonText,
+    IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon,
     FormFieldComponent
   ],
   template: `

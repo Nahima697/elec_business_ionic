@@ -1,3 +1,4 @@
+import { reviewResponseDTO } from "../../review/models/review.model";
 import { ChargingLocation } from "./chargingLocation.model";
 
  export interface ChargingStation {
@@ -10,5 +11,6 @@ import { ChargingLocation } from "./chargingLocation.model";
   lng: number,
   lat: number,
   imageUrl?: string,
-  locationDTO:ChargingLocation
+  locationDTO:ChargingLocation,
+  reviewsDTO?: reviewResponseDTO[]
  }
