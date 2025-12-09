@@ -1,6 +1,12 @@
-<div class="reviewx-list">
-  @for(review of reviews();track review.id) {
-    <app-review-card [review]="review"/>
-
+<div class="flex flex-col gap-4">
+  @if (reviews().length > 0) {
+    @for(review of reviews(); track review.id) {
+      <app-review-card [review]="review" />
+    }
+  } @else {
+    <div class="flex flex-col items-center justify-center py-10 text-gray-400">
+      <ion-icon name="chatbubble-outline" class="text-4xl mb-2"></ion-icon>
+      <p>Aucun avis pour le moment.</p>
+    </div>
   }
 </div>

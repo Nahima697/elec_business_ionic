@@ -1,3 +1,30 @@
-<p>
-  review-card works!
-</p>
+<ion-card class="m-0 h-full shadow-sm">
+  <ion-card-header class="pb-2">
+    <div class="flex justify-between items-start">
+      <div class="flex items-center gap-3">
+        <ion-avatar class="w-10 h-10">
+          <img src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Avatar" />
+        </ion-avatar>
+        <div class="flex flex-col">
+          <span class="font-semibold text-gray-800">{{ review().username }}</span>
+          <span class="text-xs text-gray-500">{{ review().createdAt | date:'dd MMM yyyy' }}</span>
+        </div>
+      </div>
+
+      <div class="flex text-yellow-400 text-sm">
+        @for(star of [1,2,3,4,5]; track star) {
+          <ion-icon
+            [name]="star <= review().reviewRating ? 'star' : 'star-outline'"
+          ></ion-icon>
+        }
+      </div>
+    </div>
+  </ion-card-header>
+
+  <ion-card-content>
+    <h3 class="text-base font-bold text-gray-900 mb-1">{{ review().reviewtitle }}</h3>
+    <p class="text-gray-600 text-sm leading-relaxed">
+      {{ review().reviewContent }}
+    </p>
+  </ion-card-content>
+</ion-card>
