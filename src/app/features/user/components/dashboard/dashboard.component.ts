@@ -15,7 +15,7 @@ export class DashboardComponent implements OnInit {
   private auth: AuthService = inject(AuthService);
   private router = inject(Router);
 
-  user = this.auth.user; // signal<UserProfileDto | null>
+  user = this.auth.user; 
 
   ngOnInit() {
     const u = this.user();

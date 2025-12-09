@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { OwnerDashboardComponent } from './components/owner-dashboard/owner-dashboard.component';
-import { RenterDashboardComponent } from './components/renter-dashboard/renter-dashboard.component';
+import { OwnerDashboardComponent } from './owner/owner-dashboard/owner-dashboard.component';
+import { RenterDashboardComponent } from './renter/renter-dashboard/renter-dashboard.component';
 import { OwnerGuard } from './guards/owner.guard';
 import { RenterGuard } from './guards/renter.guard';
 
@@ -11,28 +11,49 @@ export const USER_ROUTES: Routes = [
       import('./pages/dashboard/dashboard.component')
         .then(m => m.DashboardComponent)
   },
-  {
-    path: 'profile',
-    loadComponent: () =>
-      import('./pages/profile/profile.component')
-        .then(m => m.ProfileComponent)
-  },
+
   {
     path: 'select-role',
     loadComponent: () =>
       import('./components/role-selector/role-selector.component')
         .then(m => m.RoleSelectorComponent)
   },
-   {
-  path: 'owner/dashboard',
-  component: OwnerDashboardComponent,
-  canActivate: [OwnerGuard]
-},
-{
-  path: 'renter/dashboard',
-  component: RenterDashboardComponent,
-  canActivate: [RenterGuard]
-}
+  // --- ROUTES PROPRIÉTAIRE (OWNER) ---
+  {
+    path: 'owner',
+    canActivate: [OwnerGuard], // On protège tout le groupe
+    children: [
+      { path: 'dashboard', component: OwnerDashboardComponent },
+      {
+        path: 'locations',
+        loadComponent: () => import('../charging-station/location/location.component').then(m => m.LocationComponent)
+      },
+      // { path: 'stations', loadComponent: ... },
+      // { path: 'availability-rules', loadComponent: ... },
+      // { path: 'bookings', loadComponent: ... }
+    ]
+  },
+
+  // --- ROUTES LOUEUR (RENTER) ---
+  {
+    path: 'renter',
+    canActivate: [RenterGuard],
+    children: [
+      { path: 'dashboard', component: RenterDashboardComponent },
+      {
+        path: 'bookings',
+        loadComponent: () => import('../booking/page/booking-page.component').then(m => m.BookingPageComponent)
+      },
+      // { path: 'history', loadComponent: ... },
+      // { path: 'favorites', loadComponent: ... }
+    ]
+  },
+
+  {
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
+  }
 ,
   {
     path: '',
