@@ -21,12 +21,12 @@ export const USER_ROUTES: Routes = [
   // --- ROUTES PROPRIÉTAIRE (OWNER) ---
   {
     path: 'owner',
-    canActivate: [OwnerGuard], // On protège tout le groupe
+    canActivate: [OwnerGuard],
     children: [
       { path: 'dashboard', component: OwnerDashboardComponent },
       {
         path: 'locations',
-        loadComponent: () => import('../charging-station/location/location.component').then(m => m.LocationComponent)
+        loadComponent: () => import('../charging-station/pages/location/location.component').then(m => m.LocationComponent)
       },
       // { path: 'stations', loadComponent: ... },
       // { path: 'availability-rules', loadComponent: ... },

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BookingRequestDTO, BookingResponseDTO } from '../models/booking';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +13,26 @@ export class BookingService {
   return this.http.post<BookingResponseDTO>('/bookings',booking)
  }
 
- getMyBookings() {
-  return this.http.get<BookingResponseDTO[]>('/bookings/me');
+ getMyBookingsOwner() {
+  return this.http.get<BookingResponseDTO[]>('/bookings/owner/me');
 }
 
+ getMyBookingsRenter() {
+  return this.http.get<BookingResponseDTO[]>('/bookings/renter/me');
+}
+
+// Accepter une réservation
+  acceptBooking(bookingId: string): Observable<BookingResponseDTO> {
+    return this.http.put<BookingResponseDTO>(`/bookings/${bookingId}/accept`, {});
+  }
+
+  // Rejeter une réservation
+  rejectBooking(bookingId: string): Observable<BookingResponseDTO> {
+    return this.http.put<BookingResponseDTO>(`/bookings/${bookingId}/reject`, {});
+  }
+
 hasUserBookedStation(stationId: string) {
-  return this.getMyBookings().pipe(
+  return this.getMyBookingsRenter().pipe(
     map((bookings: BookingResponseDTO[]) => bookings.some(b => b.stationId === stationId))
   );
 }

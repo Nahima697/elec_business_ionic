@@ -5,10 +5,10 @@ import { RegisterPage } from './core/auth/pages/register/register.page';
 import { EmailVerifiedComponent } from './core/auth/pages/verif-method/verif-email.component';
 import { VerifMethodPage } from './core/auth/pages/verif-method/verif-method.page';
 import { BookingPageComponent } from './features/booking/page/booking-page.component';
-import { LocationDetailComponent } from './features/charging-station/location-detail/location-detail.component';
-import { LocationComponent } from './features/charging-station/location/location.component';
+import { LocationDetailComponent } from './features/charging-station/pages/location-detail/location-detail.component';
+import { LocationComponent } from './features/charging-station/pages/location/location.component';
 import { StationDetailComponent } from './features/charging-station/station-detail/station-detail.component';
-import { ChargingStationComponent } from './features/charging-station/station/charging-station.component';
+import { ChargingStationComponent } from './features/charging-station/pages/station/charging-station.component';
 import { MapPage } from './features/display-map/components/map/map.page';
 import { MessagesPage } from './features/messages/messages.page';
 import { TabsPage } from './shared-component/mobile-tabs/tabs/tabs.page';
@@ -31,7 +31,7 @@ export const routes: Routes = [
   {
     path: 'reservations',
     canActivate: [WebOnlyGuard],
-    loadComponent: () => import('./features/booking/page/booking-page.component').then(m => m.BookingPageComponent) 
+    loadComponent: () => import('./features/booking/page/booking-page.component').then(m => m.BookingPageComponent)
   },
 
   // MOBILE
