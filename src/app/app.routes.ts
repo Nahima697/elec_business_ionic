@@ -7,7 +7,7 @@ import { VerifMethodPage } from './core/auth/pages/verif-method/verif-method.pag
 import { BookingPageComponent } from './features/booking/page/booking-page.component';
 import { LocationDetailComponent } from './features/charging-station/pages/location-detail/location-detail.component';
 import { LocationComponent } from './features/charging-station/pages/location/location.component';
-import { StationDetailComponent } from './features/charging-station/station-detail/station-detail.component';
+import { StationDetailComponent } from './features/charging-station/pages/station-detail/station-detail.component';
 import { ChargingStationComponent } from './features/charging-station/pages/station/charging-station.component';
 import { MapPage } from './features/display-map/components/map/map.page';
 import { MessagesPage } from './features/messages/messages.page';

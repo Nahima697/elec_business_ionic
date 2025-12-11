@@ -1,5 +1,5 @@
 import { Component, input, signal } from '@angular/core';
-import { ChargingStation } from '../../models/chargingStation.model';
+import { ChargingStation } from '../../models/charging-station.model';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import { Map, GeolocateControl } from 'maplibre-gl';
 

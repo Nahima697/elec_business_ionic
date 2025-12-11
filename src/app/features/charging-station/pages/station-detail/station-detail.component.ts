@@ -4,13 +4,15 @@ import { ChargingStationResponseDTO } from 'src/app/features/charging-station/mo
 import { IonButton, IonTitle, IonHeader, IonContent,IonToolbar, IonModal, IonToast, IonSpinner } from "@ionic/angular/standalone";
 import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
 import { OverlayEventDetail } from '@ionic/core/components';
-import { BookingFormComponent } from '../../booking/component/booking-form/booking-form.component';
-import { BookingService } from '../../booking/service/booking.service';
-import { BookingRequestDTO } from '../../booking/models/booking';
-import { StationCardComponent } from '../component/station-card/station-card.component';
+import { BookingFormComponent } from '../../../booking/component/booking-form/booking-form.component';
+import { BookingService } from '../../../booking/service/booking.service';
+import { BookingRequestDTO } from '../../../booking/models/booking';
+import { StationCardComponent } from "../../component/station-card/station-card.component";
+import { StationMapComponent } from "../../component/station-map/station-map.component";
 import { httpResource } from '@angular/common/http';
-import { reviewResponseDTO } from '../../review/models/review.model';
-import { ReviewFormComponent } from '../../review/components/review-form/review-form.component';
+import { ReviewService } from '../../../review/service/review.service';
+import { reviewResponseDTO } from '../../../review/models/review.model';
+import { ReviewFormComponent } from '../../../review/components/review-form/review-form.component';
 @Component({
   selector: 'app-station-detail',
   templateUrl: './station-detail.component.html',

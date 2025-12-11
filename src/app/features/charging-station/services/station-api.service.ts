@@ -1,6 +1,6 @@
 import { httpResource } from '@angular/common/http';
 import {  Injectable, Signal } from '@angular/core';
-import { ChargingStationResponseDTO } from '../models/chargingStation.model';
+import { ChargingStationResponseDTO } from '../models/charging-station.model';
 import { environment } from 'src/environments/environment';
 
 

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable} from '@angular/core';
 import { catchError, Observable} from 'rxjs';
-import { ChargingLocation } from '../models/chargingLocation.model';
+import { ChargingLocation } from '../models/charging-location.model';
 
 
 @Injectable({

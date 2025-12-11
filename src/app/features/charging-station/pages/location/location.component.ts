@@ -1,6 +1,6 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { ChargingLocation } from 'src/app/features/charging-station/models/chargingLocation.model';
-import { ChargingStation } from 'src/app/features/charging-station/models/chargingStation.model';
+import { ChargingLocation } from 'src/app/features/charging-station/models/charging-location.model';
+import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
 import { ChargingLocationService } from 'src/app/features/charging-station/services/charging-location.service';
 import { ChargingStationService } from 'src/app/features/charging-station/services/charging-station.service';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader, IonCardSubtitle,
@@ -8,8 +8,8 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader, Io
 import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { RouterLink } from '@angular/router';
 import {  FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormFieldComponent } from 'src/app/sharedComponent/form-field/form-field.component';
-import { ControlType } from 'src/app/sharedComponent/form-field/form-field.enum.';
+import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
+import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 
 @Component({
   selector: 'app-location',
@@ -38,7 +38,7 @@ export class LocationComponent implements OnInit {
   ControlType: typeof ControlType = ControlType;
   isLoading = false;
   locations: ChargingLocation[] = [];
-  stationsByLocation: Record<string, ChargingStation[] | undefined> = {};
+  stationsByLocation: Record<string, ChargingStationResponseDTO[] | undefined> = {};
 
   user = this.authService.user;
   locationForm!:FormGroup;
@@ -80,7 +80,7 @@ export class LocationComponent implements OnInit {
 
         locations.forEach((location: ChargingLocation) => {
           if (location.id) {
-            this.chargingStationService.getStationsByLocationId(location.id).subscribe((stations: ChargingStation[]) => {
+            this.chargingStationService.getStationsByLocationId(location.id).subscribe((stations: ChargingStationResponseDTO[]) => {
               this.stationsByLocation[location.id] = stations;
             });
           }

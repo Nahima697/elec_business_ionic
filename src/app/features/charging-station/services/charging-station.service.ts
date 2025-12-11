@@ -1,6 +1,6 @@
 import { HttpClient,  httpResource } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ChargingStationRequestDTO, ChargingStationResponseDTO, PostPictureDTO } from '../models/chargingStation.model';
+import { ChargingStationRequestDTO, ChargingStationResponseDTO } from '../models/charging-station.model';
 import { Observable } from 'rxjs';
 
 

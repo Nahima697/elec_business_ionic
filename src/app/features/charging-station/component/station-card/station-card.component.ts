@@ -1,5 +1,5 @@
 import { Component, input} from '@angular/core';
-import { ChargingStation } from '../../models/chargingStation.model';
+import { ChargingStation } from '../../models/charging-station.model';
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle } from '@ionic/angular/standalone';
 import { CurrencyPipe } from '@angular/common';
 @Component({

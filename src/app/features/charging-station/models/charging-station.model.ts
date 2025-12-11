@@ -1,6 +1,6 @@
 import e from "express";
 import { reviewResponseDTO } from "../../review/models/review.model";
-import { ChargingLocation } from "./chargingLocation.model";
+import { ChargingLocation } from "./charging-location.model";
 
  export interface ChargingStationRequestDTO {
   id:string,
@@ -19,12 +19,4 @@ import { ChargingLocation } from "./chargingLocation.model";
     reviewsDTO?: reviewResponseDTO[];
 
  }
-export interface PostPictureDTO {
-  title:string,
-  description:string,
-  image:string,
-}
 
-export interface UpdatePictureDTO extends PostPictureDTO {
-  id:string
-}

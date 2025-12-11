@@ -7,7 +7,7 @@ import { ControlType } from 'src/app/shared-component/form-field/form-field.enum
 import { IonIcon, ModalController } from '@ionic/angular/standalone';
 import { FilterModalComponent } from 'src/app/shared-component/filter-modal/filter-modal.component';
 import { PlatformService } from 'src/app/shared-component/services/platform.service';
-import { ChargingStation } from 'src/app/features/charging-station/models/chargingStation.model';
+import { ChargingStation } from 'src/app/features/charging-station/models/charging-station.model';
 
 @Component({
   selector: 'app-display-map',
