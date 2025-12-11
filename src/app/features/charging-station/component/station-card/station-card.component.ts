@@ -1,5 +1,5 @@
 import { Component, input} from '@angular/core';
-import { ChargingStation } from '../../models/charging-station.model';
+import { ChargingStationResponseDTO } from '../../models/charging-station.model';
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle } from '@ionic/angular/standalone';
 import { CurrencyPipe } from '@angular/common';
 @Component({
@@ -9,6 +9,6 @@ import { CurrencyPipe } from '@angular/common';
   imports: [IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle,CurrencyPipe],
 })
 export class StationCardComponent   {
-readonly station = input.required<ChargingStation>();
+readonly station = input.required<ChargingStationResponseDTO>();
 
 }

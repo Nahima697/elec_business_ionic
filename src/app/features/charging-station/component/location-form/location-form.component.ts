@@ -56,7 +56,7 @@ export class LocationFormComponent implements OnInit {
         next: (response) => {
           console.log("Location créée", response);
           this.locationForm.reset();
-          this.locationCreated.emit(); // On notifie le parent
+          this.locationCreated.emit(); 
         },
         error: (error) => console.error('Erreur création location', error)
       });

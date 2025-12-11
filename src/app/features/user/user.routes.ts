@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { OwnerDashboardComponent } from './owner/owner-dashboard/owner-dashboard.component';
+import { OwnerDashboardComponent } from './owner/pages/owner-dashboard/owner-dashboard.component';
 import { RenterDashboardComponent } from './renter/renter-dashboard/renter-dashboard.component';
 import { OwnerGuard } from './guards/owner.guard';
 import { RenterGuard } from './guards/renter.guard';

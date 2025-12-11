@@ -16,7 +16,8 @@ import { ChargingLocation } from "./charging-location.model";
 
  export interface ChargingStationResponseDTO extends ChargingStationRequestDTO {
   id: string;
-    reviewsDTO?: reviewResponseDTO[];
+  reviewsDTO?: reviewResponseDTO[];
+  createdAt?: string;
 
  }
 
