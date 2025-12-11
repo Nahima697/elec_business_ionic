@@ -1,6 +1,6 @@
 import { Component, inject, input,  signal, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ChargingStation } from 'src/app/features/charging-station/models/chargingStation.model';
+import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/chargingStation.model';
 import { IonButton, IonTitle, IonHeader, IonContent,IonToolbar, IonModal, IonToast, IonSpinner } from "@ionic/angular/standalone";
 import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
 import { OverlayEventDetail } from '@ionic/core/components';
@@ -30,7 +30,7 @@ export class StationDetailComponent  {
 readonly id = input<string>();
 private readonly idSignal = signal('');
 private readonly stationApi = inject(StationApiService);
-protected station!: ReturnType<typeof httpResource<ChargingStation>>;
+protected station!: ReturnType<typeof httpResource<ChargingStationResponseDTO>>;
 protected readonly bookingService = inject(BookingService);
 protected readonly serverError = signal(false);
 readonly toastVisible = signal(false);

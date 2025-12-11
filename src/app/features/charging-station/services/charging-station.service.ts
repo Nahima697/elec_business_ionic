@@ -1,7 +1,6 @@
 import { HttpClient,  httpResource } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { ChargingStation } from '../models/chargingStation.model';
+import { ChargingStationRequestDTO, ChargingStationResponseDTO, PostPictureDTO } from '../models/chargingStation.model';
 import { Observable } from 'rxjs';
 
 
@@ -12,26 +11,41 @@ export class ChargingStationService {
 
   private http = inject(HttpClient);
   getChargingStations()  {
-    return httpResource<ChargingStation[]>(()=>`/charging_stations`);
+    return httpResource<ChargingStationResponseDTO[]>(()=>`/charging_stations`);
   }
-  getChargingStationDetail(id:string) :Observable<ChargingStation>   {
-    return this.http.get<ChargingStation>(`/charging_stations/${id}`);
-  }
-
-  createStation(station: Omit<ChargingStation,'id'>) : Observable<ChargingStation>{
-    return this.http.post<ChargingStation>('/charging_stations/',station);
+  getChargingStationDetail(id:string) :Observable<ChargingStationResponseDTO>   {
+    return this.http.get<ChargingStationResponseDTO>(`/charging_stations/${id}`);
   }
 
-  updateChargingStation(station: Omit<ChargingStation,'id'>,id:string) : Observable<ChargingStation> {
-    return this.http.put<ChargingStation>(`/charging_stations/${id}`,station);
+  createStation(station: ChargingStationRequestDTO, imageFile?: File): Observable<ChargingStationResponseDTO> {
+    const formData = new FormData();
+
+    // Ajout des champs texte
+    formData.append('name', station.name);
+    formData.append('description', station.description);
+    formData.append('powerKw', station.powerKw.toString());
+    formData.append('price', station.price.toString());
+    formData.append('lng', station.lng.toString());
+    formData.append('lat', station.lat.toString());
+    formData.append('locationId', station.locationId);
+
+    // Ajout de l'image si présente
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+    return this.http.post<ChargingStationResponseDTO>('/charging_stations', formData);
   }
 
-  deleteChargingStation(id:string) {
-    return this.http.delete<ChargingStation>(`/charging_stations/${id}`);
+  updateChargingStation(station: ChargingStationRequestDTO,id:string) : Observable<ChargingStationResponseDTO> {
+    return this.http.put<ChargingStationRequestDTO>(`/charging_stations/${id}`,station);
   }
 
-  getStationsByLocationId(locationId:string) : Observable<ChargingStation[]> {
-    return this.http.get<ChargingStation[]>(`/charging_stations/location/${locationId}`);
+  deleteChargingStation(id:string): Observable<void> {
+    return this.http.delete<void>(`/charging_stations/${id}`);
+  }
+
+  getStationsByLocationId(locationId:string) : Observable<ChargingStationResponseDTO[]> {
+    return this.http.get<ChargingStationResponseDTO[]>(`/charging_stations/location/${locationId}`);
   }
 
 }
