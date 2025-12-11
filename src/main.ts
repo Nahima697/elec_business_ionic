@@ -5,7 +5,7 @@ import { register as registerSwiperElements } from 'swiper/element/bundle';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { tokenInterceptor } from './app/core/auth/interceptors/token-interceptor';
+import { tokenInterceptor } from './app/core/interceptors/token-interceptor';
 
 registerSwiperElements();
 

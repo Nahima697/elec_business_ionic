@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { PlatformService } from './sharedComponent/services/platform.service';
+import { PlatformService } from './shared-component/services/platform.service';
 import { Router} from '@angular/router';
 import { IonApp, IonRouterOutlet } from "@ionic/angular/standalone";
 

@@ -1,5 +1,5 @@
 import { Component, input, signal } from '@angular/core';
-import { ChargingStation } from '../../models/charging-station.model';
+import { ChargingStationResponseDTO } from '../../models/charging-station.model';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import { Map, GeolocateControl } from 'maplibre-gl';
 
@@ -11,8 +11,8 @@ import { Map, GeolocateControl } from 'maplibre-gl';
   styleUrls: ['./station-map.component.scss'],
 })
 export class StationMapComponent {
-  readonly station = input<ChargingStation>();
-  readonly hoverStation = signal<ChargingStation | null>(null);
+  readonly station = input<ChargingStationResponseDTO>();
+  readonly hoverStation = signal<ChargingStationResponseDTO | null>(null);
   map!: Map;
 
   // centre initial, si station dispo
@@ -42,7 +42,7 @@ export class StationMapComponent {
     geolocate.on('error', () => console.warn('Erreur géolocate'));
   }
 
-  onMarkerEnter(station: ChargingStation) {
+  onMarkerEnter(station: ChargingStationResponseDTO) {
     this.hoverStation.set(station);
   }
 

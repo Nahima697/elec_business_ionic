@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, input, model } from '@angular/core
 import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
-import { ChargingStation } from 'src/app/features/charging-station/models/charging-station.model';
+import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
 import { PlatformService } from 'src/app/shared-component/services/platform.service';
 
 @Component({
@@ -16,7 +16,7 @@ export class HeaderComponent {
   private router = inject(Router);
   private platformService = inject(PlatformService);
 
-  readonly stations = input<ChargingStation[]>();
+  readonly stations = input<ChargingStationResponseDTO[]>();
   ControlType = ControlType;
 
   protected readonly searchFilter = signal('');

@@ -9,7 +9,7 @@ import { LocationDetailComponent } from './features/charging-station/pages/locat
 import { LocationComponent } from './features/charging-station/pages/location/location.component';
 import { StationDetailComponent } from './features/charging-station/pages/station-detail/station-detail.component';
 import { ChargingStationComponent } from './features/charging-station/pages/station/charging-station.component';
-import { MapPage } from './features/display-map/components/map/map.page';
+import { MapPage } from './features/display-map/pages/map.page';
 import { MessagesPage } from './features/messages/messages.page';
 import { TabsPage } from './shared-component/mobile-tabs/tabs/tabs.page';
 import { OnboardingPage } from './features/onboarding/onboarding.page';

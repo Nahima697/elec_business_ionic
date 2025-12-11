@@ -38,7 +38,7 @@ export const USER_ROUTES: Routes = [
       },
         {
         path: 'stations',
-        loadComponent: () => import('../charging-station/component/station-list/station-list.component').then(m => m.LocationComponent)
+        loadComponent: () => import('../charging-station/component/station-list/station-list.component').then(m => m.StationListComponent)
       },
       {
         path: 'availability-rules',

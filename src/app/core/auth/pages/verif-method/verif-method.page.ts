@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
-import { PlatformService } from 'src/app/sharedComponent/services/platform.service';
+import { PlatformService } from 'src/app/shared-component/services/platform.service';
 
 @Component({
   selector: 'app-verif-method',

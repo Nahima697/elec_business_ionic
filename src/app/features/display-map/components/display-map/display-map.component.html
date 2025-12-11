@@ -1,0 +1,79 @@
+@if (isBrowser) {
+  <div class="absolute top-0 left-0 right-0 z-10 p-4">
+    <app-form-field
+      label="Rechercher"
+      placeholder="Adresse, ville..."
+      [controlType]="ControlType.Search"
+      type="search"
+      (ionInput)="onLocalSearch($event)"
+    >
+      <ion-icon
+        slot="end"
+        name="filter-outline"
+        (click)="openFilterModal()"
+        class="text-xl cursor-pointer"
+      ></ion-icon>
+    </app-form-field>
+  </div>
+
+  <div class="w-full h-full">
+    <mgl-map
+      class="w-full h-full map"
+      [style]="'https://api.maptiler.com/maps/streets-v2/style.json?key=pUgm4NlEXg3amyAe53SH'"
+      [zoom]="[13]"
+      [center]="center"
+      (mapLoad)="onMapLoad($event)"
+    >
+
+      @for (station of filteredStations(); track station.id) {
+        <mgl-marker
+          [lngLat]="[station.lng!, station.lat!]"
+          class="charger-marker"
+        >
+          <div
+            class="transition-transform cursor-pointer charger-marker hover:scale-110"
+            (mouseenter)="onHover(station)"
+            (mouseleave)="onLeave()"
+            (click)="onHover(station)"
+          >
+            <a [routerLink]="['/station', station.id]" class="block">
+              <img src="assets/icons/battery.png" alt="Borne" class="w-8 h-8"/>
+            </a>
+          </div>
+        </mgl-marker>
+
+        @if (hoverStation?.id === station.id) {
+          <mgl-popup
+            [lngLat]="[station.lng!, station.lat!]"
+            [closeButton]="false"
+            [closeOnClick]="false"
+            anchor="top"
+            [offset]="25"
+          >
+            <div class="p-2 text-sm">
+              <h3 class="font-bold text-gray-900">{{ station.name }}</h3>
+              <p class="text-gray-600 truncate max-w-[150px]">{{ station.locationDTO?.addressLine }}</p>
+              <div class="mt-1 font-semibold text-teal-600">
+                ⚡ {{ station.powerKw }} kW
+              </div>
+            </div>
+          </mgl-popup>
+        }
+      }
+
+      <mgl-control
+        mglNavigation
+        position="bottom-right"
+      ></mgl-control>
+
+      <mgl-control
+        mglGeolocate
+        [positionOptions]="{ enableHighAccuracy: true }"
+        [trackUserLocation]="true"
+        [showUserLocation]="true"
+        position="top-right"
+      ></mgl-control>
+
+    </mgl-map>
+  </div>
+}
