@@ -1,3 +1,94 @@
-<p>
-  availability-rules works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/user/owner/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gérer les disponibilités</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-item class="mb-4">
+    <ion-select label="Choisir une borne" label-placement="floating"
+                [value]="selectedStationId()"
+                (ionChange)="selectedStationId.set($event.detail.value)">
+
+      @for(station of stationsResource.value(); track station.id) {
+        <ion-select-option [value]="station.id">{{ station.name }}</ion-select-option>
+      }
+    </ion-select>
+  </ion-item>
+
+  @if (selectedStationId()) {
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Ajouter une règle</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <form [formGroup]="ruleForm" (ngSubmit)="onSubmit()">
+          <ion-item>
+            <ion-select formControlName="dayOfWeek" label="Jour">
+              <ion-select-option [value]="1">Lundi</ion-select-option>
+              <ion-select-option [value]="2">Mardi</ion-select-option>
+              <ion-select-option [value]="3">Mercredi</ion-select-option>
+              <ion-select-option [value]="4">Jeudi</ion-select-option>
+              <ion-select-option [value]="5">Vendredi</ion-select-option>
+              <ion-select-option [value]="6">Samedi</ion-select-option>
+              <ion-select-option [value]="7">Dimanche</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <div class="flex gap-2">
+            <ion-item class="flex-1">
+              <ion-input type="time" label="Début" formControlName="startTime"></ion-input>
+            </ion-item>
+            <ion-item class="flex-1">
+              <ion-input type="time" label="Fin" formControlName="endTime"></ion-input>
+            </ion-item>
+          </div>
+          <ion-button expand="block" type="submit" class="mt-4" [disabled]="ruleForm.invalid">
+            Ajouter
+          </ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+    <h3 class="text-lg font-bold mt-6 mb-2 px-2">Planning actuel</h3>
+
+    @if (rulesResource.isLoading()) {
+      <div class="flex justify-center p-4">
+        <ion-spinner></ion-spinner>
+      </div>
+    }
+
+    @else if (!rulesResource.value() || rulesResource.value()?.length === 0) {
+      <div class="text-center text-gray-500 p-4 bg-white rounded-lg shadow-sm">
+        <p>Aucune règle définie pour cette borne.</p>
+      </div>
+    }
+
+    @else {
+      <ion-list>
+        @for(rule of rulesResource.value(); track rule.id) {
+          <ion-item>
+            <ion-label>
+              <h2>{{ getDayName(rule.dayOfWeek) }}</h2>
+              <p>{{ rule.startTime }} - {{ rule.endTime }}</p>
+            </ion-label>
+            <ion-button slot="end" color="danger" fill="clear" (click)="deleteRule(rule.id!)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+        }
+      </ion-list>
+    }
+
+  } @else {
+    <div class="flex flex-col items-center justify-center h-64 text-gray-400">
+      <ion-icon name="arrow-up-outline" class="text-4xl mb-2"></ion-icon>
+      <p>Sélectionnez une borne ci-dessus</p>
+    </div>
+  }
+
+</ion-content>
