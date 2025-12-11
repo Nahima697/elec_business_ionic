@@ -1,45 +1,35 @@
 import { inject, Injectable } from '@angular/core';
-import { PlatformService } from './platform.service';
-import { Geolocation, Position } from '@capacitor/geolocation';
+import { Geolocation } from '@capacitor/geolocation';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GeolocalisationService {
 
-  private platformService = inject(PlatformService);
+  async getCurrentPosition() {
+    try {
+      const coordinates = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: true
+      });
 
-  async getCurrentPosition()
-  {
-    if (this.platformService.isNative()) {
-    const coordinates = await Geolocation.getCurrentPosition();
-    console.log('Current', coordinates);
-    return {
-      lat: coordinates.coords.latitude,
-      lng: coordinates.coords.longitude
-    };
+      console.log('Position actuelle:', coordinates);
 
-  }
-else
-{
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      err => reject(err)
-    );
-  });
+      return {
+        lat: coordinates.coords.latitude,
+        lng: coordinates.coords.longitude
+      };
+    } catch (error) {
+      console.error('Erreur lors de la récupération de la position', error);
+      throw error;
+    }
   }
 
-  }
-
-  watchPosition(
-    callback: (coords: { lat: number; lng: number }) => void
-  ): Promise<String> {
-    const watchId = Geolocation.watchPosition(
+  async watchPosition(callback: (coords: { lat: number; lng: number }) => void): Promise<string> {
+    const watchId = await Geolocation.watchPosition(
       { enableHighAccuracy: true },
       (position, error) => {
         if (error) {
-          console.error('Erreur de géolocalisation :', error);
+          console.error('Erreur de tracking :', error);
           return;
         }
 
@@ -53,5 +43,11 @@ else
     );
 
     return watchId;
+  }
+
+  async stopWatching(watchId: string) {
+      if (watchId) {
+          await Geolocation.clearWatch({ id: watchId });
+      }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject,  signal } from '@angular/core';
 import { HeaderComponent } from 'src/app/shared-component/header/header.component';
 import { PresentationComponent } from '../component/presentation/presentation.component';
 import { CardComponent } from '../component/card/card.component';

@@ -13,13 +13,17 @@ export class PlatformService {
   }
 
   isMobile(): boolean {
-  
+
     if (!this.isBrowser()) return false;
 
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
   }
+
+  isMobileWeb(): boolean {
+  return this.isMobile() && !this.isNative();
+}
 
   isDesktop(): boolean {
     if (!this.isBrowser()) return false;

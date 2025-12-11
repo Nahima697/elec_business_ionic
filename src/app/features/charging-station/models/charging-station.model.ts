@@ -1,4 +1,3 @@
-import e from "express";
 import { reviewResponseDTO } from "../../review/models/review.model";
 import { ChargingLocation } from "./charging-location.model";
 
