@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { OwnerDashboardComponent } from './owner/pages/owner-dashboard/owner-dashboard.component';
-import { RenterDashboardComponent } from './renter/renter-dashboard/renter-dashboard.component';
+import { RenterDashboardComponent } from './renter/pages/renter-dashboard/renter-dashboard.component';
 import { OwnerGuard } from './guards/owner.guard';
 import { RenterGuard } from './guards/renter.guard';
 
@@ -28,9 +28,10 @@ export const USER_ROUTES: Routes = [
         path: 'locations',
         loadComponent: () => import('../charging-station/pages/location/location.component').then(m => m.LocationComponent)
       },
-      // { path: 'stations', loadComponent: ... },
-      // { path: 'availability-rules', loadComponent: ... },
-      // { path: 'bookings', loadComponent: ... }
+      {
+        path: 'bookings',
+        loadComponent: () => import('./owner/pages/booking-page/booking.page').then(m => m.BookingPage)
+      }
     ]
   },
 

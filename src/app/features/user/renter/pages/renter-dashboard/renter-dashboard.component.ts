@@ -36,14 +36,14 @@ export class RenterDashboardComponent implements OnInit {
   }
 
   goToMyBookings() {
-    this.router.navigate(['/renter/bookings']);
+    this.router.navigate(['user/renter/bookings']);
   }
 
   goToHistory() {
-    this.router.navigate(['/renter/history']);
+    this.router.navigate(['user/renter/history']);
   }
 
   goToFavorites() {
-    this.router.navigate(['/renter/favorites']);
+    this.router.navigate(['user/renter/favorites']);
   }
 }

@@ -12,7 +12,7 @@ import { StationFormComponent } from 'src/app/features/charging-station/componen
   selector: 'app-owner-dashboard',
   standalone: true,
   imports: [
-    IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, 
+    IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent,
     IonAccordion, IonAccordionGroup, IonItem, IonLabel, IonIcon,
     StationFormComponent
   ],
@@ -46,5 +46,5 @@ export class OwnerDashboardComponent implements OnInit {
   goToLocations() { this.router.navigate(['/owner/locations']); }
   goToStations() { this.router.navigate(['/owner/stations']); }
   goToAvailabilityRules() { this.router.navigate(['/owner/availability-rules']); }
-  goToBookings() { this.router.navigate(['/owner/bookings']); }
+  goToBookings() { this.router.navigate(['user/owner/bookings']); }
 }
