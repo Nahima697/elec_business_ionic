@@ -31,7 +31,20 @@ export const USER_ROUTES: Routes = [
       {
         path: 'bookings',
         loadComponent: () => import('./owner/pages/booking-page/booking.page').then(m => m.BookingPage)
+      },
+      {
+        path: 'locations',
+        loadComponent: () => import('../charging-station/pages/location/location.component').then(m => m.LocationComponent)
+      },
+        {
+        path: 'stations',
+        loadComponent: () => import('../charging-station/component/station-list/station-list.component').then(m => m.LocationComponent)
+      },
+      {
+        path: 'availability-rules',
+        loadComponent: () => import('../charging-station/pages/availability-rules/availability-rules.component').then(m => m.AvailabilityRulesComponent)
       }
+
     ]
   },
 
@@ -45,8 +58,6 @@ export const USER_ROUTES: Routes = [
         path: 'bookings',
         loadComponent: () => import('../booking/page/booking-page.component').then(m => m.BookingPageComponent)
       },
-      // { path: 'history', loadComponent: ... },
-      // { path: 'favorites', loadComponent: ... }
     ]
   },
 

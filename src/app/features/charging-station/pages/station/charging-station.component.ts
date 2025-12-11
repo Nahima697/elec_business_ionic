@@ -34,15 +34,6 @@ export class ChargingStationComponent  implements OnInit {
 
   ngOnInit() {}
 
-  // loadStations ():void {
-  //   this.chargingStationService.getChargingStations().subscribe({
-  //      next:(stations: ChargingStation[]) => {
-  //            this.stations = stations;
-  //   }
-  // });
-
-  // }
-
     protected readonly stations = this.stationApi.getAll();
 
 

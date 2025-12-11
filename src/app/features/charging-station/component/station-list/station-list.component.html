@@ -1,0 +1,18 @@
+
+<div class="flex flex-col gap-4">
+  @if (isLoading()) {
+    @for (i of [1,2,3]; track i) {
+      <div class="w-full h-32 bg-gray-100 rounded-xl animate-pulse"></div>
+    }
+  } @else {
+    @for (station of stations(); track station.id) {
+      <app-station-card [station]="station" />
+    } @empty {
+      <div class="flex flex-col items-center justify-center py-12 text-gray-500">
+        <ion-icon name="sad-outline" class="text-5xl mb-2 text-gray-300"></ion-icon>
+        <p class="font-medium">Aucune borne trouvée.</p>
+        <p class="text-xs">Essayez de modifier vos filtres.</p>
+      </div>
+    }
+  }
+</div>

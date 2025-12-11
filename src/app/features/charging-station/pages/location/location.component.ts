@@ -17,13 +17,13 @@ import {
   selector: 'app-location',
   templateUrl: './location.component.html',
   styleUrls: ['./location.component.scss'],
-  standalone: true, // N'oublie pas standalone: true
+  standalone: true,
   imports: [
     IonButton, IonLabel, IonItem, IonList, IonCardTitle, IonCardContent,
     IonCardSubtitle, IonCardHeader, IonCard, IonContent, IonHeader,
     IonTitle, IonToolbar, IonThumbnail,
     RouterLink,
-    LocationFormComponent // Import du nouveau composant
+    LocationFormComponent
   ]
 })
 export class LocationComponent implements OnInit {
@@ -39,7 +39,6 @@ export class LocationComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      // Re-vérifie le user si le signal change
       if (this.authService.user()) {
         this.loadLocations();
       }
@@ -57,7 +56,6 @@ export class LocationComponent implements OnInit {
     this.chargingLocationService.getLocationByUser().subscribe({
       next: (locations) => {
         this.locations = locations;
-        // Charger les stations pour chaque lieu
         locations.forEach(loc => {
           if (loc.id) {
             this.chargingStationService.getStationsByLocationId(loc.id)

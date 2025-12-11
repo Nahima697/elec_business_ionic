@@ -1,0 +1,33 @@
+<ion-header [translucent]="true" class="shadow-none">
+  <ion-toolbar>
+    <ion-title>Trouver une borne</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <div class="px-2 flex items-center gap-2">
+      <ion-searchbar
+        placeholder="Ville, nom de borne..."
+        [debounce]="300"
+        (ionInput)="onSearch($event)"
+        animated="true"
+        show-cancel-button="focus"
+        class="bg-white rounded-lg shadow-sm"
+      ></ion-searchbar>
+
+      <ion-button fill="clear" color="dark">
+        <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding bg-gray-50">
+
+  <div class="mt-2">
+    <app-station-list
+      [stations]="filteredStations()"
+      [isLoading]="allStationsResource.isLoading()"
+    />
+  </div>
+
+</ion-content>

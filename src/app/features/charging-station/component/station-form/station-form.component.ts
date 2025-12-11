@@ -9,6 +9,7 @@ import {
   IonList, IonItem, IonButton, IonCard, IonCardContent, IonCardHeader,
   IonCardTitle, IonSelect, IonSelectOption, IonIcon, IonText
 } from '@ionic/angular/standalone';
+import { ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { cameraOutline, imageOutline } from 'ionicons/icons';
 
@@ -53,7 +54,17 @@ export class StationFormComponent implements OnInit {
 
     this.loadLocations();
   }
+private toastController = inject(ToastController);
 
+  async presentToast(message: string, color: 'success' | 'danger') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: color,
+      position: 'bottom'
+    });
+    toast.present();
+  }
   loadLocations() {
     this.locationService.getLocationByUser().subscribe({
       next: (locs) => this.myLocations.set(locs),
@@ -77,16 +88,17 @@ export class StationFormComponent implements OnInit {
 
   onSubmit() {
     if (this.stationForm.valid) {
-      // Pour createStation, le backend attend un FormData (géré par le service)
       this.stationService.createStation(this.stationForm.value, this.selectedFile || undefined)
         .subscribe({
           next: () => {
             this.stationForm.reset();
             this.selectedFile = null;
             this.imagePreview = null;
+            this.presentToast('Borne créée avec succès !', 'success');
             this.stationCreated.emit();
           },
-          error: (err) => console.error('Erreur création station', err)
+          error: () =>
+            this.presentToast('Erreur lors de la création.', 'danger')
         });
     } else {
       this.stationForm.markAllAsTouched();

@@ -18,6 +18,7 @@ import { ChargingLocation } from "./charging-location.model";
   id: string;
   reviewsDTO?: reviewResponseDTO[];
   createdAt?: string;
+  locationDTO?: ChargingLocation;
 
  }
 
