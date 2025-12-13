@@ -14,7 +14,18 @@ export class UserService {
   }
 
   addRole(userId: string, roleName: string): Observable<void> {
-    return this.http.post<void>(`${this.api}/users/${userId}/roles/${roleName}`, {});
+    let endpoint = '';
+
+    if (roleName.includes('OWNER')) {
+      endpoint = 'owner';
+    } else if (roleName.includes('RENTER')) {
+      endpoint = 'renter';
+    } else {
+      console.error("Rôle inconnu :", roleName);
+      throw new Error("Rôle non supporté par l'API");
+    }
+
+    return this.http.post<void>(`${this.api}/users/${userId}/roles/${endpoint}`, {});
   }
 
   removeRole(userId: string, roleName: string): Observable<void> {
