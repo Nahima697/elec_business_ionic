@@ -9,7 +9,9 @@ import {
   IonCardContent,
   IonButton
 } from '@ionic/angular/standalone';
-
+import { addIcons } from 'ionicons';
+import { calendar, card, checkmarkCircle, chevronForward, navigate, search} from 'ionicons/icons';
+import { time, map } from 'ionicons/icons';
 @Component({
   selector: 'app-renter-dashboard',
   standalone: true,
@@ -33,6 +35,18 @@ export class RenterDashboardComponent implements OnInit {
     if (!this.auth.hasRole('ROLE_RENTER')) {
       this.router.navigate(['/user/select-role']);
     }
+  }
+  constructor() {
+    addIcons({ calendar, navigate, search, time, checkmarkCircle, chevronForward, card, map });
+  }
+
+  searchStation(term: string) {
+    if (!term || term.trim() === '') return;
+
+    // On redirige vers la carte en passant le terme de recherche
+    this.router.navigate(['/map'], {
+      state: { searchTerm: term }
+    });
   }
 
   goToMyBookings() {

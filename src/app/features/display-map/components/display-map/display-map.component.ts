@@ -52,15 +52,27 @@ export class DisplayMapComponent implements OnInit {
   ngOnInit(): void {
     if (!this.isBrowser) return;
 
-    // Gestion de l'état passé via le router (si on vient d'une recherche précédente)
-    const state = this.router.getCurrentNavigation()?.extras?.state as { filteredStations?: ChargingStationResponseDTO[] };
+    // Récupération de l'état (SearchTerm OU FilteredStations)
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras?.state as {
+      filteredStations?: ChargingStationResponseDTO[],
+      searchTerm?: string
+    };
 
-    if (state?.filteredStations?.length) {
+    if (state) {
       setTimeout(() => {
-        const firstStation = state.filteredStations![0];
-        this.filterValue.set(firstStation.name);
-        this.centerMapOnStation(firstStation);
-      }, 500); // Petit délai pour laisser la map charger
+        // CAS 1 : On a reçu un terme de recherche
+        if (state.searchTerm) {
+          console.log('Recherche reçue du dashboard :', state.searchTerm);
+          this.updateFilter(state.searchTerm); 
+        }
+        // CAS 2 : On a reçu une liste déjà filtrée
+        else if (state.filteredStations?.length) {
+          const firstStation = state.filteredStations![0];
+          this.filterValue.set(firstStation.name);
+          this.centerMapOnStation(firstStation);
+        }
+      }, 500);
     }
   }
 

@@ -1,0 +1,64 @@
+<ion-content class="bg-gray-50">
+  <div class="max-w-3xl mx-auto p-4 md:p-8 space-y-6">
+
+    <header class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Tableau de bord</h1>
+        <p class="text-gray-500">Gérez vos locations et trouvez une borne</p>
+      </div>
+      <div routerLink="/profile" class="h-10 w-10 bg-gray-200 rounded-full overflow-hidden cursor-pointer border-2 border-white shadow-sm hover:ring-2 hover:ring-blue-100 transition">
+        <img src="assets/images/avatar-placeholder.png" alt="Profile" class="h-full w-full object-cover">
+      </div>
+    </header>
+
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+      <h3 class="text-lg font-bold text-gray-800 mb-3">Où souhaitez-vous recharger ?</h3>
+      <div class="flex gap-2">
+        <div class="relative flex-grow">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <ion-icon name="search" class="text-gray-400"></ion-icon>
+          </div>
+          <input
+            #searchInput
+            type="text"
+            (keyup.enter)="searchStation(searchInput.value)"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3"
+            placeholder="Ville, code postal, adresse..."
+          >
+        </div>
+        <button
+          (click)="searchStation(searchInput.value)"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm px-5 py-2.5 transition shadow-sm">
+          Rechercher
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+      <div routerLink="/user/renter/bookings" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4 hover:bg-gray-50 hover:shadow-md cursor-pointer transition duration-200">
+        <div class="bg-purple-50 p-3 rounded-full text-purple-600">
+          <ion-icon name="time" class="text-xl"></ion-icon>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-800">Mes réservations</h3>
+          <p class="text-xs text-gray-500">En cours et passées</p>
+        </div>
+        <ion-icon name="chevron-forward" class="ml-auto text-gray-300"></ion-icon>
+      </div>
+
+      <div routerLink="/map" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4 hover:bg-gray-50 hover:shadow-md cursor-pointer transition duration-200">
+        <div class="bg-indigo-50 p-3 rounded-full text-indigo-600">
+          <ion-icon name="map" class="text-xl"></ion-icon>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-800">Explorer la carte</h3>
+          <p class="text-xs text-gray-500">Toutes les bornes</p>
+        </div>
+        <ion-icon name="chevron-forward" class="ml-auto text-gray-300"></ion-icon>
+      </div>
+
+    </div>
+
+    </div>
+</ion-content>
