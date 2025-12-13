@@ -13,6 +13,7 @@ import { httpResource } from '@angular/common/http';
 import { ReviewService } from '../../../review/service/review.service';
 import { reviewResponseDTO } from '../../../review/models/review.model';
 import { ReviewFormComponent } from '../../../review/components/review-form/review-form.component';
+import { ReviewListComponent } from 'src/app/features/review/components/review-list/review-list.component';
 @Component({
   selector: 'app-station-detail',
   templateUrl: './station-detail.component.html',
@@ -24,10 +25,11 @@ import { ReviewFormComponent } from '../../../review/components/review-form/revi
     IonButton,
     IonToolbar,
     IonModal,
-    BookingFormComponent, StationCardComponent,ReviewFormComponent]
+    BookingFormComponent, StationCardComponent,ReviewFormComponent,ReviewListComponent]
 })
 export class StationDetailComponent  {
 readonly id = input<string>();
+readonly reviewList =input<reviewResponseDTO[]>();
 private readonly idSignal = signal('');
 private readonly stationApi = inject(StationApiService);
 protected station!: ReturnType<typeof httpResource<ChargingStationResponseDTO>>;

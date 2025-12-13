@@ -7,7 +7,7 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonButton
+  IonButton,IonIcon
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { calendar, card, checkmarkCircle, chevronForward, navigate, search} from 'ionicons/icons';
@@ -17,11 +17,7 @@ import { time, map } from 'ionicons/icons';
   standalone: true,
   imports: [
     IonContent,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonButton
+    IonIcon
   ],
   templateUrl: './renter-dashboard.component.html',
   styleUrls: ['./renter-dashboard.component.scss']

@@ -1,62 +1,61 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router'; // + RouterLink
+import { CommonModule } from '@angular/common'; // + CommonModule (pour titlecase)
 import { AuthService } from 'src/app/core/auth/services/auth.service';
-import { UserService } from '../../service/user.service'; // Ton user service
+import { UserService } from '../../service/user.service';
 import { RoleSelectorComponent } from '../../components/role-selector/role-selector.component';
-import { IonContent } from "@ionic/angular/standalone";
+import { IonContent, IonIcon } from "@ionic/angular/standalone";
+import { PlatformService } from 'src/app/shared-component/services/platform.service';
+import { addIcons } from 'ionicons'; // + addIcons
+import { shieldCheckmarkOutline, helpBuoyOutline, flashOutline } from 'ionicons/icons'; // + Icons
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  // N'oublie pas d'importer ton RoleSelector ici
-  imports: [IonContent, RoleSelectorComponent],
+  imports: [IonContent, RoleSelectorComponent, CommonModule, IonIcon, RouterLink], // Ajoute les modules ici
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
   private router = inject(Router);
-  private authService = inject(AuthService);
+  // On met authService en public pour l'utiliser dans le HTML (ou protected)
+  public authService = inject(AuthService);
   private userService = inject(UserService);
+  private platformService = inject(PlatformService);
+
+  constructor() {
+    // On charge les icônes de la page
+    addIcons({ shieldCheckmarkOutline, helpBuoyOutline, flashOutline });
+  }
 
   ngOnInit() {}
 
   onRoleSelected(roleName: string) {
-    // 1. Récupérer l'utilisateur actuel
+    // ... (Ton code existant pour la redirection) ...
     const currentUser = this.authService.user();
+    if (!currentUser) return;
 
-    if (!currentUser) {
-      console.error('Aucun utilisateur connecté');
-      return;
-    }
-
-    // 2. Vérifier si l'utilisateur a déjà ce rôle (pour éviter l'appel API inutile)
     if (this.authService.hasRole(roleName)) {
         this.navigateByRole(roleName);
         return;
     }
 
-    // 3. Appel API pour ajouter le rôle
     this.userService.addRole(currentUser.id, roleName).subscribe({
       next: () => {
-        console.log(`Rôle ${roleName} ajouté avec succès`);
-
-        // 4. IMPORTANT : Rafraîchir l'utilisateur localement pour avoir le nouveau rôle dans le AuthService
         this.authService.fetchCurrentUser().subscribe(() => {
-           // 5. Redirection une fois que tout est à jour
            this.navigateByRole(roleName);
         });
       },
-      error: (err) => {
-        console.error('Erreur lors de l\'ajout du rôle', err);
-            }
+      error: (err) => console.error(err)
     });
   }
 
   private navigateByRole(roleName: string) {
+    const basePath = this.platformService.isMobile() ? '/tabs/user' : '/user';
     if (roleName === 'OWNER') {
-      this.router.navigate(['/user/owner/dashboard']);
+      this.router.navigate([`${basePath}/owner/dashboard`]);
     } else if (roleName === 'RENTER') {
-      this.router.navigate(['/user/renter/dashboard']);
+      this.router.navigate([`${basePath}/renter/dashboard`]);
     }
   }
 }

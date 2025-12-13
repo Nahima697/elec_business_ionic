@@ -1,21 +1,67 @@
-<ion-content class="bg-gray-50">
-  <div
-    class="min-h-screen flex flex-col items-center justify-center p-4 md:p-8"
-  >
-    <div class="text-center mb-12 max-w-2xl">
-      <h1
-        class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 tracking-tight"
-      >
-        Bienvenue sur Electricity Business
-      </h1>
-      <p class="text-lg text-gray-600">
-        Que souhaitez-vous faire aujourd'hui ? Gérez vos bornes ou trouvez-en
-        une pour recharger votre véhicule.
-      </p>
+<ion-content class="bg-gray-50 relative">
+  <div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-r from-blue-700 to-indigo-800 rounded-b-[3rem] z-0"></div>
+
+  <div class="relative z-10 max-w-5xl mx-auto px-4 pt-12 pb-8">
+
+    <div class="text-white mb-10 flex justify-between items-end">
+      <div>
+        <p class="text-blue-200 text-sm font-medium uppercase tracking-wider mb-1">Espace Membre</p>
+        <h1 class="text-3xl md:text-4xl font-bold">
+          Bonjour, {{ (authService.user()?.username | titlecase) || 'Utilisateur' }}
+        </h1>
+        <p class="text-blue-100 mt-2 text-lg">
+          Gérez vos bornes ou réservez votre prochaine recharge.
+        </p>
+      </div>
+      <div routerLink="/profile" class="hidden md:block h-14 w-14 bg-white/20 backdrop-blur-md rounded-full border-2 border-white/30 p-1 cursor-pointer hover:bg-white/30 transition">
+        <img src="assets/images/avatar-placeholder.png" class="h-full w-full rounded-full object-cover" alt="Avatar">
+      </div>
     </div>
 
-    <app-role-selector
-      (roleSelected)="onRoleSelected($event)"
-    ></app-role-selector>
+    <div class="bg-white rounded-3xl shadow-xl p-6 md:p-12 mb-8 border border-gray-100">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl font-bold text-gray-800">Choisissez votre interface</h2>
+        <p class="text-gray-500">Vous pouvez basculer d'un mode à l'autre à tout moment.</p>
+      </div>
+
+      <div class="flex justify-center">
+        <app-role-selector (roleSelected)="onRoleSelected($event)"></app-role-selector>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <div class="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-sm border border-white/50 flex items-start gap-4">
+        <div class="bg-green-50 p-3 rounded-xl text-green-600">
+          <ion-icon name="shield-checkmark-outline" class="text-2xl"></ion-icon>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-800 text-sm">Paiement Sécurisé</h3>
+          <p class="text-xs text-gray-500 mt-1">Toutes les transactions sont chiffrées et protégées.</p>
+        </div>
+      </div>
+
+      <div class="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-sm border border-white/50 flex items-start gap-4">
+        <div class="bg-blue-50 p-3 rounded-xl text-blue-600">
+          <ion-icon name="help-buoy-outline" class="text-2xl"></ion-icon>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-800 text-sm">Support 24/7</h3>
+          <p class="text-xs text-gray-500 mt-1">Une question ? Notre équipe est là pour vous aider.</p>
+        </div>
+      </div>
+
+      <div class="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-sm border border-white/50 flex items-start gap-4">
+        <div class="bg-purple-50 p-3 rounded-xl text-purple-600">
+          <ion-icon name="flash-outline" class="text-2xl"></ion-icon>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-800 text-sm">Réseau Rapide</h3>
+          <p class="text-xs text-gray-500 mt-1">Accédez à plus de 5000 bornes compatibles.</p>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 </ion-content>
