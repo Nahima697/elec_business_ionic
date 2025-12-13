@@ -1,29 +1,24 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { UserService } from '../../service/user.service';
-import { AuthService } from 'src/app/core/auth/services/auth.service';
-import { IonHeader,IonContent,IonButton,IonTitle,IonToolbar} from "@ionic/angular/standalone";
-
+import { Component, output } from '@angular/core'; // Note: 'output' est la nouvelle syntaxe Angular 17+ (sinon utilise @Output)
+import { UserRoleDTO } from '../../models/user.model';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { carSportOutline, flashOutline, arrowForwardOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-role-selector',
-  imports: [IonHeader, IonContent, IonButton, IonTitle, IonToolbar],
+  standalone: true,
+  imports: [IonIcon],
   templateUrl: './role-selector.component.html',
-  styleUrls: ['./role-selector.component.scss'],
+  styleUrls: ['./role-selector.component.scss']
 })
-export class RoleSelectorComponent   {
-  private auth = inject(AuthService);
-  private userService = inject(UserService);
+export class RoleSelectorComponent {
+  roleSelected = output<string>();
 
-  user = this.auth.user();
+  constructor() {
+    addIcons({ carSportOutline, flashOutline, arrowForwardOutline });
+  }
 
-  setRole(role: 'owner' | 'renter') {
-    if (!this.user) return;
-
-    this.userService.addRole(this.user.id, role).subscribe(() => {
-      this.auth.fetchCurrentUser().subscribe();
-    });
+  selectRole(role: string) {
+    this.roleSelected.emit(role);
   }
 }
-
-
-

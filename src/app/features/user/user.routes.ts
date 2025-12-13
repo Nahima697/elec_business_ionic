@@ -3,6 +3,7 @@ import { OwnerDashboardComponent } from './owner/pages/owner-dashboard/owner-das
 import { RenterDashboardComponent } from './renter/pages/renter-dashboard/renter-dashboard.component';
 import { OwnerGuard } from './guards/owner.guard';
 import { RenterGuard } from './guards/renter.guard';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 export const USER_ROUTES: Routes = [
   {
@@ -61,15 +62,8 @@ export const USER_ROUTES: Routes = [
     ]
   },
 
-  {
+{
     path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full'
-  }
-,
-  {
-    path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full'
-  }
+    component: DashboardComponent,
+  },
 ];

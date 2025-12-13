@@ -38,9 +38,9 @@ onSubmit() {
       next: (response) => {
         console.log('Connexion réussie :', response);
         if(this.platformService.isDesktop()) {
-          this.router.navigateByUrl('/map', { replaceUrl: true });
+          this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
         } else {
-          this.router.navigateByUrl('/tabs/map', { replaceUrl: true });
+          this.router.navigateByUrl('/tabs/user/dashboard', { replaceUrl: true });
         }
       },
       error: (err) => {

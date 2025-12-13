@@ -1,3 +1,21 @@
-<p>
-  dashboard works!
-</p>
+<ion-content class="bg-gray-50">
+  <div
+    class="min-h-screen flex flex-col items-center justify-center p-4 md:p-8"
+  >
+    <div class="text-center mb-12 max-w-2xl">
+      <h1
+        class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 tracking-tight"
+      >
+        Bienvenue sur Electricity Business
+      </h1>
+      <p class="text-lg text-gray-600">
+        Que souhaitez-vous faire aujourd'hui ? Gérez vos bornes ou trouvez-en
+        une pour recharger votre véhicule.
+      </p>
+    </div>
+
+    <app-role-selector
+      (roleSelected)="onRoleSelected($event)"
+    ></app-role-selector>
+  </div>
+</ion-content>

@@ -13,7 +13,7 @@ import { MapPage } from './features/display-map/pages/map.page';
 import { MessagesPage } from './features/messages/messages.page';
 import { TabsPage } from './shared-component/mobile-tabs/tabs/tabs.page';
 import { OnboardingPage } from './features/onboarding/onboarding.page';
-import { ProfilePage } from './features/user/pages/dashboard/profile/profile.page';
+import { ProfilePage } from './features/user/pages/profile/profile.page';
 import { HomePage } from './features/web-home/home/home.page';
 import { MobileOnlyGuard } from './core/guards/mobile-only.guard';
 import { WebOnlyGuard } from './core/guards/web-only.guard';
