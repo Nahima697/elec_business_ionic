@@ -11,7 +11,8 @@ import {
 } from '@ionic/angular/standalone';
 import { ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { cameraOutline, imageOutline } from 'ionicons/icons';
+import { cameraOutline, imageOutline, trashOutline } from 'ionicons/icons'; // Ajout trashOutline
+import { GeolocalisationService } from 'src/app/shared-component/services/geolocalisation.service';
 
 @Component({
   selector: 'app-station-form',
@@ -28,6 +29,8 @@ import { cameraOutline, imageOutline } from 'ionicons/icons';
 export class StationFormComponent implements OnInit {
   private stationService = inject(ChargingStationService);
   private locationService = inject(ChargingLocationService);
+  private geoService = inject(GeolocalisationService);
+  private toastController = inject(ToastController);
 
   stationCreated = output<void>();
   stationForm!: FormGroup;
@@ -38,23 +41,63 @@ export class StationFormComponent implements OnInit {
   imagePreview: string | null = null;
 
   constructor() {
-    addIcons({ cameraOutline, imageOutline });
+    // On ajoute toutes les icônes nécessaires
+    addIcons({ cameraOutline, imageOutline, trashOutline });
   }
 
   ngOnInit(): void {
+    // 1. Initialisation du Formulaire
     this.stationForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
       powerKw: new FormControl(null, [Validators.required, Validators.min(0)]),
       price: new FormControl(null, [Validators.required, Validators.min(0)]),
       locationId: new FormControl('', [Validators.required]),
-      lat: new FormControl(0, [Validators.required]),
-      lng: new FormControl(0, [Validators.required]),
+      // Champs cachés pour la géolocalisation
+      lat: new FormControl(null, [Validators.required]),
+      lng: new FormControl(null, [Validators.required]),
     });
 
+    // 2. Chargement des lieux
     this.loadLocations();
+
+    // 3. Écouteur sur le changement de lieu pour calculer lat/lng
+    this.stationForm.get('locationId')?.valueChanges.subscribe(async (locationId) => {
+      const selectedLocation = this.myLocations().find(l => l.id === locationId);
+
+      if (selectedLocation) {
+        const fullAddress = `${selectedLocation.addressLine}, ${selectedLocation.postalCode} ${selectedLocation.city}`;
+
+        console.log('📍 Recherche coordonnées pour :', fullAddress);
+
+        this.geoService.geocodeAddress(fullAddress).subscribe({
+          next: (coords) => {
+            if (coords) {
+              console.log('✅ Coordonnées trouvées :', coords);
+              // Mise à jour des champs cachés
+              this.stationForm.patchValue({
+                lat: coords.lat,
+                lng: coords.lng
+              });
+              this.presentToast('Adresse localisée avec succès', 'success');
+            } else {
+              console.warn('⚠️ Adresse introuvable');
+              this.presentToast('Impossible de localiser cette adresse automatiquement', 'danger');
+            }
+          },
+          error: (err) => {
+            console.error('Erreur géocodage', err);
+            this.presentToast('Erreur technique lors de la localisation', 'danger');
+          }
+        });
+      }
+    });
   }
-private toastController = inject(ToastController);
+
+  // Helper pour récupérer un FormControl typé dans le HTML
+  getControl(name: string): FormControl {
+    return this.stationForm.get(name) as FormControl;
+  }
 
   async presentToast(message: string, color: 'success' | 'danger') {
     const toast = await this.toastController.create({
@@ -65,6 +108,7 @@ private toastController = inject(ToastController);
     });
     toast.present();
   }
+
   loadLocations() {
     this.locationService.getLocationByUser().subscribe({
       next: (locs) => this.myLocations.set(locs),

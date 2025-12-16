@@ -1,82 +1,65 @@
-<ion-content class="ion-padding">
+<ion-content style="--background: #f9fafb;">
+  <div class="max-w-5xl mx-auto p-4 md:p-8 space-y-8">
 
-  <div class="text-center mb-6 mt-2">
-    <h1 class="text-2xl font-bold text-gray-800">
-      Tableau de bord
-    </h1>
-    <p class="text-gray-500 text-sm">Bienvenue, {{ auth.user()?.username }}</p>
-  </div>
-
-  <ion-accordion-group #accordionGroup class="shadow-md rounded-xl bg-white mb-6 overflow-hidden">
-    <ion-accordion value="add-station">
-      <ion-item slot="header" color="light">
-        <ion-icon slot="start" name="add-circle-outline" color="primary"></ion-icon>
-        <ion-label class="font-semibold text-primary">Ajouter une borne rapide</ion-label>
-      </ion-item>
-
-      <div class="p-2 bg-gray-50" slot="content">
-        <app-station-form (stationCreated)="onStationCreated()"></app-station-form>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Espace Propriétaire</h1>
+        <p class="text-gray-500">Gérez votre parc de bornes</p>
       </div>
-    </ion-accordion>
-  </ion-accordion-group>
 
-  <div class="grid grid-cols-2 gap-4 mb-4">
-    <ion-card class="m-0 shadow-sm flex flex-col justify-between" (click)="goToLocations()">
-      <ion-card-header class="pb-2">
-        <div class="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center mb-2">
-          <span class="text-xl">📍</span>
-        </div>
-        <ion-card-title class="text-lg">Lieux</ion-card-title>
-      </ion-card-header>
-      <ion-card-content class="text-xs text-gray-500">
-        Gérer vos adresses et emplacements.
-      </ion-card-content>
-    </ion-card>
+      <ion-button (click)="openAddStationModal()" color="primary" mode="ios" class="shadow-sm">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Ajouter une borne
+      </ion-button>
+    </div>
 
-    <ion-card class="m-0 shadow-sm flex flex-col justify-between" (click)="goToStations()">
-      <ion-card-header class="pb-2">
-        <div class="h-10 w-10 bg-yellow-100 rounded-full flex items-center justify-center mb-2">
-          <span class="text-xl">⚡</span>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <p class="text-gray-500 text-sm">Revenus ce mois</p>
+        <p class="text-3xl font-bold text-gray-900">0 €</p>
+      </div>
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <p class="text-gray-500 text-sm">Réservations actives</p>
+        <p class="text-3xl font-bold text-gray-900">0</p>
+      </div>
+    </div>
+
+    <h2 class="text-lg font-bold text-gray-800 mt-8 mb-4">Actions rapides</h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+      <div (click)="openAddLocationModal()"
+           class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer flex flex-col items-center justify-center text-center gap-2 h-32 group">
+        <div class="p-3 bg-indigo-50 rounded-full text-indigo-600 group-hover:bg-indigo-100 transition">
+          <ion-icon name="map-outline" class="text-2xl"></ion-icon>
         </div>
-        <ion-card-title class="text-lg">Bornes</ion-card-title>
-      </ion-card-header>
-      <ion-card-content class="text-xs text-gray-500">
-        Modifier les bornes existantes.
-      </ion-card-content>
-    </ion-card>
+        <span class="font-medium text-gray-700 text-sm">Nouveau Lieu</span>
+      </div>
+
+      <div (click)="openAddStationModal()"
+           class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer flex flex-col items-center justify-center text-center gap-2 h-32 group">
+        <div class="p-3 bg-teal-50 rounded-full text-teal-600 group-hover:bg-teal-100 transition">
+          <ion-icon name="storefront-outline" class="text-2xl"></ion-icon>
+        </div>
+        <span class="font-medium text-gray-700 text-sm">Nouvelle Borne</span>
+      </div>
+
+      <div (click)="openAvailabilityModal()"
+           class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer flex flex-col items-center justify-center text-center gap-2 h-32 group">
+        <div class="p-3 bg-orange-50 rounded-full text-orange-600 group-hover:bg-orange-100 transition">
+          <ion-icon name="time-outline" class="text-2xl"></ion-icon>
+        </div>
+        <span class="font-medium text-gray-700 text-sm">Disponibilités</span>
+      </div>
+
+      <div (click)="goToMyBookings()"
+           class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer flex flex-col items-center justify-center text-center gap-2 h-32 group">
+        <div class="p-3 bg-purple-50 rounded-full text-purple-600 group-hover:bg-purple-100 transition">
+          <ion-icon name="list-outline" class="text-2xl"></ion-icon>
+        </div>
+        <span class="font-medium text-gray-700 text-sm">Réservations</span>
+      </div>
+
+    </div>
   </div>
-
-  <div class="grid grid-cols-2 gap-4 mb-6">
-    <ion-card class="m-0 shadow-sm flex flex-col justify-between" (click)="goToAvailabilityRules()">
-      <ion-card-header class="pb-2">
-        <div class="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center mb-2">
-          <span class="text-xl">🕒</span>
-        </div>
-        <ion-card-title class="text-lg">Horaires</ion-card-title>
-      </ion-card-header>
-      <ion-card-content class="text-xs text-gray-500">
-        Définir quand vos bornes sont libres.
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card class="m-0 shadow-sm flex flex-col justify-between" (click)="goToBookings()">
-      <ion-card-header class="pb-2">
-        <div class="h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center mb-2">
-          <span class="text-xl">📅</span>
-        </div>
-        <ion-card-title class="text-lg">Réservations</ion-card-title>
-      </ion-card-header>
-      <ion-card-content class="text-xs text-gray-500">
-        Valider les demandes reçues.
-      </ion-card-content>
-    </ion-card>
-  </div>
-
-  <h3 class="text-lg font-bold text-gray-800 ml-1 mb-2">Activité récente</h3>
-  <ion-card class="m-0 shadow-sm bg-white">
-    <ion-card-content class="flex items-center justify-center py-8 text-gray-400">
-      <p class="text-center">Aucune activité récente pour le moment.</p>
-    </ion-card-content>
-  </ion-card>
-
 </ion-content>

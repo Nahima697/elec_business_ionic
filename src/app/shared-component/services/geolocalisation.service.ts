@@ -1,10 +1,13 @@
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GeolocalisationService {
+  private http = inject(HttpClient);
 
   async getCurrentPosition() {
     try {
@@ -49,5 +52,20 @@ export class GeolocalisationService {
       if (watchId) {
           await Geolocation.clearWatch({ id: watchId });
       }
+  }
+  geocodeAddress(address: string): Observable<{ lat: number, lng: number } | null> {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+
+    return this.http.get<any[]>(url).pipe(
+      map(results => {
+        if (results && results.length > 0) {
+          return {
+            lat: parseFloat(results[0].lat),
+            lng: parseFloat(results[0].lon)
+          };
+        }
+        return null;
+      })
+    );
   }
 }

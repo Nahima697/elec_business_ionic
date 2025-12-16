@@ -31,7 +31,7 @@ export class ChargingLocationService {
   }
 
   createLocation(location: Omit<ChargingLocation,'id'>) : Observable<ChargingLocation>{
-    return this.http.post<ChargingLocation>(`/charging_locations/`,location).pipe(
+    return this.http.post<ChargingLocation>(`/charging_locations`,location).pipe(
     catchError(error => {
       console.error('Erreur lors de la récupération des utilisateurs', error);
       throw error;

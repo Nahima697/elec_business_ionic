@@ -20,7 +20,6 @@ export class ChargingStationService {
   createStation(station: ChargingStationRequestDTO, imageFile?: File): Observable<ChargingStationResponseDTO> {
     const formData = new FormData();
 
-    // Ajout des champs texte
     formData.append('name', station.name);
     formData.append('description', station.description);
     formData.append('powerKw', station.powerKw.toString());

@@ -6,14 +6,9 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenInterceptor } from './app/core/interceptors/token-interceptor';
+import { appConfig } from './app/app.config';
 
 registerSwiperElements();
 
-bootstrapApplication(AppComponent, {
-  providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
-    provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideHttpClient(withInterceptors([tokenInterceptor]))
-  ],
-});
+bootstrapApplication(AppComponent, appConfig) 
+  .catch((err) => console.error(err));

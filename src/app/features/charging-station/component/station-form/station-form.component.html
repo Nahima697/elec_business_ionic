@@ -9,23 +9,25 @@
         <ion-item class="rounded-lg border border-gray-300">
           <ion-select label="Lieu de la borne" label-placement="floating" formControlName="locationId" placeholder="Choisir un lieu">
             @for (loc of myLocations(); track loc.id) {
-              <ion-select-option [value]="loc.id">{{ loc.name }} - {{ loc.city }}</ion-select-option>
+              <ion-select-option [value]="loc.id">{{ loc.city }} - {{ loc.addressLine }}</ion-select-option>
             }
           </ion-select>
         </ion-item>
+
         @if (stationForm.get('locationId')?.invalid && stationForm.get('locationId')?.touched) {
-          <ion-text color="danger" class="text-xs px-4">Le lieu est obligatoire</ion-text>
+          <ion-text color="danger" class="text-xs px-4">Le lieu est obligatoire.</ion-text>
         }
 
         <app-form-field
           label="Nom de la borne"
           placeholder="ex: Borne Garage"
           [controlType]="ControlType.Input"
-          formControlName="name"> </app-form-field>
+          formControlName="name">
+        </app-form-field>
 
         <app-form-field
           label="Description"
-          placeholder="Instructions..."
+          placeholder="Instructions d'accès..."
           [controlType]="ControlType.Textarea"
           formControlName="description">
         </app-form-field>
@@ -39,35 +41,22 @@
           </app-form-field>
         </div>
 
-        <div class="flex gap-2">
-          <app-form-field class="flex-1" label="Latitude" type="number"
-            [controlType]="ControlType.Input" formControlName="lat">
-          </app-form-field>
-          <app-form-field class="flex-1" label="Longitude" type="number"
-            [controlType]="ControlType.Input" formControlName="lng">
-          </app-form-field>
-        </div>
-
-        <div class="flex flex-col items-center mt-2 p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+        <div class="flex flex-col items-center mt-2 p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 transition cursor-pointer" (click)="triggerFileInput()">
           <input id="fileInput" type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden">
 
           @if (imagePreview) {
             <div class="relative w-full h-40 mb-2">
               <img [src]="imagePreview" class="w-full h-full object-cover rounded-md" alt="Prévisualisation">
-              <ion-button size="small" color="danger" class="absolute top-1 right-1" (click)="imagePreview = null; selectedFile = null">
-                X
+              <ion-button size="small" color="danger" class="absolute top-1 right-1" (click)="$event.stopPropagation(); imagePreview = null; selectedFile = null">
+                <ion-icon name="trash-outline"></ion-icon>
               </ion-button>
             </div>
           } @else {
-            <div class="flex flex-col items-center text-gray-500" (click)="triggerFileInput()">
-              <ion-icon name="image-outline" class="text-4xl"></ion-icon>
-              <span class="text-sm mt-1">Ajouter une photo</span>
+            <div class="flex flex-col items-center text-gray-500">
+              <ion-icon name="image-outline" class="text-4xl mb-2"></ion-icon>
+              <span class="text-sm font-medium">Ajouter une photo</span>
             </div>
           }
-          <ion-button fill="outline" size="small" (click)="triggerFileInput()" class="mt-2">
-            <ion-icon slot="start" name="camera-outline"></ion-icon>
-            Choisir une image
-          </ion-button>
         </div>
 
         <ion-button type="submit" expand="block" class="mt-4" [disabled]="stationForm.invalid">

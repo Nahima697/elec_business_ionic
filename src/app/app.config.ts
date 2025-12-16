@@ -3,13 +3,14 @@ import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules, w
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
-import { tokenInterceptor } from './core/auth/interceptors/token-interceptor';
+import { tokenInterceptor } from './core/interceptors/token-interceptor';
+import { globalInterceptor } from './core/interceptors/global.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules),withComponentInputBinding()),
-    provideHttpClient(withInterceptors([tokenInterceptor])),
+    provideHttpClient(withInterceptors([globalInterceptor,tokenInterceptor])),
   ],
 };
