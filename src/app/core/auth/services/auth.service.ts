@@ -32,7 +32,30 @@ export class AuthService {
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
+  set token(value: string | null) {
+    if (value) {
+      this.storeToken(value);
+    } else {
+      localStorage.removeItem(this.tokenKey);
+    }
+  }
 
+  refreshToken(): Observable<string> {
+    return this.http.post(
+      '/api/refresh-token',
+      {},
+      {
+        withCredentials: true,
+        responseType: 'text'
+      }
+    ).pipe(
+      tap((newToken: string) => {
+        this.token = newToken;
+        localStorage.setItem('jwt', newToken);
+        console.log('Token rafraîchi avec succès');
+      })
+    );
+  }
   // ------------------------
   // LOGIN
   // ------------------------

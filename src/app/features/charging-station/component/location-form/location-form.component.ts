@@ -4,7 +4,12 @@ import { ChargingLocationService } from 'src/app/features/charging-station/servi
 import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
-import { IonList, IonItem, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle } from '@ionic/angular/standalone';
+import {
+  IonList, IonIcon, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
+  ToastController, ModalController
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { closeOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-location-form',
@@ -12,7 +17,7 @@ import { IonList, IonItem, IonButton, IonCard, IonCardContent, IonCardHeader, Io
   imports: [
     ReactiveFormsModule,
     FormFieldComponent,
-    IonList, IonItem, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle
+    IonList, IonIcon, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle
   ],
   templateUrl: './location-form.component.html',
   styleUrls: ['./location-form.component.scss'],
@@ -20,13 +25,17 @@ import { IonList, IonItem, IonButton, IonCard, IonCardContent, IonCardHeader, Io
 export class LocationFormComponent implements OnInit {
   private chargingLocationService = inject(ChargingLocationService);
   private authService = inject(AuthService);
+  private toastCtrl = inject(ToastController);
+  private modalCtrl = inject(ModalController);
 
-  // Output pour prévenir le parent qu'une location a été créée
   locationCreated = output<void>();
 
   locationForm!: FormGroup;
   ControlType = ControlType;
   user = this.authService.user;
+  constructor() {
+  addIcons({ closeOutline });
+}
 
   ngOnInit(): void {
     this.locationForm = new FormGroup({
@@ -38,7 +47,18 @@ export class LocationFormComponent implements OnInit {
     });
   }
 
-  // Getters pour le template
+  // Helper pour afficher le Toast
+  async presentToast(message: string, color: 'success' | 'danger') {
+    const toast = await this.toastCtrl.create({
+      message: message,
+      duration: 2000,
+      color: color,
+      position: 'bottom'
+    });
+    await toast.present();
+  }
+
+  // Getters
   get name(): FormControl { return this.locationForm.get('name') as FormControl; }
   get addressLine(): FormControl { return this.locationForm.get('addressLine') as FormControl; }
   get postalCode(): FormControl { return this.locationForm.get('postalCode') as FormControl; }
@@ -55,11 +75,30 @@ export class LocationFormComponent implements OnInit {
       this.chargingLocationService.createLocation(locationData).subscribe({
         next: (response) => {
           console.log("Location créée", response);
+
+          // 1. Reset du form
           this.locationForm.reset();
-          this.locationCreated.emit(); 
+
+          // 2. Afficher le Toast
+          this.presentToast('Lieu ajouté avec succès !', 'success');
+
+          // 3. Emettre l'event (optionnel si on ferme la modale)
+          this.locationCreated.emit();
+
+          // 4. Fermer la modale (Retour au Dashboard)
+          this.modalCtrl.dismiss(response, 'confirm');
         },
-        error: (error) => console.error('Erreur création location', error)
+        error: (error) => {
+          console.error('Erreur création location', error);
+          this.presentToast('Erreur lors de la création du lieu', 'danger');
+        }
       });
+    } else {
+      this.locationForm.markAllAsTouched();
     }
+  }
+
+  closeModal() {
+    this.modalCtrl.dismiss(null, 'cancel');
   }
 }
