@@ -54,7 +54,7 @@ onSubmit() {
     const formValue = this.ruleForm.value;
 
     const newRule: AvailabilityRuleDTO = {
-      stationId: stationId,
+      stationId: stationId, 
       dayOfWeek: Number(formValue.dayOfWeek),
       startTime: this.formatTime(formValue.startTime!),
       endTime: this.formatTime(formValue.endTime!)

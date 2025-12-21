@@ -12,7 +12,7 @@ import {
 
 import { LocationFormComponent } from 'src/app/features/charging-station/component/location-form/location-form.component';
 import { StationFormComponent } from 'src/app/features/charging-station/component/station-form/station-form.component';
-import { AvailabilityRulesComponent } from 'src/app/features/charging-station/pages/availability-rules/availability-rules.component';
+import { AvailabilityRulesComponent } from 'src/app/features/charging-station/component/availability-rules/availability-rules.component';
 
 @Component({
   selector: 'app-owner-dashboard',

@@ -43,7 +43,7 @@ export const USER_ROUTES: Routes = [
       },
       {
         path: 'availability-rules',
-        loadComponent: () => import('../charging-station/pages/availability-rules/availability-rules.component').then(m => m.AvailabilityRulesComponent)
+        loadComponent: () => import('../charging-station/component/availability-rules/availability-rules.component').then(m => m.AvailabilityRulesComponent)
       }
 
     ]

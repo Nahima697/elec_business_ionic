@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs'; // <--- Check this import
+import { catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth/services/auth.service';
 import { ToastController } from '@ionic/angular';
@@ -19,31 +19,45 @@ export const globalInterceptor: HttpInterceptorFn = (req, next) => {
     await toast.present();
   };
 
-  // Don't modify the URL if it's already an absolute URL (e.g. Nominatim or assets)
+  // 1. Injection de l'URL (C'est correct, on ne touche pas)
   const url = req.url.startsWith('http') ? req.url : environment.apiUrl + req.url;
-
   const clone = req.clone({ url });
 
   return next(clone).pipe(
     catchError((error: HttpErrorResponse) => {
 
-      // We handle the side effects (Toast, Logout)
+      // 2. Gestion intelligente des erreurs
       if (error.status === 401) {
-        if (!req.url.includes('/login')) {
+
+        // CAS A : Erreur lors du LOGIN (Mauvais mot de passe)
+        if (req.url.includes('/login')) {
+           showToast("Identifiants incorrects.");
+        }
+
+        // CAS B : Erreur lors du REFRESH (Le refresh token est aussi expiré)
+        // C'est la fin de session réelle.
+        else if (req.url.includes('/refresh-token')) {
            authService.logout();
-           showToast("Session expired, please log in again.");
-        } else {
-            showToast("Invalid credentials, please try again.");
+           showToast("Votre session a expiré, veuillez vous reconnecter.");
         }
+
+        // CAS C : Erreur 401 standard (Token d'accès expiré)
+        // 🛑 IMPORTANT : ON NE FAIT RIEN ICI !
+        // On laisse l'erreur remonter au RefreshTokenInterceptor qui va tenter de rafraîchir.
+        // Si on logout ici, on tue le processus de refresh.
+
       } else if (error.status === 403) {
-        showToast("You do not have the rights to perform this action.");
+        showToast("Vous n'avez pas les droits pour effectuer cette action.");
       } else if (error.status === 404) {
-        if (!req.url.includes('/login')) {
-           showToast("Resource not found.");
+        // On évite le toast 404 sur le login ou refresh si nécessaire, sinon OK
+        if (!req.url.includes('/login') && !req.url.includes('/refresh-token')) {
+           showToast("Ressource introuvable.");
         }
-      } else {
-        showToast("A technical error occurred.");
+      } else if (error.status >= 500) {
+        showToast("Une erreur technique est survenue.");
       }
+
+      // On renvoie toujours l'erreur pour que la chaîne continue (vers RefreshTokenInterceptor)
       return throwError(() => error);
     })
   );

@@ -6,10 +6,9 @@ import { ChargingLocation } from '../../models/charging-location.model';
 import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import {
-  IonList, IonItem, IonButton, IonCard, IonCardContent, IonCardHeader,
-  IonCardTitle, IonSelect, IonSelectOption, IonIcon, IonText,
-  ToastController, ModalController // <--- AJOUT DES IMPORTS
-} from '@ionic/angular/standalone';
+  IonList, IonItem, IonButton,
+   IonSelect, IonSelectOption, IonIcon, IonText,IonContent,
+  ToastController, ModalController, IonHeader, IonButtons,IonToolbar,IonTitle } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { cameraOutline, closeOutline, imageOutline, trashOutline } from 'ionicons/icons';
 import { GeolocalisationService } from 'src/app/shared-component/services/geolocalisation.service';
@@ -17,11 +16,11 @@ import { GeolocalisationService } from 'src/app/shared-component/services/geoloc
 @Component({
   selector: 'app-station-form',
   standalone: true,
-  imports: [
+  imports: [IonButtons, IonHeader,
     ReactiveFormsModule,
     FormFieldComponent,
-    IonList, IonItem, IonButton, IonCard, IonCardContent, IonCardHeader,
-    IonCardTitle, IonSelect, IonSelectOption, IonIcon, IonText
+    IonList, IonItem, IonContent,IonButton,IonTitle,
+IonToolbar,IonSelect, IonSelectOption, IonIcon, IonText
   ],
   templateUrl: './station-form.component.html',
   styleUrls: ['./station-form.component.scss'],

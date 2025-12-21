@@ -1,86 +1,90 @@
-<ion-card>
-  <ion-card-header class="flex flex-row justify-between items-center pb-0">
-    <ion-card-title>Ajouter une borne</ion-card-title>
-    <ion-button fill="clear" color="medium" (click)="cancel()">
-      <ion-icon name="close-outline" slot="icon-only"></ion-icon>
-    </ion-button>
-  </ion-card-header>
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Ajouter une borne</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="medium" (click)="cancel()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-card-content class="pt-4">
-    <form [formGroup]="stationForm" (ngSubmit)="onSubmit()">
-      <ion-list lines="none" class="flex flex-col gap-4">
+<ion-content class="ion-padding">
 
-        <ion-item class="rounded-lg border border-gray-300">
-          <ion-select label="Lieu de la borne" label-placement="floating" formControlName="locationId" placeholder="Choisir un lieu">
-            @for (loc of myLocations(); track loc.id) {
-              <ion-select-option [value]="loc.id">{{ loc.city }} - {{ loc.addressLine }}</ion-select-option>
-            }
-          </ion-select>
-        </ion-item>
+  <form [formGroup]="stationForm" (ngSubmit)="onSubmit()">
+    <ion-list lines="none" class="flex flex-col gap-4">
 
-        @if (stationForm.get('locationId')?.invalid && stationForm.get('locationId')?.touched) {
-          <ion-text color="danger" class="text-xs px-4">Le lieu est obligatoire.</ion-text>
-        }
-
-        <app-form-field
-          label="Nom de la borne"
-          placeholder="ex: Borne Garage"
-          [controlType]="ControlType.Input"
-          formControlName="name">
-        </app-form-field>
-
-        <app-form-field
-          label="Description"
-          placeholder="Instructions d'accès..."
-          [controlType]="ControlType.Textarea"
-          formControlName="description">
-        </app-form-field>
-
-        <div class="flex gap-2">
-          <app-form-field class="flex-1" label="Puissance (kW)" placeholder="7.4" type="number"
-            [controlType]="ControlType.Input" formControlName="powerKw">
-          </app-form-field>
-          <app-form-field class="flex-1" label="Prix (€/h)" placeholder="2.50" type="number"
-            [controlType]="ControlType.Input" formControlName="price">
-          </app-form-field>
-        </div>
-
-        <div class="flex flex-col items-center mt-2 p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 transition cursor-pointer" (click)="triggerFileInput()">
-          <input id="fileInput" type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden">
-
-          @if (imagePreview) {
-            <div class="relative w-full h-40 mb-2">
-              <img [src]="imagePreview" class="w-full h-full object-cover rounded-md" alt="Prévisualisation">
-              <ion-button size="small" color="danger" class="absolute top-1 right-1" (click)="$event.stopPropagation(); imagePreview = null; selectedFile = null">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </div>
-          } @else {
-            <div class="flex flex-col items-center text-gray-500">
-              <ion-icon name="image-outline" class="text-4xl mb-2"></ion-icon>
-              <span class="text-sm font-medium">Ajouter une photo</span>
-            </div>
+      <ion-item class="rounded-lg border border-gray-300">
+        <ion-select label="Lieu de la borne" label-placement="floating" formControlName="locationId" placeholder="Choisir un lieu">
+          @for (loc of myLocations(); track loc.id) {
+            <ion-select-option [value]="loc.id">{{ loc.city }} - {{ loc.addressLine }}</ion-select-option>
           }
-        </div>
+        </ion-select>
+      </ion-item>
 
-        <div class="flex gap-3 mt-4">
-          <ion-button
-            fill="outline"
-            color="medium"
-            class="flex-1"
-            (click)="cancel()">
-            Annuler
-          </ion-button>
+      @if (stationForm.get('locationId')?.invalid && stationForm.get('locationId')?.touched) {
+        <ion-text color="danger" class="text-xs px-4">Le lieu est obligatoire.</ion-text>
+      }
 
-          <ion-button
-            type="submit"
-            class="flex-1"
-            [disabled]="stationForm.invalid">
-            Créer
-          </ion-button>
-        </div>
+      <app-form-field
+        label="Nom de la borne"
+        placeholder="ex: Borne Garage"
+        [controlType]="ControlType.Input"
+        formControlName="name">
+      </app-form-field>
 
-      </ion-list>
-    </form>
-  </ion-card-content>
-</ion-card>
+      <app-form-field
+        label="Description"
+        placeholder="Instructions d'accès..."
+        [controlType]="ControlType.Textarea"
+        formControlName="description">
+      </app-form-field>
+
+      <div class="flex gap-2">
+        <app-form-field class="flex-1" label="Puissance (kW)" placeholder="7.4" type="number"
+          [controlType]="ControlType.Input" formControlName="powerKw">
+        </app-form-field>
+        <app-form-field class="flex-1" label="Prix (€/h)" placeholder="2.50" type="number"
+          [controlType]="ControlType.Input" formControlName="price">
+        </app-form-field>
+      </div>
+
+      <div class="flex flex-col items-center mt-2 p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 transition cursor-pointer" (click)="triggerFileInput()">
+        <input id="fileInput" type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden">
+
+        @if (imagePreview) {
+          <div class="relative w-full h-40 mb-2">
+            <img [src]="imagePreview" class="w-full h-full object-cover rounded-md" alt="Prévisualisation">
+            <ion-button size="small" color="danger" class="absolute top-1 right-1" (click)="$event.stopPropagation(); imagePreview = null; selectedFile = null">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        } @else {
+          <div class="flex flex-col items-center text-gray-500">
+            <ion-icon name="image-outline" class="text-4xl mb-2"></ion-icon>
+            <span class="text-sm font-medium">Ajouter une photo</span>
+          </div>
+        }
+      </div>
+
+      <div class="flex gap-3 mt-4 mb-6">
+        <ion-button
+          fill="outline"
+          color="medium"
+          class="flex-1"
+          (click)="cancel()">
+          Annuler
+        </ion-button>
+
+        <ion-button
+          type="submit"
+          class="flex-1"
+          [disabled]="stationForm.invalid">
+          Créer
+        </ion-button>
+      </div>
+
+    </ion-list>
+  </form>
+
+</ion-content>
