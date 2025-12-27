@@ -10,20 +10,21 @@ import { LocationFormComponent } from '../../component/location-form/location-fo
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader,
   IonCardSubtitle, IonCardContent, IonCardTitle, IonList, IonItem,
-  IonLabel, IonThumbnail, IonButton
-} from '@ionic/angular/standalone';
+  IonLabel, IonThumbnail, IonButton,IonBackButton,IonButtons, IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { addOutline } from 'ionicons/icons';
+import { ModalController } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-location',
   templateUrl: './location.component.html',
   styleUrls: ['./location.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonIcon,
     IonButton, IonLabel, IonItem, IonList, IonCardTitle, IonCardContent,
     IonCardSubtitle, IonCardHeader, IonCard, IonContent, IonHeader,
-    IonTitle, IonToolbar, IonThumbnail,
-    RouterLink,
-    LocationFormComponent
+    IonTitle, IonToolbar, IonThumbnail,IonBackButton,IonButtons,
+    RouterLink
   ]
 })
 export class LocationComponent implements OnInit {
@@ -31,6 +32,7 @@ export class LocationComponent implements OnInit {
   private chargingLocationService = inject(ChargingLocationService);
   private chargingStationService = inject(ChargingStationService);
   private authService = inject(AuthService);
+  private modalCtrl = inject(ModalController);
 
   isLoading = false;
   locations: ChargingLocation[] = [];
@@ -38,6 +40,9 @@ export class LocationComponent implements OnInit {
   user = this.authService.user;
 
   constructor() {
+    addIcons({ addOutline });
+
+    // Recharger les lieux lorsque l'utilisateur change (login/logout)
     effect(() => {
       if (this.authService.user()) {
         this.loadLocations();
@@ -49,6 +54,20 @@ export class LocationComponent implements OnInit {
     if (this.user()) {
       this.loadLocations();
     }
+  }
+
+  async openAddLocationModal() {
+    const modal = await this.modalCtrl.create({
+      component: LocationFormComponent,
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result.role === 'confirm') {
+        this.loadLocations();
+      }
+    });
+
+    await modal.present();
   }
 
   loadLocations(): void {

@@ -9,26 +9,28 @@
   <ion-card-content class="pt-4">
     <form [formGroup]="locationForm" (ngSubmit)="onSubmit()">
       <ion-list class="space-y-4" lines="none">
-
         <app-form-field
           label="Nom du lieu"
           placeholder="ex: Maison, Bureau..."
           [controlType]="ControlType.Input"
-          [formControl]="name">
+          [formControl]="name"
+        >
         </app-form-field>
 
         <app-form-field
           label="Adresse"
           placeholder="ex: 12 rue de la Paix"
           [controlType]="ControlType.Input"
-          [formControl]="addressLine">
+          [formControl]="addressLine"
+        >
         </app-form-field>
 
         <app-form-field
           label="Ville"
           placeholder="Ville"
           [controlType]="ControlType.Input"
-          [formControl]="city">
+          [formControl]="city"
+        >
         </app-form-field>
 
         <div class="flex gap-2">
@@ -37,7 +39,8 @@
             label="Code postal"
             placeholder="75000"
             [controlType]="ControlType.Input"
-            [formControl]="postalCode">
+            [formControl]="postalCode"
+          >
           </app-form-field>
 
           <app-form-field
@@ -45,7 +48,8 @@
             label="Pays"
             placeholder="France"
             [controlType]="ControlType.Input"
-            [formControl]="country">
+            [formControl]="country"
+          >
           </app-form-field>
         </div>
 
@@ -54,7 +58,8 @@
             fill="outline"
             color="medium"
             class="flex-1"
-            (click)="closeModal()">
+            (click)="closeModal()"
+          >
             Annuler
           </ion-button>
 
@@ -62,11 +67,11 @@
             type="submit"
             color="primary"
             class="flex-1"
-            [disabled]="locationForm.invalid">
+            [disabled]="locationForm.invalid"
+          >
             Enregistrer
           </ion-button>
         </div>
-
       </ion-list>
     </form>
   </ion-card-content>

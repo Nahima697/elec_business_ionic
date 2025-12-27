@@ -1,26 +1,91 @@
-
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>rDétail du lieu</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Détail du lieu</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Lieux de recharge</ion-title>
-    </ion-toolbar>
-  </ion-header>
-<ion-card>
-  <ion-card-header>
-    <ion-card-title>Card Title</ion-card-title>
-    <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-  </ion-card-header>
+<ion-content [fullscreen]="true" class="ion-padding">
 
-  <ion-card-content>
-    
-  </ion-card-content>
+  @if (isLoading()) {
+    <div class="flex justify-center mt-10">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  } @else if (location(); as loc) {
 
-  <ion-button fill="clear">Action 1</ion-button>
-  <ion-button fill="clear">Action 2</ion-button>
-</ion-card>
+    <ion-card class="mx-0 mb-6 shadow-sm">
+      <ion-card-header>
+        <div class="flex items-center gap-2 mb-2">
+          <div class="bg-indigo-100 p-2 rounded-full text-indigo-600">
+             <ion-icon name="map-outline" size="large"></ion-icon>
+          </div>
+          <div>
+            <ion-card-title>{{ loc.name }}</ion-card-title>
+            <ion-card-subtitle>{{ loc.city }}</ion-card-subtitle>
+          </div>
+        </div>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="text-gray-700 font-medium">{{ loc.addressLine }}</p>
+        <p class="text-gray-500 text-sm mt-1">CP: {{ loc.postalCode }}</p>
+      </ion-card-content>
+
+      <div class="flex justify-end p-2 border-t border-gray-100">
+        <ion-button fill="clear" size="small" color="medium">Modifier</ion-button>
+        <ion-button fill="clear" size="small" color="danger">Supprimer</ion-button>
+      </div>
+    </ion-card>
+
+    <div class="flex justify-between items-center mb-2 px-1">
+      <h3 class="text-lg font-bold text-gray-800">Bornes installées</h3>
+
+      <ion-button size="small" fill="outline"
+                  [routerLink]="['/owner/stations/new']"
+                  [queryParams]="{ locationId: loc.id }">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Ajouter
+      </ion-button>
+    </div>
+
+    @if (stations().length > 0) {
+      <ion-list class="bg-transparent">
+        @for (station of stations(); track station.id) {
+          <ion-item button [routerLink]="['/station', station.id]" detail="true" class="mb-3 rounded-xl overflow-hidden shadow-sm border border-gray-100" lines="none">
+            <ion-thumbnail slot="start">
+              <img [src]="station.imageUrl && station.imageUrl.startsWith('http')
+                          ? station.imageUrl
+                          : (station.imageUrl ? 'http://localhost:8080/uploads/' + station.imageUrl : 'assets/images/eleccar.png')"
+                   class="object-cover rounded w-full h-full"
+                   alt="Borne"/>
+            </ion-thumbnail>
+            <ion-label>
+              <h2 class="font-bold">{{ station.name }}</h2>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">
+                  {{ station.powerKw }} kW
+                </span>
+                <span class="text-sm text-gray-500">{{ station.price }} €/h</span>
+              </div>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    } @else {
+      <div class="text-center p-8 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+        <p class="text-gray-500 mb-2">Aucune borne dans ce lieu.</p>
+        <ion-button size="small"
+                    [routerLink]="['/owner/stations/new']"
+                    [queryParams]="{ locationId: loc.id }">
+            Créer ma première borne
+        </ion-button>
+      </div>
+    }
+
+  } @else {
+    <div class="text-center mt-10">Lieu introuvable.</div>
+  }
+</ion-content>

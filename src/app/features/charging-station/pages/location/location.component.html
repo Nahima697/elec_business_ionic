@@ -1,66 +1,85 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/user/owner/dashboard"
+        text="Retour"
+      ></ion-back-button>
+    </ion-buttons>
     <ion-title>Mes Lieux</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="openAddLocationModal()">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Mes Lieux</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
   <div class="flex flex-col gap-6">
-
-    <app-location-form (locationCreated)="loadLocations()"></app-location-form>
-
     <h2 class="text-xl font-bold px-2 mt-4">Vos lieux enregistrés</h2>
 
     @for(location of locations; track location.id) {
-      <ion-card class="mx-0">
-        <ion-card-header>
-          <div class="flex justify-between items-start">
-            <div>
-              <ion-card-title>{{ location.name }}</ion-card-title>
-              <ion-card-subtitle>{{ location.city }}</ion-card-subtitle>
-            </div>
-            </div>
-        </ion-card-header>
+    <ion-card class="mx-0">
+      <ion-card-header>
+        <div class="flex justify-between items-start">
+          <div>
+            <ion-card-title>{{ location.name }}</ion-card-title>
+            <ion-card-subtitle>{{ location.city }}</ion-card-subtitle>
+          </div>
+        </div>
+      </ion-card-header>
 
-        <ion-card-content>
-          <ion-list lines="none">
-            @for (station of stationsByLocation[location.id] ?? []; track station.id) {
-              <ion-item [routerLink]="['/station', station.id]" detail="true" button class="mb-2 rounded-lg">
-                <ion-thumbnail slot="start" class="rounded overflow-hidden">
-                  <img
-                    [src]="station.imageUrl && station.imageUrl !== 'default.png'
-                      ? 'http://localhost:8080/uploads/thumbnail-' + station.imageUrl
-                      : 'assets/images/eleccar.png'"
-                    alt="Borne"
-                    class="object-cover w-full h-full"
-                  />
-                </ion-thumbnail>
-                <ion-label>
-                  <h3 class="font-bold">{{ station.name }}</h3>
-                  <p class="text-sm text-gray-500">{{ station.powerKw }} kW • {{ station.price }} €/h</p>
-                </ion-label>
-              </ion-item>
-            } @empty {
-              <div class="text-center py-4 text-gray-400 text-sm">
-                <p>Aucune borne associée à ce lieu.</p>
-                <ion-button fill="clear" size="small" [routerLink]="['/owner/stations']">Ajouter une borne</ion-button>
-              </div>
-            }
-          </ion-list>
-        </ion-card-content>
-      </ion-card>
+      <ion-card-content>
+        <ion-list lines="none">
+          @for (station of stationsByLocation[location.id] ?? []; track
+          station.id) {
+
+          <ion-item
+            [routerLink]="['/station', station.id]"
+            detail="true"
+            button
+            class="mb-2 rounded-lg"
+          >
+            <ion-thumbnail slot="start" class="rounded overflow-hidden">
+              <img
+                [src]="
+                  station.imageUrl && station.imageUrl !== 'default.png'
+                    ? 'http://localhost:8080/uploads/thumbnail-' +
+                      station.imageUrl
+                    : 'assets/images/eleccar.png'
+                "
+                alt="Borne"
+                class="object-cover w-full h-full"
+              />
+            </ion-thumbnail>
+            <ion-label>
+              <h3 class="font-bold">{{ station.name }}</h3>
+              <p class="text-sm text-gray-500">
+                {{ station.powerKw }} kW • {{ station.price }} €/h
+              </p>
+            </ion-label>
+          </ion-item>
+          } @empty {
+          <div class="text-center py-4 text-gray-400 text-sm">
+            <p>Aucune borne associée à ce lieu.</p>
+            <ion-button
+              fill="clear"
+              size="small"
+              [routerLink]="['/user/owner/stations']"
+              >Ajouter une borne</ion-button
+            >
+          </div>
+          }
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
     } @empty {
-      <div class="text-center mt-10 text-gray-500">
-        <p>Vous n'avez pas encore ajouté de lieu.</p>
-        <p class="text-sm">Utilisez le formulaire ci-dessus pour commencer.</p>
-      </div>
+    <div class="text-center mt-10 text-gray-500">
+      <p>Vous n'avez pas encore ajouté de lieu.</p>
+      <p class="text-sm">Cliquez sur le + en haut à droite pour commencer.</p>
+    </div>
     }
   </div>
-
 </ion-content>

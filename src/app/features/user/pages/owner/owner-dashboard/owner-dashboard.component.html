@@ -1,5 +1,10 @@
 <ion-content style="--background: #f9fafb;">
-  <div class="max-w-5xl mx-auto p-4 md:p-8 space-y-8">
+  <div class="max-w-5xl mx-auto p-4 md:p-8 space-y-6">
+
+    <div (click)="goBack()" class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 cursor-pointer transition mb-2">
+      <ion-icon name="arrow-back-outline" class="text-xl"></ion-icon>
+      <span class="font-medium text-sm">Retour</span>
+    </div>
 
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
@@ -26,7 +31,15 @@
 
     <h2 class="text-lg font-bold text-gray-800 mt-8 mb-4">Actions rapides</h2>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+
+ <div (click)="goToMyLocations()"
+     class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer flex flex-col items-center justify-center text-center gap-2 h-32 group">
+  <div class="p-3 bg-indigo-50 rounded-full text-indigo-600 group-hover:bg-indigo-100 transition">
+    <ion-icon name="map-outline" class="text-2xl"></ion-icon>
+  </div>
+  <span class="font-medium text-gray-700 text-sm">Mes Lieux</span>
+</div>
 
       <div (click)="openAddLocationModal()"
            class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer flex flex-col items-center justify-center text-center gap-2 h-32 group">
