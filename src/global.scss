@@ -1,9 +1,8 @@
-/* global.scss */
+/* src/global.scss */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Importations Ionic */
 @import "@ionic/angular/css/core.css";
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
@@ -15,88 +14,71 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/* NOUVELLE PALETTE */
-:root {
-  /* Arrière-plan & Texte */
-  --color-background: #F4F7F9; /* Gris très clair, plus doux que le blanc pur */
-  --color-foreground: #101828; /* Noir profond pour un bon contraste */
 
-  /* Couleurs Primaires et Secondaires */
-  --color-primary: #1C64F2;    /* Bleu électrique/confiance, la couleur principale d'action */
-  --color-accent: #059669;     /* Vert émeraude vif, pour le succès, la disponibilité, les indicateurs positifs */
-  --color-secondary: #6B7280;  /* Gris neutre pour le texte secondaire et les bordures légères */
-  --color-warning: #F59E0B;    /* Orange pour les avertissements ou les bornes occupées */
-
-  /* Schéma et Polices */
-  --color-scheme: light;
-  --font-title: 'Inter', sans-serif; /* Changement vers une police moderne */
-  --font-text: 'Inter', sans-serif;  /* Utilisation d'Inter pour tout pour une meilleure uniformité */
+.bg-primary {
+  background-color: var(--ion-color-primary) !important;
+}
+.text-primary {
+  color: var(--ion-color-primary) !important;
+}
+.border-primary {
+  border-color: var(--ion-color-primary) !important;
 }
 
-/* Base Body et Éléments de Contenu */
+.bg-accent {
+  background-color: var(--ion-color-success) !important;
+}
+.text-accent {
+  color: var(--ion-color-success) !important;
+}
+
+/* Fond général blanc */
 body {
-  background: var(--color-background);
-  color: var(--color-foreground);
-  font-family: var(--font-text);
+  background-color: #ffffff;
 }
 
-ion-content, ion-card, ion-card-header, ion-card-content, ion-item {
-  /* Assure que ces éléments respectent le fond du body */
-  --background: var(--color-background);
-  --color: var(--color-foreground);
-}
-
-/* Boutons d'Action (ION-BUTTON) */
-ion-button {
-  --background: var(--color-primary);
-  --background-hover: #1E40AF; /* Bleu légèrement plus foncé au survol */
-  --background-activated: #1E40AF;
-  --background-focused: var(--color-primary);
-  --color: white;
-  --border-radius: 0.5rem; /* Coins arrondis modérés (équivalent à rounded-lg de Tailwind) */
-  --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* Ombre plus moderne */
-  --ripple-color: white;
-}
-
-/* Éléments de Formulaire (ION-INPUT, etc.) */
-ion-input, ion-textarea, ion-datetime, ion-select {
-  --background: white; /* Fond blanc pour les champs pour les faire ressortir sur le fond gris clair */
-  --color: var(--color-foreground);
-  /* Ajout d'une bordure légère pour définir le champ */
+/* Correction des Inputs (Style blanc avec bordure) */
+ion-input, ion-textarea, ion-select {
+  --background: #ffffff;
+  --color: #1F2A44;
+  --placeholder-color: #9CA3AF;
   border: 1px solid #D1D5DB;
-  padding: 1rem !important; /* Ajout de padding pour un meilleur touch target */
   border-radius: 0.5rem;
   margin-bottom: 1rem;
-}
-/* Retrait des lignes et ajustement des items pour les formulaires */
-ion-item {
-  --border-color: transparent !important; /* Supprime la ligne inférieure par défaut */
-  --background: transparent !important;
-  --ion-item-background: transparent !important;
-  /* Nettoyage des paddings pour laisser Tailwind gérer */
-  --padding-start: 0px !important;
-  --padding-end: 0px !important;
-  --inner-padding-start: 0px !important;
-  --inner-padding-end: 0px !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-/* Header et Navigation */
-ion-header, ion-toolbar {
-  --background: white; /* Mettre le header en blanc pour bien contraster avec le body */
-  --color: var(--color-foreground);
-  --border-width: 0; /* Supprimer la bordure inférieure par défaut d'Ionic */
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); /* Légère ombre pour la profondeur */
+/* Header propre */
+ion-header {
+  background: #ffffff;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); /* Petite ombre */
+}
+ion-toolbar {
+  --background: #ffffff;
+  --border-width: 0;
 }
 
-ion-label {
-  color: var(--color-foreground);
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-a.link {
-  text-decoration: none;
-  color: var(--color-secondary);
+.animate-fade-in-down {
+  animation: fade-in-down 0.2s ease-out;
 }
-
-a.link:hover {
-  color: var(--color-primary);
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

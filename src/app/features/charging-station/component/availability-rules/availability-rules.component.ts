@@ -18,9 +18,9 @@ import { trashOutline, arrowUpOutline, alertCircleOutline } from 'ionicons/icons
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent,
-    IonItem, IonSelect, IonSelectOption, IonCard, IonCardHeader, IonCardTitle,
-    IonCardContent, IonInput, IonButton, IonLabel, IonIcon, IonList, IonSpinner
+    IonContent,
+    IonItem, IonSelect, IonSelectOption, 
+
   ]
 })
 export class AvailabilityRulesComponent {
@@ -54,7 +54,7 @@ onSubmit() {
     const formValue = this.ruleForm.value;
 
     const newRule: AvailabilityRuleDTO = {
-      stationId: stationId, 
+      stationId: stationId,
       dayOfWeek: Number(formValue.dayOfWeek),
       startTime: this.formatTime(formValue.startTime!),
       endTime: this.formatTime(formValue.endTime!)

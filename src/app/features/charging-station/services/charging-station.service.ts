@@ -1,7 +1,8 @@
 import { HttpClient,  httpResource } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ChargingStationRequestDTO, ChargingStationResponseDTO } from '../models/charging-station.model';
+import { ChargingStationPage, ChargingStationRequestDTO, ChargingStationResponseDTO } from '../models/charging-station.model';
 import { Observable } from 'rxjs';
+import { Page } from 'src/app/core/models/page.model';
 
 
 @Injectable({
@@ -11,7 +12,7 @@ export class ChargingStationService {
 
   private http = inject(HttpClient);
   getChargingStations()  {
-    return httpResource<ChargingStationResponseDTO[]>(()=>`/charging_stations`);
+    return httpResource<ChargingStationPage>(()=>`/charging_stations`);
   }
   getChargingStationDetail(id:string) :Observable<ChargingStationResponseDTO>   {
     return this.http.get<ChargingStationResponseDTO>(`/charging_stations/${id}`);
@@ -28,15 +29,14 @@ export class ChargingStationService {
     formData.append('lat', station.lat.toString());
     formData.append('locationId', station.locationId);
 
-    // Ajout de l'image si présente
     if (imageFile) {
       formData.append('image', imageFile);
     }
     return this.http.post<ChargingStationResponseDTO>('/charging_stations', formData);
   }
 
-  updateChargingStation(station: ChargingStationRequestDTO,id:string) : Observable<ChargingStationResponseDTO> {
-    return this.http.put<ChargingStationRequestDTO>(`/charging_stations/${id}`,station);
+  updateChargingStation(station: ChargingStationRequestDTO) : Observable<ChargingStationResponseDTO> {
+    return this.http.put<ChargingStationRequestDTO>(`/charging_stations/${station.id}`,station);
   }
 
   deleteChargingStation(id:string): Observable<void> {

@@ -23,12 +23,12 @@ import {
 export class RenterDashboardComponent implements OnInit {
   private auth = inject(AuthService);
   private router = inject(Router);
-  private location = inject(Location); // <--- AJOUT
+  private location = inject(Location); 
 
   constructor() {
     addIcons({
       calendar, navigate, search, time, checkmarkCircle,
-      chevronForward, card, map, arrowBackOutline // <--- AJOUT
+      chevronForward, card, map, arrowBackOutline
     });
   }
 

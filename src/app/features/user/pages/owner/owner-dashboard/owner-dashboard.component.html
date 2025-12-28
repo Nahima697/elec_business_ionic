@@ -1,78 +1,103 @@
 <ion-content style="--background: #f9fafb;">
-  <div class="max-w-5xl mx-auto p-4 md:p-8 space-y-6">
 
-    <div (click)="goBack()" class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 cursor-pointer transition mb-2">
-      <ion-icon name="arrow-back-outline" class="text-xl"></ion-icon>
-      <span class="font-medium text-sm">Retour</span>
-    </div>
+  <div class="max-w-5xl mx-auto p-4 md:p-8 space-y-8">
 
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900">Espace Propriétaire</h1>
-        <p class="text-gray-500">Gérez votre parc de bornes</p>
+    <div class="space-y-4">
+      <div (click)="goBack()"
+           class="inline-flex items-center gap-2 cursor-pointer transition py-1 hover:opacity-80"
+           style="color: var(--ion-color-medium);"> <ion-icon name="arrow-back-outline" class="text-xl"></ion-icon>
+        <span class="font-medium text-sm">Retour au dashboard</span>
       </div>
 
-      <ion-button (click)="openAddStationModal()" color="primary" mode="ios" class="shadow-sm">
-        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
-        Ajouter une borne
-      </ion-button>
-    </div>
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div>
+          <h1 class="text-3xl font-bold tracking-tight" style="color: var(--ion-text-color);">
+            Espace Propriétaire
+          </h1>
+          <p class="mt-1" style="color: var(--ion-color-step-600, #576073);">
+            Gérez vos bornes, disponibilités et revenus.
+          </p>
+        </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-        <p class="text-gray-500 text-sm">Revenus ce mois</p>
-        <p class="text-3xl font-bold text-gray-900">0 €</p>
-      </div>
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-        <p class="text-gray-500 text-sm">Réservations actives</p>
-        <p class="text-3xl font-bold text-gray-900">0</p>
+        <ion-button (click)="openAddStationModal()" color="primary" mode="ios" class="shadow-md">
+          <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+          Ajouter une borne
+        </ion-button>
       </div>
     </div>
 
-    <h2 class="text-lg font-bold text-gray-800 mt-8 mb-4">Actions rapides</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-
- <div (click)="goToMyLocations()"
-     class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer flex flex-col items-center justify-center text-center gap-2 h-32 group">
-  <div class="p-3 bg-indigo-50 rounded-full text-indigo-600 group-hover:bg-indigo-100 transition">
-    <ion-icon name="map-outline" class="text-2xl"></ion-icon>
-  </div>
-  <span class="font-medium text-gray-700 text-sm">Mes Lieux</span>
-</div>
-
-      <div (click)="openAddLocationModal()"
-           class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer flex flex-col items-center justify-center text-center gap-2 h-32 group">
-        <div class="p-3 bg-indigo-50 rounded-full text-indigo-600 group-hover:bg-indigo-100 transition">
-          <ion-icon name="map-outline" class="text-2xl"></ion-icon>
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+        <div class="flex justify-between items-start">
+          <p class="text-xs font-bold uppercase tracking-wider" style="color: var(--ion-color-medium);">Revenus mensuels</p>
+          <div class="p-2 rounded-lg"
+               style="background: rgba(var(--ion-color-success-rgb), 0.1); color: var(--ion-color-success);">
+            <ion-icon name="cash-outline" class="text-xl"></ion-icon>
+          </div>
         </div>
-        <span class="font-medium text-gray-700 text-sm">Nouveau Lieu</span>
+        <p class="text-3xl font-bold" style="color: var(--ion-text-color);">0 €</p>
       </div>
 
-      <div (click)="openAddStationModal()"
-           class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer flex flex-col items-center justify-center text-center gap-2 h-32 group">
-        <div class="p-3 bg-teal-50 rounded-full text-teal-600 group-hover:bg-teal-100 transition">
-          <ion-icon name="storefront-outline" class="text-2xl"></ion-icon>
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+        <div class="flex justify-between items-start">
+          <p class="text-xs font-bold uppercase tracking-wider" style="color: var(--ion-color-medium);">Réservations actives</p>
+          <div class="p-2 rounded-lg"
+               style="background: rgba(var(--ion-color-primary-rgb), 0.1); color: var(--ion-color-primary);">
+            <ion-icon name="calendar-outline" class="text-xl"></ion-icon>
+          </div>
         </div>
-        <span class="font-medium text-gray-700 text-sm">Nouvelle Borne</span>
+        <p class="text-3xl font-bold" style="color: var(--ion-text-color);">0</p>
       </div>
 
-      <div (click)="openAvailabilityModal()"
-           class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer flex flex-col items-center justify-center text-center gap-2 h-32 group">
-        <div class="p-3 bg-orange-50 rounded-full text-orange-600 group-hover:bg-orange-100 transition">
-          <ion-icon name="time-outline" class="text-2xl"></ion-icon>
-        </div>
-        <span class="font-medium text-gray-700 text-sm">Disponibilités</span>
-      </div>
+    </div>
 
-      <div (click)="goToMyBookings()"
-           class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer flex flex-col items-center justify-center text-center gap-2 h-32 group">
-        <div class="p-3 bg-purple-50 rounded-full text-purple-600 group-hover:bg-purple-100 transition">
-          <ion-icon name="list-outline" class="text-2xl"></ion-icon>
-        </div>
-        <span class="font-medium text-gray-700 text-sm">Réservations</span>
-      </div>
+    <div>
+      <h2 class="text-lg font-bold mb-4 px-1" style="color: var(--ion-text-color);">Menu rapide</h2>
 
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+        <div (click)="goToMyLocations()"
+             class="group bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center text-center gap-3">
+
+          <div class="h-14 w-14 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
+               style="background: rgba(var(--ion-color-primary-rgb), 0.08); color: var(--ion-color-primary);">
+            <ion-icon name="map-outline" class="text-2xl"></ion-icon>
+          </div>
+          <span class="font-semibold text-sm" style="color: var(--ion-text-color);">Mes Lieux</span>
+        </div>
+
+        <div (click)="openAddLocationModal()"
+             class="group bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center text-center gap-3">
+
+          <div class="h-14 w-14 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
+               style="background: rgba(var(--ion-color-primary-rgb), 0.08); color: var(--ion-color-primary);">
+            <ion-icon name="add-location-outline" class="text-2xl"></ion-icon>
+          </div>
+          <span class="font-semibold text-sm" style="color: var(--ion-text-color);">Nouveau Lieu</span>
+        </div>
+
+        <div (click)="openAvailabilityModal()"
+             class="group bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center text-center gap-3">
+
+          <div class="h-14 w-14 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
+               style="background: rgba(var(--ion-color-primary-rgb), 0.08); color: var(--ion-color-primary);">
+            <ion-icon name="time-outline" class="text-2xl"></ion-icon>
+          </div>
+          <span class="font-semibold text-sm" style="color: var(--ion-text-color);">Disponibilités</span>
+        </div>
+
+        <div (click)="goToMyBookings()"
+             class="group bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center text-center gap-3">
+
+          <div class="h-14 w-14 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
+               style="background: rgba(var(--ion-color-primary-rgb), 0.08); color: var(--ion-color-primary);">
+            <ion-icon name="list-outline" class="text-2xl"></ion-icon>
+          </div>
+          <span class="font-semibold text-sm" style="color: var(--ion-text-color);">Historique</span>
+        </div>
+
+      </div>
     </div>
   </div>
 </ion-content>

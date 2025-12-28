@@ -1,7 +1,8 @@
 import { httpResource } from '@angular/common/http';
 import {  Injectable, Signal } from '@angular/core';
-import { ChargingStationResponseDTO } from '../models/charging-station.model';
+import { ChargingStationPage, ChargingStationResponseDTO } from '../models/charging-station.model';
 import { environment } from 'src/environments/environment';
+import { Page } from 'src/app/core/models/page.model';
 
 
 @Injectable({
@@ -11,10 +12,10 @@ import { environment } from 'src/environments/environment';
 export class StationApiService {
    private apiUrl = environment.apiUrl;
  getAll() {
-  return httpResource<ChargingStationResponseDTO[]>(() => `${this.apiUrl}/charging_stations`)
+  return httpResource<ChargingStationPage>(() => `/charging_stations`)
  }
 
    getOne(id:Signal<string>) {
-    return httpResource<ChargingStationResponseDTO>(() => `${this.apiUrl}/charging_stations/`+id());
+    return httpResource<ChargingStationResponseDTO>(() => `/charging_stations/`+id());
   }
 }

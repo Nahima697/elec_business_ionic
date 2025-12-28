@@ -1,5 +1,4 @@
 import { Component, inject, signal, computed, input, model } from '@angular/core';
-import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
 import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
@@ -8,34 +7,43 @@ import { PlatformService } from 'src/app/shared-component/services/platform.serv
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [FormFieldComponent, RouterModule],
+  imports: [ RouterModule],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
   private router = inject(Router);
   private platformService = inject(PlatformService);
+  readonly stations = input<any>();
 
-  readonly stations = input<ChargingStationResponseDTO[]>();
   ControlType = ControlType;
+  open = model.required<boolean>();
 
   protected readonly searchFilter = signal('');
 
-  protected readonly filteredStations = computed(() =>
-    (this.stations() ?? []).filter(station =>
-      station.name?.toLowerCase().includes(this.searchFilter()?.toLowerCase() ?? '') ||
-      station.locationDTO?.name?.toLowerCase().includes(this.searchFilter()?.toLowerCase() ?? '')
-    )
-  );
+  protected readonly filteredStations = computed(() => {
+    const rawData = this.stations();
+    let list: ChargingStationResponseDTO[] = [];
 
-   open = model.required<boolean>();
+    // 1. Extraction intelligente (Tableau ou Page)
+    if (rawData?.content && Array.isArray(rawData.content)) {
+      list = rawData.content;
+    } else if (Array.isArray(rawData)) {
+      list = rawData;
+    }
+
+    // 2. Filtrage
+    const filter = this.searchFilter()?.toLowerCase() ?? '';
+    if (!filter) return list;
+
+    return list.filter(station =>
+      station.name?.toLowerCase().includes(filter) ||
+      station.locationDTO?.addressLine?.toLowerCase().includes(filter)
+    );
+  });
 
   close() {
     this.open.set(false);
-  }
-
-   openMenu() {
-    this.open.set(true);
   }
 
   toggleMenu() {
@@ -43,22 +51,25 @@ export class HeaderComponent {
   }
 
   protected readonly links = computed(() => [
-    { path: '/', name: 'Home' },
+    { path: '/', name: 'Accueil' },
     { path: '/map', name: 'Carte' },
     { path: '/login', name: 'Se connecter' },
-    { path: '/profile', name: 'Votre compte' }
+    { path: '/profile', name: 'Mon Compte' }
   ]);
 
   onLocalSearch(event: Event) {
-    const inputValue = (event.target as HTMLInputElement).value || '';
+    const target = event.target as HTMLInputElement;
+    const inputValue = (event as CustomEvent).detail?.value || target.value || '';
+
     this.searchFilter.set(inputValue);
 
-    if (!this.platformService.isBrowser) return;
+    if (!this.platformService.isBrowser()) return;
 
-    if (this.filteredStations().length > 0) {
-      this.router.navigate(['/map'], {
-        state: { stations: this.filteredStations() }
-      });
+    if (inputValue.length > 2) {
+       console.log('Recherche header:', inputValue);
+       this.router.navigate(['/map'], {
+         state: { searchTerm: inputValue }
+       });
     }
   }
 }

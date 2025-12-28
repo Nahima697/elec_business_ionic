@@ -7,7 +7,7 @@ import { ControlType } from 'src/app/shared-component/form-field/form-field.enum
 import { IonIcon, ModalController,} from '@ionic/angular/standalone';
 import { FilterModalComponent } from 'src/app/shared-component/filter-modal/filter-modal.component';
 import { PlatformService } from 'src/app/shared-component/services/platform.service';
-import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
+import { ChargingStationPage, ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
 
 @Component({
   selector: 'app-display-map',
@@ -28,12 +28,26 @@ export class DisplayMapComponent implements OnInit {
 
   // Variables
   protected readonly isBrowser = this.platformService.isBrowser();
-  readonly stations = input.required<ChargingStationResponseDTO[]>();
+  readonly stations = input.required<ChargingStationPage>();
 
   protected readonly filterValue = signal('');
   protected readonly filteredStations = computed(() => {
-    const list = this.stations();
-    if (!list) return [];
+    const rawData = this.stations();
+
+    // 1. EXTRACTION DES DONNÉES (Le correctif est ici)
+    let list: ChargingStationResponseDTO[] = [];
+
+    if (!rawData) {
+      list = [];
+    }
+    // Si c'est l'objet Paginé de Spring Boot (ce que tu reçois)
+    else if (rawData.content && Array.isArray(rawData.content)) {
+      list = rawData.content;
+    }
+    // Si c'est déjà un tableau (cas normal)
+    else if (Array.isArray(rawData)) {
+      list = rawData;
+    }
 
     const filter = this.filterValue().toLowerCase().trim();
     if (!filter) return list;
@@ -45,7 +59,7 @@ export class DisplayMapComponent implements OnInit {
   });
 
   map: Map | undefined;
-  center: LngLatLike = [4.8522, 45.7566]; // Lyon par défaut
+  center: LngLatLike = [4.8522, 45.7566];
   hoverStation?: ChargingStationResponseDTO;
   ControlType = ControlType;
 
@@ -64,7 +78,7 @@ export class DisplayMapComponent implements OnInit {
         // CAS 1 : On a reçu un terme de recherche
         if (state.searchTerm) {
           console.log('Recherche reçue du dashboard :', state.searchTerm);
-          this.updateFilter(state.searchTerm); 
+          this.updateFilter(state.searchTerm);
         }
         // CAS 2 : On a reçu une liste déjà filtrée
         else if (state.filteredStations?.length) {

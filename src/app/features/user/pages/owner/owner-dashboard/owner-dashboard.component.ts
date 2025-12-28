@@ -26,14 +26,14 @@ import { AvailabilityRulesComponent } from 'src/app/features/charging-station/co
 export class OwnerDashboardComponent implements OnInit {
   private auth = inject(AuthService);
   private router = inject(Router);
-  private location = inject(Location); // <--- Injection Location
+  private location = inject(Location); 
   private modalCtrl = inject(ModalController);
 
   constructor() {
     addIcons({
       addCircleOutline, mapOutline, listOutline,
       timeOutline, statsChartOutline, storefrontOutline,
-      arrowBackOutline, flashOutline // <--- Enregistrement des icones
+      arrowBackOutline, flashOutline
     });
   }
 

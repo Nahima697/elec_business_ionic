@@ -81,4 +81,8 @@ export const routes: Routes = [
 
   // WEB MAP
   { path: 'map', component: MapPage},
+  {
+    path: 'profile',
+    loadComponent: () => import('./features/profile/page/profile/profile.page').then( m => m.ProfilePage)
+  },
 ];

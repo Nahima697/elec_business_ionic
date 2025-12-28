@@ -1,64 +1,164 @@
-<ion-content class="bg-gray-50 relative">
-  <div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-r from-blue-700 to-indigo-800 rounded-b-[3rem] z-0"></div>
+<ion-content color="light">
 
-  <div class="relative z-10 max-w-5xl mx-auto px-4 pt-12 pb-8">
+  <div class="max-w-5xl mx-auto px-6 pt-12 pb-10">
 
-    <div class="text-white mb-10 flex justify-between items-end">
+    <!-- Header -->
+    <div class="flex justify-between items-start mb-10">
       <div>
-        <p class="text-blue-200 text-sm font-medium uppercase tracking-wider mb-1">Espace Membre</p>
-        <h1 class="text-3xl md:text-4xl font-bold">
-          Bonjour, {{ (authService.user()?.username | titlecase) || 'Utilisateur' }}
+        <p class="text-xs font-semibold uppercase tracking-wider mb-2"
+           style="color: var(--ion-color-medium);">
+          Tableau de bord
+        </p>
+
+        <h1 class="text-4xl font-extrabold leading-tight"
+            style="color: var(--ion-text-color);">
+          Bonjour,
+          <span style="color: var(--ion-color-primary);">
+            {{ (authService.user()?.username | titlecase) || 'Utilisateur' }}
+          </span>
         </h1>
-        <p class="text-blue-100 mt-2 text-lg">
-          Gérez vos bornes ou réservez votre prochaine recharge.
+
+        <p class="mt-3 text-sm max-w-lg"
+           style="color: var(--ion-color-medium);">
+          Gérez vos bornes, vos réservations et votre profil depuis votre espace personnel.
         </p>
       </div>
-      <div routerLink="/profile" class="hidden md:block h-14 w-14 bg-white/20 backdrop-blur-md rounded-full border-2 border-white/30 p-1 cursor-pointer hover:bg-white/30 transition">
-        <img src="assets/images/avatar-placeholder.png" class="h-full w-full rounded-full object-cover" alt="Avatar">
+
+      <div routerLink="/profile"
+           class="h-14 w-14 rounded-full p-1 cursor-pointer hover:scale-105 transition-transform"
+           style="
+             background: var(--ion-color-light);
+             border: 1.5px solid rgba(var(--ion-color-primary-rgb), 0.35);
+           ">
+        <img
+          src="assets/images/avatar-placeholder.png"
+          class="h-full w-full rounded-full object-cover"
+          alt="Avatar"
+        />
       </div>
     </div>
 
-    <div class="bg-white rounded-3xl shadow-xl p-6 md:p-12 mb-8 border border-gray-100">
-      <div class="text-center mb-10">
-        <h2 class="text-2xl font-bold text-gray-800">Choisissez votre interface</h2>
-        <p class="text-gray-500">Vous pouvez basculer d'un mode à l'autre à tout moment.</p>
-      </div>
+    <!-- Interface selector -->
+    <div class="rounded-2xl p-6 mb-10"
+         style="
+           background: var(--ion-color-light);
+           border: 1.5px solid rgba(var(--ion-color-primary-rgb), 0.3);
+         ">
 
-      <div class="flex justify-center">
-        <app-role-selector (roleSelected)="onRoleSelected($event)"></app-role-selector>
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <h2 class="text-lg font-bold"
+              style="color: var(--ion-text-color);">
+            Votre interface
+          </h2>
+          <p class="text-sm mt-1"
+             style="color: var(--ion-color-medium);">
+            Basculez entre le mode Propriétaire et Locataire.
+          </p>
+        </div>
+
+        <app-role-selector
+          (roleSelected)="onRoleSelected($event)">
+        </app-role-selector>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Infos -->
+    <h3 class="text-lg font-bold mb-4"
+        style="color: var(--ion-text-color);">
+      En bref
+    </h3>
 
-      <div class="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-sm border border-white/50 flex items-start gap-4">
-        <div class="bg-green-50 p-3 rounded-xl text-green-600">
-          <ion-icon name="shield-checkmark-outline" class="text-2xl"></ion-icon>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+      <!-- Card 1 -->
+      <div class="p-5 rounded-2xl transition-transform hover:scale-[1.02]"
+           style="
+             background: linear-gradient(
+               180deg,
+               rgba(var(--ion-color-success-rgb), 0.08),
+               var(--ion-color-light)
+             );
+             border: 1.5px solid rgba(var(--ion-color-success-rgb), 0.35);
+           ">
+
+        <div class="h-11 w-11 rounded-xl flex items-center justify-center mb-3"
+             style="
+               background: rgba(var(--ion-color-success-rgb), 0.18);
+               color: var(--ion-color-success);
+             ">
+          <ion-icon name="shield-checkmark-outline" class="text-xl"></ion-icon>
         </div>
-        <div>
-          <h3 class="font-bold text-gray-800 text-sm">Paiement Sécurisé</h3>
-          <p class="text-xs text-gray-500 mt-1">Toutes les transactions sont chiffrées et protégées.</p>
-        </div>
+
+        <h4 class="font-bold text-sm"
+            style="color: var(--ion-text-color);">
+          Paiement sécurisé
+        </h4>
+
+        <p class="text-xs mt-1"
+           style="color: var(--ion-color-medium);">
+          Transactions chiffrées et protégées.
+        </p>
       </div>
 
-      <div class="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-sm border border-white/50 flex items-start gap-4">
-        <div class="bg-blue-50 p-3 rounded-xl text-blue-600">
-          <ion-icon name="help-buoy-outline" class="text-2xl"></ion-icon>
+      <!-- Card 2 -->
+      <div class="p-5 rounded-2xl transition-transform hover:scale-[1.02]"
+           style="
+             background: linear-gradient(
+               180deg,
+               rgba(var(--ion-color-primary-rgb), 0.08),
+               var(--ion-color-light)
+             );
+             border: 1.5px solid rgba(var(--ion-color-primary-rgb), 0.35);
+           ">
+
+        <div class="h-11 w-11 rounded-xl flex items-center justify-center mb-3"
+             style="
+               background: rgba(var(--ion-color-primary-rgb), 0.18);
+               color: var(--ion-color-primary);
+             ">
+          <ion-icon name="headset-outline" class="text-xl"></ion-icon>
         </div>
-        <div>
-          <h3 class="font-bold text-gray-800 text-sm">Support 24/7</h3>
-          <p class="text-xs text-gray-500 mt-1">Une question ? Notre équipe est là pour vous aider.</p>
-        </div>
+
+        <h4 class="font-bold text-sm"
+            style="color: var(--ion-text-color);">
+          Support 24/7
+        </h4>
+
+        <p class="text-xs mt-1"
+           style="color: var(--ion-color-medium);">
+          Une équipe disponible à tout moment.
+        </p>
       </div>
 
-      <div class="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-sm border border-white/50 flex items-start gap-4">
-        <div class="bg-purple-50 p-3 rounded-xl text-purple-600">
-          <ion-icon name="flash-outline" class="text-2xl"></ion-icon>
+      <!-- Card 3 -->
+      <div class="p-5 rounded-2xl transition-transform hover:scale-[1.02]"
+           style="
+             background: linear-gradient(
+               180deg,
+               rgba(var(--ion-color-primary-rgb), 0.08),
+               var(--ion-color-light)
+             );
+             border: 1.5px solid rgba(var(--ion-color-primary-rgb), 0.35);
+           ">
+
+        <div class="h-11 w-11 rounded-xl flex items-center justify-center mb-3"
+             style="
+               background: rgba(var(--ion-color-primary-rgb), 0.18);
+               color: var(--ion-color-primary);
+             ">
+          <ion-icon name="map-outline" class="text-xl"></ion-icon>
         </div>
-        <div>
-          <h3 class="font-bold text-gray-800 text-sm">Réseau Rapide</h3>
-          <p class="text-xs text-gray-500 mt-1">Accédez à plus de 5000 bornes compatibles.</p>
-        </div>
+
+        <h4 class="font-bold text-sm"
+            style="color: var(--ion-text-color);">
+          Réseau étendu
+        </h4>
+
+        <p class="text-xs mt-1"
+           style="color: var(--ion-color-medium);">
+          Des milliers de bornes disponibles.
+        </p>
       </div>
 
     </div>

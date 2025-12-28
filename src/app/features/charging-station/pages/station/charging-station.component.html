@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="bg-gray-50">
+<ion-content [fullscreen]="true" color="light">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Stations</ion-title>
@@ -12,49 +12,74 @@
   </ion-header>
 
   <div class="p-4 space-y-4">
-    @for (station of stations.value(); track station.id) {
-      <ion-card class="rounded-2xl shadow-md overflow-hidden">
 
-        <!-- Image -->
-        @if (station?.imageUrl && station.imageUrl !== 'default.png') {
-          <img
-            [src]="'http://localhost:8080/uploads/thumbnail-' + station.imageUrl"
-            alt="Image de la station"
-            class="w-full h-40 object-cover"
-          />
-        } @else {
-          <img
-            src="http://localhost:8080/uploads/default.png"
-            alt="Image par défaut"
-            class="w-full h-40 object-cover"
-          />
-        }
+    @for (station of stations.value()?.content; track station.id) {
 
-        <ion-card-header class="bg-white">
-          <ion-card-title class="text-lg font-bold text-gray-800">
-            {{ station.name }}
-          </ion-card-title>
-          <ion-card-subtitle class="text-sm text-gray-500">
-            Créée le {{ station.createdAt | date:'longDate' }}
-          </ion-card-subtitle>
+      <ion-card class="rounded-2xl shadow-sm overflow-hidden m-0" style="--background: #fff;">
+
+        <div class="relative h-48 w-full bg-gray-100">
+          @if (station.urls?.thumbnail) {
+            <img
+              [src]="station.urls?.thumbnail"
+              alt="Image station"
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          } @else if (station.imageUrl) {
+            <img
+              [src]="'http://localhost:8080/uploads/thumbnail-' + station.imageUrl"
+              class="w-full h-full object-cover"
+            />
+          } @else {
+            <div class="w-full h-full flex items-center justify-center text-gray-300">
+              <ion-icon name="image-outline" class="text-5xl"></ion-icon>
+            </div>
+          }
+
+          <div class="absolute top-3 right-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold shadow-sm"
+               style="color: var(--ion-text-color);">
+             {{ station.price | currency:'EUR' }} / kWh
+          </div>
+        </div>
+
+        <ion-card-header>
+          <div class="flex justify-between items-start">
+            <div>
+              <ion-card-title class="text-lg font-bold" style="color: var(--ion-text-color);">
+                {{ station.name }}
+              </ion-card-title>
+              <ion-card-subtitle class="mt-1" style="color: var(--ion-color-medium);">
+                Ajoutée le {{ station.createdAt | date:'dd/MM/yyyy' }}
+              </ion-card-subtitle>
+            </div>
+
+            <div class="flex items-center gap-1 px-2 py-1 rounded-lg bg-yellow-50 text-yellow-700 text-xs font-bold">
+              <ion-icon name="flash"></ion-icon>
+              {{ station.powerKw }} kW
+            </div>
+          </div>
         </ion-card-header>
 
-        <ion-card-content class="bg-white space-y-2">
-          <p class="text-gray-600"><strong>⚡</strong> {{ station.powerKw }} kW</p>
-          <p class="text-gray-600"><strong>💶</strong> {{ station.price | currency:'EUR' }}</p>
-        </ion-card-content>
-
-        <div class="p-4 bg-gray-50">
-          <ion-button
+        <div class="p-4 pt-0">
+           <ion-button
             expand="block"
             class="w-full rounded-xl"
             color="primary"
+            mode="ios"
             [routerLink]="['/station', station.id]"
           >
             Voir les détails
+            <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
           </ion-button>
         </div>
       </ion-card>
+    } @empty {
+      <div class="flex flex-col items-center justify-center h-64 text-center">
+        <div class="p-4 rounded-full bg-gray-100 mb-4 text-gray-400">
+          <ion-icon name="map-outline" class="text-4xl"></ion-icon>
+        </div>
+        <p style="color: var(--ion-color-medium);">Aucune station trouvée.</p>
+      </div>
     }
   </div>
 </ion-content>

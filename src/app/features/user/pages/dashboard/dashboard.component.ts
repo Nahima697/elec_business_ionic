@@ -4,15 +4,15 @@ import { CommonModule } from '@angular/common'; // + CommonModule (pour titlecas
 import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { UserService } from '../../service/user.service';
 import { RoleSelectorComponent } from '../../components/role-selector/role-selector.component';
-import { IonContent, IonIcon } from "@ionic/angular/standalone";
+import { IonContent, IonIcon, IonButton } from "@ionic/angular/standalone";
 import { PlatformService } from 'src/app/shared-component/services/platform.service';
 import { addIcons } from 'ionicons'; // + addIcons
-import { shieldCheckmarkOutline, helpBuoyOutline, flashOutline } from 'ionicons/icons'; // + Icons
+import { shieldCheckmarkOutline, helpBuoyOutline, flashOutline, arrowBackOutline, addCircleOutline, cashOutline, calendarOutline, mapOutline, timeOutline, listOutline, headsetOutline } from 'ionicons/icons'; // + Icons
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [IonContent, RoleSelectorComponent, CommonModule, IonIcon, RouterLink], // Ajoute les modules ici
+  imports: [IonButton, IonContent, RoleSelectorComponent, CommonModule, IonIcon, RouterLink], // Ajoute les modules ici
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit {
 
   constructor() {
     // On charge les icônes de la page
-    addIcons({ shieldCheckmarkOutline, helpBuoyOutline, flashOutline });
+    addIcons({shieldCheckmarkOutline,headsetOutline,mapOutline,arrowBackOutline,addCircleOutline,cashOutline,calendarOutline,timeOutline,listOutline,helpBuoyOutline,flashOutline});
   }
 
   ngOnInit() {}

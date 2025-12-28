@@ -1,8 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { ChargingStationService } from 'src/app/features/charging-station/services/charging-station.service';
-import { IonHeader, IonCardSubtitle,IonTitle,IonToolbar,
-   IonCardContent,  IonCardTitle,IonCard,IonCardHeader,IonContent } from "@ionic/angular/standalone";
+import { IonHeader, IonCardSubtitle,IonTitle,IonToolbar,  IonCardTitle,IonCard,IonCardHeader,IonContent, IonIcon } from "@ionic/angular/standalone";
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
@@ -10,9 +9,9 @@ import { StationApiService } from 'src/app/features/charging-station/services/st
 @Component({
   selector: 'app-charging-station',
   templateUrl: './charging-station.component.html',
-   imports: [ CurrencyPipe,DatePipe,
+   imports: [IonIcon,  CurrencyPipe,DatePipe,
      IonCardTitle,
-     IonCardContent,
+     IonIcon,
      IonCardSubtitle,
      IonCardHeader,
      IonCard,

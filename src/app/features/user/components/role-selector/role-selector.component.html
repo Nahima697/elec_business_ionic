@@ -1,45 +1,54 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
 
-  <div
-    (click)="selectRole('RENTER')"
-    class="group relative bg-white rounded-2xl p-8 cursor-pointer shadow-sm hover:shadow-xl border border-gray-100 transition-all duration-300 transform hover:-translate-y-1"
-  >
-    <div class="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-100 transition-colors">
-      <ion-icon name="car-sport-outline" class="text-3xl text-blue-600"></ion-icon>
+  <div (click)="selectRole('RENTER')"
+       class="group relative bg-white rounded-2xl p-8 cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+       style="border: 1px solid rgba(var(--ion-text-color-rgb), 0.1);">
+
+    <div class="w-16 h-16 rounded-xl flex items-center justify-center mb-6 transition-colors"
+         style="background: rgba(var(--ion-color-primary-rgb), 0.1); color: var(--ion-color-primary);">
+      <ion-icon name="car-sport-outline" class="text-3xl"></ion-icon>
     </div>
 
-    <h3 class="text-xl font-bold text-gray-900 mb-2">Je veux recharger</h3>
-    <p class="text-gray-500 leading-relaxed mb-6">
+    <h3 class="text-xl font-bold mb-2" style="color: var(--ion-text-color);">
+      Je veux recharger
+    </h3>
+    <p class="leading-relaxed mb-6" style="color: var(--ion-color-medium);">
       Trouvez des bornes disponibles autour de vous, réservez un créneau et rechargez votre véhicule en toute simplicité.
     </p>
 
-    <div class="flex items-center text-blue-600 font-semibold group-hover:underline">
+    <div class="flex items-center font-semibold group-hover:underline"
+         style="color: var(--ion-color-primary);">
       Accéder à mon espace conducteur
       <ion-icon name="arrow-forward-outline" class="ml-2"></ion-icon>
     </div>
 
-    <div class="absolute inset-0 border-2 border-transparent group-hover:border-blue-500 rounded-2xl transition-colors pointer-events-none"></div>
+    <div class="absolute inset-0 border-2 border-transparent group-hover:border-[var(--ion-color-primary)] rounded-2xl transition-colors pointer-events-none"></div>
   </div>
 
-  <div
-    (click)="selectRole('OWNER')"
-    class="group relative bg-white rounded-2xl p-8 cursor-pointer shadow-sm hover:shadow-xl border border-gray-100 transition-all duration-300 transform hover:-translate-y-1"
-  >
-    <div class="w-16 h-16 bg-green-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-100 transition-colors">
-      <ion-icon name="flash-outline" class="text-3xl text-green-600"></ion-icon>
+
+  <div (click)="selectRole('OWNER')"
+       class="group relative bg-white rounded-2xl p-8 cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+       style="border: 1px solid rgba(var(--ion-text-color-rgb), 0.1);">
+
+    <div class="w-16 h-16 rounded-xl flex items-center justify-center mb-6 transition-colors"
+         style="background: rgba(var(--ion-color-success-rgb), 0.1); color: var(--ion-color-success);">
+      <ion-icon name="flash-outline" class="text-3xl"></ion-icon>
     </div>
 
-    <h3 class="text-xl font-bold text-gray-900 mb-2">Je propose une borne</h3>
-    <p class="text-gray-500 leading-relaxed mb-6">
+    <h3 class="text-xl font-bold mb-2" style="color: var(--ion-text-color);">
+      Je propose une borne
+    </h3>
+    <p class="leading-relaxed mb-6" style="color: var(--ion-color-medium);">
       Gérez vos bornes de recharge, définissez vos disponibilités et encaissez vos revenus locatifs.
     </p>
 
-    <div class="flex items-center text-green-600 font-semibold group-hover:underline">
+    <div class="flex items-center font-semibold group-hover:underline"
+         style="color: var(--ion-color-success);">
       Gérer mes bornes
       <ion-icon name="arrow-forward-outline" class="ml-2"></ion-icon>
     </div>
 
-    <div class="absolute inset-0 border-2 border-transparent group-hover:border-green-500 rounded-2xl transition-colors pointer-events-none"></div>
+    <div class="absolute inset-0 border-2 border-transparent group-hover:border-[var(--ion-color-success)] rounded-2xl transition-colors pointer-events-none"></div>
   </div>
 
 </div>

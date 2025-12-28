@@ -1,25 +1,32 @@
 <section class="bg-white">
-  <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
-      <div class="mr-auto place-self-center lg:col-span-7">
-          <h1 class="max-w-2xl mb-6 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl">Electricity Business : trouvez une borne où que vous soyez</h1>
-          <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl">Louez une borne de recharge près de chez vous en quelques clics et roulez l’esprit léger.</p>
-          <div class="relative flex w-full max-w-lg">
-            <input
-              type="search"
-              id="default-search"
-              class="w-full p-4 pl-12 text-sm border border-secondary-300 rounded-r-lg bg-white-50"
-              placeholder="Rechercher une borne"
-            />
-            <button
-              class=" btn-accent absolute right-0 top-0 bottom-0 p-4 text-white bg-accent rounded-r-lg"
-              type="submit"
-            >
-              Trouver votre borne
-            </button>
-          </div>
+  <div class="grid max-w-screen-xl px-6 py-20 mx-auto lg:grid-cols-12 gap-10 items-center">
+
+    <!-- Texte -->
+    <div class="lg:col-span-7">
+      <h1 class="max-w-2xl mb-6 text-4xl md:text-5xl xl:text-6xl font-extrabold leading-tight">
+        Rechargez votre véhicule <span class="text-primary">où que vous soyez</span>
+      </h1>
+
+      <p class="max-w-xl mb-8 text-lg text-gray-500">
+        Electricity Business met en relation propriétaires et conducteurs pour une recharge simple, rapide et locale.
+      </p>
+
+      <div class="relative flex w-full max-w-lg">
+        <input
+          type="search"
+          class="w-full p-4 pl-12 text-sm border border-gray-300 rounded-l-lg"
+          placeholder="Ville, code postal..."
+        />
+        <button class="bg-accent text-white px-6 rounded-r-lg font-semibold hover:opacity-90">
+          Rechercher
+        </button>
       </div>
-      <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
-        <img src="assets/images/eleccar.png" alt="voiture en train de recharger" class="animated-image">
-      </div>
+    </div>
+
+    <!-- Image -->
+    <div class="hidden lg:flex lg:col-span-5 justify-center">
+      <img src="assets/images/eleccar.png" alt="Recharge voiture électrique" class="animated-image max-w-md">
+    </div>
+
   </div>
 </section>
