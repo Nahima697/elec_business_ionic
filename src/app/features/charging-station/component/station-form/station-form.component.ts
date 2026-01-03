@@ -11,7 +11,7 @@ import {
   ToastController, ModalController, IonHeader, IonButtons,IonToolbar,IonTitle } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { cameraOutline, closeOutline, imageOutline, trashOutline } from 'ionicons/icons';
-import { GeolocalisationService } from 'src/app/shared-component/services/geolocalisation.service';
+import { GeolocalisationService } from 'src/app/features/display-map/service/geolocalisation.service';
 
 @Component({
   selector: 'app-station-form',

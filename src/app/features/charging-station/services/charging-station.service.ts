@@ -14,6 +14,10 @@ export class ChargingStationService {
   getChargingStations()  {
     return httpResource<ChargingStationPage>(()=>`/charging_stations`);
   }
+
+  getMyStations() {
+    return httpResource<ChargingStationPage>(() => `/charging_stations/me`);
+  }
   getChargingStationDetail(id:string) :Observable<ChargingStationResponseDTO>   {
     return this.http.get<ChargingStationResponseDTO>(`/charging_stations/${id}`);
   }

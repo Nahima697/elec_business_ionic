@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl:'https://elec-business-spring.onrender.com/api'
+  apiUrl:'https://elec-business-spring.onrender.com/api',
+  MAPTILER_KEY: 'pUgm4NlEXg3amyAe53SH'
 };
 
 /*

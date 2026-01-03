@@ -1,43 +1,45 @@
 @if (isBrowser) {
-  <div class="absolute top-0 left-0 right-0 z-10 p-4">
-    <app-form-field
-      label="Rechercher"
-      placeholder="Adresse, ville..."
-      [controlType]="ControlType.Search"
-      type="search"
-      (ionInput)="onLocalSearch($event)"
-    >
+  <div class="absolute top-0 left-0 right-0 z-50 p-4 mt-20 pointer-events-none">
+
+    <div class="bg-white rounded-xl shadow-lg flex items-center pr-3 pointer-events-auto border border-gray-100">
+
+      <ion-searchbar
+        mode="ios"
+        class="custom-searchbar"
+        placeholder="Rechercher une borne, une ville..."
+        (ionInput)="onLocalSearch($event)"
+        style="--box-shadow: none; --background: #ffffff;"
+      ></ion-searchbar>
+
       <ion-icon
-        slot="end"
         name="filter-outline"
         (click)="openFilterModal()"
-        class="text-xl cursor-pointer"
+        class="text-2xl text-gray-500 cursor-pointer hover:text-blue-600 transition pl-2 border-l border-gray-100"
       ></ion-icon>
-    </app-form-field>
+    </div>
   </div>
 
-  <div class="w-full h-full">
+  <div class="w-full h-full relative z-0">
     <mgl-map
       class="w-full h-full map"
-      [style]="'https://api.maptiler.com/maps/streets-v2/style.json?key=pUgm4NlEXg3amyAe53SH'"
+      [style]="mapStyle"
       [zoom]="[13]"
       [center]="center"
       (mapLoad)="onMapLoad($event)"
     >
-
       @for (station of filteredStations(); track station.id) {
         <mgl-marker
           [lngLat]="[station.lng!, station.lat!]"
           class="charger-marker"
         >
           <div
-            class="transition-transform cursor-pointer charger-marker hover:scale-110"
+            class="transition-transform cursor-pointer hover:scale-110"
             (mouseenter)="onHover(station)"
             (mouseleave)="onLeave()"
             (click)="onHover(station)"
           >
             <a [routerLink]="['/station', station.id]" class="block">
-              <img src="assets/icons/battery.png" alt="Borne" class="w-8 h-8"/>
+              <img src="assets/icon/battery.png" alt="Borne" class="w-10 h-10 drop-shadow-md"/>
             </a>
           </div>
         </mgl-marker>
@@ -49,12 +51,22 @@
             [closeOnClick]="false"
             anchor="top"
             [offset]="25"
+            class="z-50"
           >
-            <div class="p-2 text-sm">
-              <h3 class="font-bold text-gray-900">{{ station.name }}</h3>
-              <p class="text-gray-600 truncate max-w-[150px]">{{ station.locationDTO?.addressLine }}</p>
-              <div class="mt-1 font-semibold text-teal-600">
-                ⚡ {{ station.powerKw }} kW
+            <div class="p-2 text-sm min-w-[160px]">
+              <h3 class="font-bold text-gray-900 truncate">{{ station.name }}</h3>
+              <p class="text-gray-500 text-xs truncate mb-2">
+                {{ station.locationDTO?.addressLine || 'Adresse inconnue' }}
+              </p>
+
+              <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1 font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs">
+                  <ion-icon name="flash"></ion-icon>
+                  <span>{{ station.powerKw }} kW</span>
+                </div>
+                <div class="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                   {{ station.price }}€/h
+                </div>
               </div>
             </div>
           </mgl-popup>
@@ -76,4 +88,4 @@
 
     </mgl-map>
   </div>
-} 
+}

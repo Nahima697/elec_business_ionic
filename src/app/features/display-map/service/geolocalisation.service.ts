@@ -1,13 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
-import { map, Observable } from 'rxjs';
+import { env } from 'process';
+import { catchError, map, Observable, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GeolocalisationService {
   private http = inject(HttpClient);
+  private MAPTILER_KEY = environment.MAPTILER_KEY;
 
   async getCurrentPosition() {
     try {
@@ -68,4 +71,25 @@ export class GeolocalisationService {
       })
     );
   }
+  searchCity(query: string): Observable<{ lat: number, lng: number } | null> {
+    if (!query || query.length < 3) return of(null);
+
+    const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(query)}.json?key=${this.MAPTILER_KEY}&limit=1`;
+
+    return this.http.get<any>(url).pipe(
+      map(response => {
+        if (response.features && response.features.length > 0) {
+          const [lng, lat] = response.features[0].center;
+          return { lat, lng };
+        }
+
+        return null;
+      }),
+      catchError(err => {
+        console.error('Erreur geocoding:', err);
+        return of(null);
+      })
+    );
+  }
 }
+

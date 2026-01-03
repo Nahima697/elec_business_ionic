@@ -12,19 +12,17 @@ import { shieldCheckmarkOutline, helpBuoyOutline, flashOutline, arrowBackOutline
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [IonButton, IonContent, RoleSelectorComponent, CommonModule, IonIcon, RouterLink], // Ajoute les modules ici
+  imports: [ IonContent, RoleSelectorComponent, CommonModule, IonIcon, RouterLink], // Ajoute les modules ici
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
   private router = inject(Router);
-  // On met authService en public pour l'utiliser dans le HTML (ou protected)
   public authService = inject(AuthService);
   private userService = inject(UserService);
   private platformService = inject(PlatformService);
 
   constructor() {
-    // On charge les icônes de la page
     addIcons({shieldCheckmarkOutline,headsetOutline,mapOutline,arrowBackOutline,addCircleOutline,cashOutline,calendarOutline,timeOutline,listOutline,helpBuoyOutline,flashOutline});
   }
 

@@ -5,84 +5,66 @@
 </ion-header>
 
 <ion-content class="bg-gray-50">
+
   @if (station.value(); as state) {
-    @if (station.isLoading()) {
-      <div class="flex justify-center items-center h-full">
-        <ion-spinner></ion-spinner>
+
+    <div class="p-4 flex flex-col gap-6">
+      <div class="max-w-md mx-auto w-full">
+        <app-station-card [station]="state"></app-station-card>
       </div>
-    } @else if (station.error()) {
-      <div class="flex flex-col items-center justify-center h-full text-red-500">
-        <p>Erreur lors du chargement de la station.</p>
+
+      <div class="max-w-md mx-auto w-full">
+        <ion-button expand="block" (click)="openModal()" color="primary" class="rounded-xl shadow-md">
+          RÉSERVER
+        </ion-button>
       </div>
-    } @else {
-      <div class="p-4 flex flex-col gap-6">
-        <!-- CARD STATION CENTRÉE -->
-        <div class="max-w-md mx-auto w-full">
-          <app-station-card [station]="state"></app-station-card>
+
+      <div>
+        <div class="flex justify-between items-center mb-4 px-1">
+          <h3 class="text-lg font-bold text-gray-800">
+            Avis utilisateurs ({{ state.reviewsDTO?.length || 0 }})
+          </h3>
+
+          @if (canReview()) {
+            <ion-button fill="clear" size="small" (click)="openReviewModal()">
+              Laisser un avis
+            </ion-button>
+          }
         </div>
 
-        <!-- BOUTON RÉSERVER CENTRÉ & LARGE -->
-        <div class="max-w-md mx-auto w-full">
-          <ion-button
-            expand="block"
-            (click)="openModal()"
-            class="w-full h-12 rounded-full font-semibold text-base
-                   bg-teal-500 text-white shadow-md
-                   hover:opacity-90 active:scale-95
-                   transition-all duration-150"
-          >
-            RÉSERVER
-          </ion-button>
-        </div>
+        <app-review-list [reviews]="state.reviewsDTO ?? []"></app-review-list>
       </div>
+    </div>
 
-      <!-- MODAL DE RÉSERVATION -->
+    <ion-modal #modal>
+      <ng-template>
+        <app-booking-form [stationId]="state.id" (formSubmit)="onFormSubmit($event)"></app-booking-form>
+      </ng-template>
+    </ion-modal>
 
-<ion-modal #modal class="booking-modal">
-  <ng-template>
-    @if (station.value(); as state) {
-      <app-booking-form
-        [stationId]="state.id"
-        (formSubmit)="onFormSubmit($event)"
-      ></app-booking-form>
-    }
-  </ng-template>
-</ion-modal>
+    <ion-modal #reviewModal>
+      <ng-template>
+        <app-review-form
+           [stationId]="state.id"
+           (formSubmit)="onReviewSubmitSuccess()"
+           (cancel)="reviewModal.dismiss()">
+        </app-review-form>
+      </ng-template>
+    </ion-modal>
 
-      <!-- SECTION AVIS-->
-       <div class="flex justify-between items-center mb-4">
-  <h3 class="text-lg font-bold text-gray-800">Avis utilisateurs</h3>
-
-  @if (canReview()) {
-    <ion-button fill="clear" size="small" (click)="openReviewModal()">
-      Laisser un avis
-    </ion-button>
   }
-</div>
-<app-review-list [reviews]="reviewList()"></app-review-list>
 
-<ion-modal #reviewModal ...>
-  <ng-template>
-    @if (station.value(); as s) {
-      <app-review-form
-        [stationId]="s.id"
-        (formSubmit)="onReviewSubmitSuccess()"
-        (cancel)="reviewModal.dismiss()"
-      ></app-review-form>
-    }
-  </ng-template>
-</ion-modal>
-      <!-- TOAST -->
-      <ion-toast
-        [isOpen]="toastVisible()"
-        [message]="toastMessage()"
-        duration="2000"
-        (didDismiss)="toastVisible.set(false)"
-      ></ion-toast>
-    }
-  } @else {
+  @else if (station.isLoading()) {
     <div class="flex justify-center items-center h-full">
       <ion-spinner></ion-spinner>
     </div>
   }
+  @else if (station.error()) {
+    <div class="flex flex-col items-center justify-center h-full text-red-500">
+      <p>Impossible de charger la station.</p>
+    </div>
+  }
+
+  <ion-toast [isOpen]="toastVisible()" [message]="toastMessage()" duration="2000" (didDismiss)="toastVisible.set(false)"></ion-toast>
+
 </ion-content>

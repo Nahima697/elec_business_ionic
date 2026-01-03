@@ -1,110 +1,88 @@
-import { Component, inject, input,  signal, ViewChild } from '@angular/core';
+import { Component, inject, input, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
-import { IonButton, IonTitle, IonHeader, IonContent,IonToolbar, IonModal, IonToast, IonSpinner } from "@ionic/angular/standalone";
+import { IonButton, IonTitle, IonHeader, IonContent, IonToolbar, IonModal, IonToast, IonSpinner, IonIcon } from "@ionic/angular/standalone";
 import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
-import { OverlayEventDetail } from '@ionic/core/components';
 import { BookingFormComponent } from '../../../booking/component/booking-form/booking-form.component';
 import { BookingService } from '../../../booking/service/booking.service';
 import { BookingRequestDTO } from '../../../booking/models/booking';
 import { StationCardComponent } from "../../component/station-card/station-card.component";
-import { StationMapComponent } from "../../component/station-map/station-map.component";
 import { httpResource } from '@angular/common/http';
-import { ReviewService } from '../../../review/service/review.service';
 import { reviewResponseDTO } from '../../../review/models/review.model';
 import { ReviewFormComponent } from '../../../review/components/review-form/review-form.component';
 import { ReviewListComponent } from 'src/app/features/review/components/review-list/review-list.component';
+
 @Component({
   selector: 'app-station-detail',
   templateUrl: './station-detail.component.html',
   styleUrls: ['./station-detail.component.scss'],
-    imports: [IonSpinner, IonToast,
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonButton,
-    IonToolbar,
-    IonModal,
-    BookingFormComponent, StationCardComponent,ReviewFormComponent,ReviewListComponent]
+  standalone: true,
+  imports: [
+    IonSpinner, IonToast, IonContent, IonHeader, IonTitle, IonButton, IonToolbar, IonModal,
+    BookingFormComponent, StationCardComponent, ReviewFormComponent, ReviewListComponent
+  ]
 })
-export class StationDetailComponent  {
-readonly id = input<string>();
-readonly reviewList =input<reviewResponseDTO[]>();
-private readonly idSignal = signal('');
-private readonly stationApi = inject(StationApiService);
-protected station!: ReturnType<typeof httpResource<ChargingStationResponseDTO>>;
-protected readonly bookingService = inject(BookingService);
-protected readonly serverError = signal(false);
-readonly toastVisible = signal(false);
-readonly toastMessage = signal('');
-private route = inject(ActivatedRoute);
-@ViewChild('modal', { read: IonModal }) modal!: IonModal;
-protected reviews = signal<reviewResponseDTO[]>([]);
-@ViewChild('reviewModal', { read: IonModal }) reviewModal!: IonModal;
-canReview = signal(false);
- constructor() {
+export class StationDetailComponent {
+  readonly id = input<string>();
+  private readonly idSignal = signal('');
 
+  private readonly stationApi = inject(StationApiService);
+  protected readonly bookingService = inject(BookingService);
+  private route = inject(ActivatedRoute);
+
+  // Ressource unique : La station (qui contient déjà les avis)
+  protected station = this.stationApi.getOne(this.idSignal);
+
+  readonly toastVisible = signal(false);
+  readonly toastMessage = signal('');
+  canReview = signal(false);
+
+  @ViewChild('modal', { read: IonModal }) modal!: IonModal;
+  @ViewChild('reviewModal', { read: IonModal }) reviewModal!: IonModal;
+
+  constructor() {
     const idFromInput = this.id();
-
-    const idFromRoute = this.route.snapshot.paramMap.get('id') ?? undefined;
-
+    const idFromRoute = this.route.snapshot.paramMap.get('id');
     const realId = idFromInput ?? idFromRoute;
 
-    if (!realId) {
-      throw new Error('ID introuvable pour StationDetailComponent');
-    }
-    this.checkEligibility(realId);
+    if (!realId) throw new Error('ID introuvable');
 
     this.idSignal.set(realId);
-
-    this.station = this.stationApi.getOne(this.idSignal);
+    this.checkEligibility(realId);
   }
-checkEligibility(stationId: string) {
+
+  checkEligibility(stationId: string) {
     this.bookingService.hasUserBookedStation(stationId).subscribe(allowed => {
       this.canReview.set(allowed);
-      console.log('Droit de commenterpour cette station ?', allowed);
     });
   }
 
- openModal() {
-  this.modal.present();
-  }
-
-  closeModal() {
-    this.modal.dismiss(null, 'cancel');
-  }
+  // --- Gestion Réservation ---
+  openModal() { this.modal.present(); }
 
   onFormSubmit($event: any) {
     const booking: BookingRequestDTO = $event.booking;
     this.bookingService.createBooking(booking).subscribe({
       next: () => {
-        this.toastMessage.set('Réservation créée avec succès ✅');
+        this.toastMessage.set('Réservation créée ✅');
         this.toastVisible.set(true);
         this.modal.dismiss(booking, 'confirm');
       },
       error: () => {
-        this.toastMessage.set('Erreur lors de la réservation ❌');
+        this.toastMessage.set('Erreur réservation ❌');
         this.toastVisible.set(true);
-        this.serverError.set(true);
       }
     });
   }
 
-  openReviewModal() {
-    this.reviewModal.present();
-  }
+  // --- Gestion Avis ---
+  openReviewModal() { this.reviewModal.present(); }
 
   onReviewSubmitSuccess() {
     this.reviewModal.dismiss(null, 'confirm');
-    this.toastMessage.set('Merci pour votre avis ! ⭐');
+    this.toastMessage.set('Avis publié ! ⭐');
     this.toastVisible.set(true);
-    // this.loadReviews();
-  }
 
-  onWillDismiss(event: CustomEvent<OverlayEventDetail>) {
-    if (event.detail.role === 'confirm') {
-      console.log('Demande de booking envoyé avec succes:', event.detail.data);
-    }
+    this.station.reload();
   }
-
 }

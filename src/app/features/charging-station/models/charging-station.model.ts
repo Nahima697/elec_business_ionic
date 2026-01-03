@@ -27,8 +27,6 @@ export interface ChargingStationResponseDTO {
   createdAt?: string;
   locationDTO?: ChargingLocation;
   reviewsDTO?: reviewResponseDTO[];
-
-
   urls?: {
     thumbnail: string;
     original: string;
