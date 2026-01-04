@@ -57,4 +57,14 @@ export class RenterBookingPage {
   refresh(event: any) {
     this.loadBookings(event);
   }
+
+  downloadPdf(bookingId: string) {
+  this.bookingService.downloadBookingPdf(bookingId).subscribe(blob => {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `reservation-${bookingId}.pdf`;
+    a.click();
+  });
+}
 }

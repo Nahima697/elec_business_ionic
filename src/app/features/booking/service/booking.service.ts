@@ -20,7 +20,9 @@ export class BookingService {
  getMyBookingsRenter() {
   return this.http.get<BookingResponseDTO[]>('/bookings/renter/me');
 }
-
+downloadBookingPdf(bookingId: string): Observable<Blob> {
+  return this.http.get(`/'pdf/booking/${bookingId}`, { responseType: 'blob' });
+}
 // Accepter une réservation
   acceptBooking(bookingId: string): Observable<BookingResponseDTO> {
     return this.http.put<BookingResponseDTO>(`/bookings/${bookingId}/accept`, {});
@@ -35,6 +37,11 @@ hasUserBookedStation(stationId: string) {
   return this.getMyBookingsRenter().pipe(
     map((bookings: BookingResponseDTO[]) => bookings.some(b => b.stationId === stationId))
   );
+}
+
+updateBookingStatus(bookingId: string, status: string): Observable<BookingResponseDTO> {
+  // status peut être 'ACCEPTED' ou 'REJECTED'
+  return this.http.put<BookingResponseDTO>(`/bookings/${bookingId}/status?status=${status}`, {});
 }
 
 }

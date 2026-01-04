@@ -10,4 +10,16 @@
       <ion-title size="large">booking-page</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-card>
+  @if (booking.status === 'PENDING') {
+    <div class="flex gap-2 p-2">
+      <ion-button color="success" expand="block" class="flex-1" (click)="updateStatus(booking.id, 'ACCEPTED')">
+        Accepter
+      </ion-button>
+      <ion-button color="danger" expand="block" class="flex-1" (click)="updateStatus(booking.id, 'REJECTED')">
+        Refuser
+      </ion-button>
+    </div>
+  }
+</ion-card>
 </ion-content>
