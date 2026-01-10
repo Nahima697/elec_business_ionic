@@ -9,7 +9,6 @@ import { UserProfileDto } from '../models/user-profile.model';
 export class UserProfileService {
 private http = inject(HttpClient);
 
-  // Récupérer le profil connecté
   getMyProfile(): Observable<UserProfileDto> {
     return this.http.get<UserProfileDto>('/profile');
   }
@@ -17,5 +16,11 @@ private http = inject(HttpClient);
   // Mettre à jour le profil
   updateMyProfile(profile: UserProfileDto): Observable<UserProfileDto> {
     return this.http.put<UserProfileDto>('/profile', profile);
+  }
+
+  uploadAvatar(file: File): Observable<UserProfileDto> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<UserProfileDto>(`/me/avatar`, formData);
   }
 }

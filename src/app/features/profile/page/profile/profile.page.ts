@@ -5,8 +5,7 @@ import { UserProfileDto } from '../../models/user-profile.model';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon,
   IonAvatar, IonItem, IonLabel, IonInput, IonList, IonItemDivider,
-  IonSpinner, ToastController, IonButtons, IonBackButton
-} from '@ionic/angular/standalone';
+  IonSpinner, ToastController, IonButtons, IonBackButton, IonCard, IonCardContent } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { personCircleOutline, saveOutline, logOutOutline, cameraOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
@@ -20,7 +19,7 @@ import { Router } from '@angular/router';
   imports: [
     ReactiveFormsModule,
     IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon,
-    IonAvatar, IonItem, IonLabel, IonInput, IonList, IonItemDivider,
+    IonAvatar, IonItem, IonLabel, IonInput,
     IonSpinner, IonButtons, IonBackButton
   ]
 })
@@ -47,7 +46,6 @@ export class ProfilePage implements OnInit {
 
   private initForm() {
     this.profileForm = this.fb.group({
-      // Infos de base (Souvent en lecture seule ou modifiable selon ton besoin)
       username: ['', Validators.required],
       email: [{ value: '', disabled: true }, [Validators.required, Validators.email]], // Email souvent non modifiable directement
 
@@ -64,7 +62,6 @@ export class ProfilePage implements OnInit {
     this.profileService.getMyProfile().subscribe({
       next: (data) => {
         this.user.set(data);
-        // PatchValue remplit le formulaire automatiquement avec les noms correspondants
         this.profileForm.patchValue(data);
         this.isLoading.set(false);
       },
@@ -79,10 +76,9 @@ export class ProfilePage implements OnInit {
   onSubmit() {
     if (this.profileForm.valid) {
       this.isSaving.set(true);
-      // On fusionne les valeurs du form avec l'ID existant
       const updatedProfile: UserProfileDto = {
-        ...this.user()!, // Garde l'ID et autres champs non présents dans le form
-        ...this.profileForm.getRawValue() // Récupère tout, même les champs disabled
+        ...this.user()!,
+        ...this.profileForm.getRawValue()
       };
 
       this.profileService.updateMyProfile(updatedProfile).subscribe({
