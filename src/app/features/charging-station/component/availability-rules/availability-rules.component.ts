@@ -11,7 +11,6 @@ import {
 } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { trashOutline, closeOutline, timeOutline, calendarOutline, addCircleOutline, arrowUpOutline } from 'ionicons/icons';
-import { DatePipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-availability-rules',
@@ -33,6 +32,7 @@ export class AvailabilityRulesComponent {
   private modalCtrl = inject(ModalController);
   private toastCtrl = inject(ToastController);
 
+
   // 1. Ressource des stations
   stationsResource = this.stationService.getMyStations();
 
@@ -41,7 +41,7 @@ export class AvailabilityRulesComponent {
 
   // 3. Ressource des règles (se recharge quand selectedStationId change)
   rulesResource = this.rulesService.getRulesByStation(this.selectedStationId);
-
+  // 4. Formulaire pour ajouter une règle
   ruleForm = this.fb.group({
     dayOfWeek: [1, Validators.required],
     startTime: ['', Validators.required],
@@ -50,6 +50,7 @@ export class AvailabilityRulesComponent {
 
   constructor() {
     addIcons({ trashOutline, closeOutline, timeOutline, calendarOutline, addCircleOutline, arrowUpOutline });
+
   }
 
   close() {
@@ -99,10 +100,27 @@ export class AvailabilityRulesComponent {
     }
   }
 
-  deleteRule(ruleId: string) {
+
+deleteRule(ruleId: string) {
     this.rulesService.deleteRule(ruleId).subscribe({
-      next: () => {
+      next: async () => {
         this.rulesResource.reload();
+        const toast = await this.toastCtrl.create({
+            message: 'Règle supprimée',
+            duration: 1500,
+            color: 'success',
+            position: 'top'
+        });
+        toast.present();
+      },
+      error: async (err) => {
+        console.error(err);
+        const toast = await this.toastCtrl.create({
+          message: 'Impossible de supprimer cette règle.',
+          duration: 3000,
+          color: 'danger'
+        });
+        toast.present();
       }
     });
   }

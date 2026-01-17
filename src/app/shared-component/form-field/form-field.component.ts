@@ -1,59 +1,62 @@
-import { Component, forwardRef, Injector, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NgControl, ReactiveFormsModule } from '@angular/forms';
-import { IonInput, IonTextarea, IonDatetime, IonItem,IonSelect, IonSelectOption, IonSearchbar, IonLabel } from '@ionic/angular/standalone';
+import { Component, Input, forwardRef, inject } from '@angular/core';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { ControlType } from './form-field.enum.';
-import { EventEmitter, Output } from '@angular/core';
-
+import { CommonModule } from '@angular/common';
+import {
+  IonInput, IonSearchbar, IonTextarea, IonSelect, IonSelectOption,
+  IonDatetime, IonLabel, IonIcon
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { alertCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-form-field',
-  imports: [IonLabel, IonSearchbar,
+  templateUrl: './form-field.component.html',
+  styleUrls: ['./form-field.component.scss'],
+  standalone: true,
+  imports: [
     CommonModule,
     ReactiveFormsModule,
     IonInput,
+    IonSearchbar,
     IonTextarea,
-    IonDatetime,
-    IonItem,
     IonSelect,
     IonSelectOption,
-    IonSearchbar
+    IonDatetime,
+    IonLabel,
+    IonIcon
   ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FormFieldComponent),
-      multi: true,
-    },
-  ],
-  templateUrl: './form-field.component.html',
-  styleUrls: ['./form-field.component.scss'],
-})
-export class FormFieldComponent implements ControlValueAccessor, OnInit {
-
-  @Input() label!: string;
-  @Input() placeholder!: string;
-  @Input() type: string = 'text';
-  @Input() controlType!: ControlType;;
-  @Input() icon?: string;
-  @Input() options: { label: string; value: any }[] = [];
-  @Output() valueChange = new EventEmitter<any>();
-
-  ControlType = ControlType;
-  value: any;
-
-  onChange = (value: any) => {};
-  onTouched = () => {};
-  formControl?: FormControl;
-
-  constructor(private injector: Injector) {}
-
-  ngOnInit() {
-    const ngControl = this.injector.get(NgControl, null);
-    if (ngControl) {
-      ngControl.valueAccessor = this;
-      this.formControl = ngControl.control as FormControl;
+      multi: true
     }
+  ]
+})
+export class FormFieldComponent implements ControlValueAccessor {
+  @Input() label = '';
+  @Input() placeholder = '';
+  @Input() type = 'text';
+  @Input() controlType: ControlType = ControlType.Input;
+  @Input() formControl?: FormControl;
+  @Input() options: { label: string; value: any }[] = [];
+
+  value: any = '';
+  isDisabled = false;
+  ControlType = ControlType;
+
+  onChange: (value: any) => void = () => {};
+  onTouched: () => void = () => {};
+
+  constructor() {
+    addIcons({ alertCircleOutline }); 
+  }
+
+  setValue(event: any) {
+    this.value = event.detail?.value ?? event.target?.value;
+    this.onChange(this.value);
+    this.onTouched();
   }
 
   writeValue(value: any): void {
@@ -68,33 +71,20 @@ export class FormFieldComponent implements ControlValueAccessor, OnInit {
     this.onTouched = fn;
   }
 
-  setValue(event: any) {
-  const newValue = event?.detail?.value ?? event?.target?.value ?? event;
-
-  if (newValue !== this.value) {
-    this.value = newValue;
-    this.onChange(this.value);
-    this.valueChange.emit(this.value);  
-    console.log('setValue appelé avec :', this.value);
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
   }
-}
-
 
   getErrorMessage(): string {
-    if (!this.formControl) return '';
+    if (this.formControl?.hasError('required')) return 'Ce champ est obligatoire';
+    if (this.formControl?.hasError('email')) return 'Email invalide';
+    if (this.formControl?.hasError('minlength')) {
+      const min = this.formControl.errors?.['minlength'].requiredLength;
+      return `Minimum ${min} caractères`;
+    }
+    // Gestion spécifique mot de passe
+    if (this.formControl?.hasError('passwordMismatch')) return 'Les mots de passe ne correspondent pas';
 
-    const control = this.formControl;
-
-    if (control.errors?.['required']) {
-      return 'Ce champ est obligatoire.';
-    }
-    if (control.errors?.['email']) {
-      return 'Veuillez entrer une adresse email valide.';
-    }
-    if (control.errors?.['minlength']) {
-      const requiredLength = control.errors['minlength'].requiredLength;
-      return `Minimum ${requiredLength} caractères.`;
-    }
-    return 'Champ invalide.';
+    return 'Champ invalide';
   }
 }

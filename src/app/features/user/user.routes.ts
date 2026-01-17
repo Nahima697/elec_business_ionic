@@ -63,7 +63,7 @@ export const USER_ROUTES: Routes = [
       { path: 'dashboard', component: RenterDashboardComponent },
       {
         path: 'bookings',
-        loadComponent: () => import('../booking/page/booking-page.component').then(m => m.BookingPageComponent)
+        loadComponent: () => import('./pages/renter/renter-booking/renter-booking.page').then(m => m.RenterBookingPage)
       },
     ]
   },

@@ -62,35 +62,58 @@ export class BookingFormComponent implements OnInit {
     });
   }
 
-  onDateChanged(ev: any) {
+onDateChanged(ev: any) {
     const raw = ev.detail?.value as string | string[] | null;
     if (!raw) return;
+
     const value = Array.isArray(raw) ? raw[0] : raw;
     const onlyDate = value.substring(0, 10);
+
     console.log('Date sélectionnée:', onlyDate);
+
+    this.form.patchValue({
+      date: onlyDate,
+      startHour: '',
+      endHour: ''
+    });
     this.loadSlots(onlyDate);
   }
 
   loadSlots(date: string) {
     this.loadingSlots.set(true);
-    console.log('Chargement des slots pour', this.stationId(), date);
+
     this.timeSlotService.getSlotsForDate(this.stationId(), date).subscribe({
-      next: (res) => {
-        const slots = res;
+      next: (slots) => {
         console.log('Slots reçus :', slots);
         this.availableSlots.set(slots);
+
+        const startTimes = new Set<string>();
+        const endTimes = new Set<string>();
+
+        slots.forEach(slot => {
+          const startH = parseInt(slot.startTime.substring(11, 13), 10);
+          const endH = parseInt(slot.endTime.substring(11, 13), 10);
+
+          for (let h = startH; h <= endH; h++) {
+            const timeStr = `${h.toString().padStart(2, '0')}:00`;
+
+            if (h < endH) {
+              startTimes.add(timeStr);
+            }
+            if (h > startH) {
+              endTimes.add(timeStr);
+            }
+          }
+        });
+
         this.startOptions.set(
-          slots.map(s => ({
-            label: s.startTime.substring(11, 16),
-            value: s.startTime.substring(11, 16)
-          }))
+          Array.from(startTimes).sort().map(t => ({ label: t, value: t }))
         );
+
         this.endOptions.set(
-          slots.map(s => ({
-            label: s.endTime.substring(11, 16),
-            value: s.endTime.substring(11, 16)
-          }))
+          Array.from(endTimes).sort().map(t => ({ label: t, value: t }))
         );
+
         this.loadingSlots.set(false);
       },
       error: (err) => {

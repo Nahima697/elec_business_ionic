@@ -1,13 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router'; // + RouterLink
 import { CommonModule } from '@angular/common'; // + CommonModule (pour titlecase)
 import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { UserService } from '../../service/user.service';
 import { RoleSelectorComponent } from '../../components/role-selector/role-selector.component';
 import { IonContent, IonIcon, IonButton } from "@ionic/angular/standalone";
-import { PlatformService } from 'src/app/shared-component/services/platform.service';
+import { PlatformService } from 'src/app/core/services/platform.service';
 import { addIcons } from 'ionicons'; // + addIcons
 import { shieldCheckmarkOutline, helpBuoyOutline, flashOutline, arrowBackOutline, addCircleOutline, cashOutline, calendarOutline, mapOutline, timeOutline, listOutline, headsetOutline } from 'ionicons/icons'; // + Icons
+import { UserProfileDto } from '../../models/user.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,6 +22,7 @@ export class DashboardComponent implements OnInit {
   public authService = inject(AuthService);
   private userService = inject(UserService);
   private platformService = inject(PlatformService);
+  user = signal<UserProfileDto | null>(null);
 
   constructor() {
     addIcons({shieldCheckmarkOutline,headsetOutline,mapOutline,arrowBackOutline,addCircleOutline,cashOutline,calendarOutline,timeOutline,listOutline,helpBuoyOutline,flashOutline});
@@ -29,7 +31,6 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {}
 
   onRoleSelected(roleName: string) {
-    // ... (Ton code existant pour la redirection) ...
     const currentUser = this.authService.user();
     if (!currentUser) return;
 

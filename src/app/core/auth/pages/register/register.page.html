@@ -44,20 +44,6 @@
         </header>
 
         <ion-card-content class="p-0">
-
-          <!-- Connexion Sociale -->
-          <ion-button expand="block" fill="outline" class="w-full h-14 border-2 border-gray-200 text-[var(--color-foreground)] hover:bg-gray-50 font-medium mb-6">
-            <img src="/assets/icons/google.svg" alt="Icône Google" class="w-5 h-5 mr-3" />
-            S'inscrire avec Google
-          </ion-button>
-
-          <!-- Séparateur 'ou' -->
-          <div class="flex items-center mb-6">
-            <div class="flex-grow border-t border-[var(--color-secondary)] opacity-50"></div>
-            <span class="flex-shrink mx-4 text-sm text-[var(--color-secondary)]">OU</span>
-            <div class="flex-grow border-t border-[var(--color-secondary)] opacity-50"></div>
-          </div>
-
           <!-- Formulaire d'Inscription -->
           <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-col space-y-0">
 
@@ -88,6 +74,19 @@
               type="password">
             </app-form-field>
 
+            <!-- Confirm Password -->
+            <app-form-field
+              label="Confirmer le mot de passe"
+              placeholder="Retapez votre mot de passe"
+              [controlType]="ControlType.Input"
+              [formControl]="confirmPassword"
+              type="password">
+            </app-form-field>
+          @if (registerForm.hasError('passwordMismatch') && (confirmPassword.touched || confirmPassword.dirty)) {
+                <p class="text-xs text-red-500 mt-1 absolute -bottom-5 left-0">
+                  Les mots de passe ne correspondent pas.
+                </p>
+          }
             <!-- Checkbox CGU -->
             <div class="py-2">
               <ion-item lines="none" class="flex items-center justify-start --padding-start-0">
@@ -100,15 +99,21 @@
             </div>
 
             <!-- Bouton Valider -->
-            <div class="mt-4">
-              <ion-button
-                type="submit"
-                expand="block"
-                class="w-full h-14 font-bold text-lg transition-transform"
-                [disabled]="registerForm.invalid"
-              >
-                Créer un compte
-              </ion-button>
+             <div class="mt-6 space-y-4">
+            <ion-button
+              type="submit"
+              expand="block"
+              class="h-12 --box-shadow-none"
+              color="primary"
+              shape="round"
+              [disabled]="registerForm.invalid || isLoading"
+            >
+              @if(isLoading) {
+                <ion-spinner name="crescent" color="light"></ion-spinner>
+              } @else {
+                S'inscrire
+              }
+            </ion-button>
             </div>
           </form>
 

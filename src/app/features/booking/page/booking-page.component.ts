@@ -1,44 +1,60 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonLabel, IonButton, IonSpinner } from '@ionic/angular/standalone';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BookingRequestDTO, BookingResponseDTO } from 'src/app/features/booking/models/booking';
-import { BookingService } from 'src/app/features/booking/service/booking.service';
+import {
+  IonContent, IonHeader, IonToolbar, IonTitle,
+  IonCard, IonCardContent, IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { carSportOutline, timeOutline, listOutline } from 'ionicons/icons';
+
+// Services
+import { AuthService } from 'src/app/core/auth/services/auth.service';
+import { UserService } from 'src/app/features/user/service/user.service';
+import { AppNavigationService } from 'src/app/core/services/app-navigation.service';
+
 @Component({
   selector: 'app-booking-page',
   templateUrl: './booking-page.component.html',
   styleUrls: ['./booking-page.component.scss'],
-   imports: [
+  standalone: true,
+  imports: [
     CommonModule,
-    IonContent,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonSpinner,
+    IonContent, IonHeader, IonToolbar, IonTitle,
+    IonCard, IonCardContent, IonIcon
   ]
 })
-export class BookingPageComponent  implements OnInit {
+export class BookingPageComponent {
 
-  private bookingService = inject(BookingService);
+  private authService = inject(AuthService);
+  private userService = inject(UserService);
+  private navService = inject(AppNavigationService);
 
-  bookings: BookingResponseDTO[] = [];
-  loading = false;
-
-  ngOnInit() {
-    this.loadBookings();
+  constructor() {
+    addIcons({ carSportOutline,  timeOutline, listOutline });
   }
 
-  loadBookings() {
-    this.loading = true;
-    this.bookingService.getMyBookingsOwner().subscribe({
-      next: (data) => {
-        this.bookings = data;
-        this.loading = false;
-      },
-      error: () => this.loading = false
-    });
+  onSelectContext(roleName: 'RENTER' | 'OWNER') {
+    const currentUser = this.authService.user();
+    if (!currentUser) return;
+
+    if (this.authService.hasRole(roleName)) {
+        this.navigateByRole(roleName);
+    } else {
+        this.userService.addRole(currentUser.id, roleName).subscribe({
+          next: () => {
+            this.authService.fetchCurrentUser().subscribe(() => {
+               this.navigateByRole(roleName);
+            });
+          },
+          error: (err) => console.error('Erreur lors de l\'ajout du rôle', err)
+        });
+    }
   }
 
+  private navigateByRole(roleName: string) {
+    if (roleName === 'OWNER') {
+      this.navService.go(['user', 'owner', 'bookings']);
+    } else if (roleName === 'RENTER') {
+      this.navService.go(['user', 'renter', 'bookings']);
+    }
+  }
 }

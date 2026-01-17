@@ -29,7 +29,7 @@ export class ChargingStationComponent  implements OnInit {
   private chargingStationService = inject(ChargingStationService);
   private readonly stationApi = inject(StationApiService);
   isLoading = false;
-  // stations:ChargingStation[]=[];
+
 
   ngOnInit() {}
 

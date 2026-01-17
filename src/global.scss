@@ -37,21 +37,21 @@ body {
   background-color: #ffffff;
 }
 
-/* Correction des Inputs (Style blanc avec bordure) */
 ion-input, ion-textarea, ion-select {
   --background: #ffffff;
   --color: #1F2A44;
   --placeholder-color: #9CA3AF;
-  border: 1px solid #D1D5DB;
   border-radius: 0.5rem;
   margin-bottom: 1rem;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
+
+
 /* Header propre */
 ion-header {
   background: #ffffff;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); /* Petite ombre */
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 ion-toolbar {
   --background: #ffffff;

@@ -6,7 +6,7 @@ import { FormFieldComponent } from 'src/app/shared-component/form-field/form-fie
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { PlatformService } from 'src/app/shared-component/services/platform.service';
+import { PlatformService } from 'src/app/core/services/platform.service';
 
 @Component({
   selector: 'app-login',
@@ -20,8 +20,6 @@ export class LoginPage {
   router = inject(Router);
   authservice = inject(AuthService);
   platformService = inject(PlatformService);
-
-  // Gestion de l'état de chargement et des erreurs
   isLoading = false;
   errorMessage: string | null = null;
 
@@ -32,14 +30,12 @@ export class LoginPage {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      // 1. On active le chargement et on reset l'erreur
       this.isLoading = true;
       this.errorMessage = null;
 
       this.authservice.login(this.username.value, this.password.value).subscribe({
         next: (response) => {
           console.log('Connexion réussie :', response);
-          // Le loading reste true jusqu'à la navigation pour éviter le "flickering"
           if (this.platformService.isDesktop()) {
             this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
           } else {
@@ -48,9 +44,7 @@ export class LoginPage {
         },
         error: (err) => {
           console.error('Erreur de connexion :', err);
-          // 2. On arrête le chargement et on affiche l'erreur
           this.isLoading = false;
-          // Tu peux personnaliser le message selon le code erreur (401, 500, etc.)
           this.errorMessage = "Identifiant ou mot de passe incorrect.";
         }
       });

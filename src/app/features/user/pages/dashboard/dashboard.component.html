@@ -30,9 +30,8 @@
              background: var(--ion-color-light);
              border: 1.5px solid rgba(var(--ion-color-primary-rgb), 0.35);
            ">
-        <img
-          src="assets/images/avatar-placeholder.png"
-          class="h-full w-full rounded-full object-cover"
+          <img
+          [src]="user()?.profilePictureUrl || 'assets/images/default-avatar.png'"
           alt="Avatar"
         />
       </div>
@@ -46,16 +45,6 @@
          ">
 
       <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-        <div>
-          <h2 class="text-lg font-bold"
-              style="color: var(--ion-text-color);">
-            Votre interface
-          </h2>
-          <p class="text-sm mt-1"
-             style="color: var(--ion-color-medium);">
-            Basculez entre le mode Propriétaire et Locataire.
-          </p>
-        </div>
 
         <app-role-selector
           (roleSelected)="onRoleSelected($event)">

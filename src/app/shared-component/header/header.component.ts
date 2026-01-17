@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, input, model } from '@angular/core
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
 import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
-import { PlatformService } from 'src/app/shared-component/services/platform.service';
+import { PlatformService } from 'src/app/core/services/platform.service';
 
 @Component({
   selector: 'app-header',

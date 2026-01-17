@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { PlatformService } from 'src/app/shared-component/services/platform.service';
+import { PlatformService } from 'src/app/core/services/platform.service';
 
 @Injectable({
   providedIn: 'root',

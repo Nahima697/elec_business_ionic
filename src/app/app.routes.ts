@@ -2,15 +2,12 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { LoginPage } from './core/auth/pages/login/login.page';
 import { RegisterPage } from './core/auth/pages/register/register.page';
-import { EmailVerifiedComponent } from './core/auth/pages/verif-method/verif-email.component';
-import { VerifMethodPage } from './core/auth/pages/verif-method/verif-method.page';
 import { BookingPageComponent } from './features/booking/page/booking-page.component';
 import { LocationDetailComponent } from './features/charging-station/pages/location-detail/location-detail.component';
 import { LocationComponent } from './features/charging-station/pages/location/location.component';
 import { StationDetailComponent } from './features/charging-station/pages/station-detail/station-detail.component';
 import { ChargingStationComponent } from './features/charging-station/pages/station/charging-station.component';
 import { MapPage } from './features/display-map/pages/map.page';
-import { MessagesPage } from './features/messages/messages.page';
 import { TabsPage } from './shared-component/mobile-tabs/tabs/tabs.page';
 import { OnboardingPage } from './features/onboarding/onboarding.page';
 import { ProfilePage } from './features/profile/page/profile/profile.page';
@@ -47,7 +44,6 @@ export const routes: Routes = [
     component: TabsPage,
     children: [
       { path: 'map', component: MapPage },
-      { path: 'messages', component: MessagesPage },
       { path: 'reservations', component: BookingPageComponent },
       { path: 'profile', component: ProfilePage },
       { path: '', redirectTo: '/tabs/map', pathMatch: 'full' },
@@ -62,8 +58,6 @@ export const routes: Routes = [
   // AUTH
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegisterPage },
-  { path: 'verify-email-info', component: VerifMethodPage },
-  { path: 'email-verified', component: EmailVerifiedComponent },
 
   // USER MODULE
   {

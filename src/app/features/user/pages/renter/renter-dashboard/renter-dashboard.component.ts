@@ -1,6 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 import { GeolocalisationService } from 'src/app/features/display-map/service/geolocalisation.service';
 import {
@@ -13,11 +13,12 @@ import {
   calendar, card, checkmarkCircle, chevronForward,
   navigate, search, time, map, arrowBackOutline
 } from 'ionicons/icons';
+import { UserProfileDto } from '../../../models/user.model';
 
 @Component({
   selector: 'app-renter-dashboard',
   standalone: true,
-  imports: [IonContent, IonIcon],
+  imports: [IonContent, IonIcon,RouterLink],
   templateUrl: './renter-dashboard.component.html',
   styleUrls: ['./renter-dashboard.component.scss']
 })
@@ -28,6 +29,8 @@ export class RenterDashboardComponent implements OnInit {
   private geolocService = inject(GeolocalisationService);
   private loadingCtrl = inject(LoadingController);
   private toastCtrl = inject(ToastController);
+  protected user = signal<UserProfileDto | null>(null);
+
 
   constructor() {
     addIcons({

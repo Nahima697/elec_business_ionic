@@ -3,8 +3,8 @@ import { Router, RouterModule } from '@angular/router';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import { LngLatLike, Map } from 'maplibre-gl';
 import { IonIcon, ModalController, IonSearchbar } from '@ionic/angular/standalone';
-import { FilterModalComponent } from 'src/app/shared-component/filter-modal/filter-modal.component';
-import { PlatformService } from 'src/app/shared-component/services/platform.service';
+import { FilterModalComponent } from 'src/app/shared-component/footer/filter-modal/filter-modal.component';
+import { PlatformService } from 'src/app/core/services/platform.service';
 import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
 import { GeolocalisationService } from '../../service/geolocalisation.service';
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
@@ -28,7 +28,6 @@ export class DisplayMapComponent implements OnInit {
   private platformService = inject(PlatformService);
   private geolocService = inject(GeolocalisationService);
   readonly mapStyle = `https://api.maptiler.com/maps/streets-v2/style.json?key=${environment.MAPTILER_KEY}`;
-  private MAPTILER_KEY = environment.MAPTILER_KEY;
 
   protected readonly isBrowser = this.platformService.isBrowser();
   readonly stations = input.required<any>();
@@ -66,11 +65,10 @@ export class DisplayMapComponent implements OnInit {
 
     const navigation = this.router.getCurrentNavigation();
 
-    // On type le state pour inclure 'center'
     const state = navigation?.extras?.state as {
       filteredStations?: ChargingStationResponseDTO[],
       searchTerm?: string,
-      center?: [number, number] // ✅ Ajout du type pour les coordonnées [lng, lat]
+      center?: [number, number]
     };
 
     if (state) {

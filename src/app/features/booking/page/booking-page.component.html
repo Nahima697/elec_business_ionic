@@ -1,51 +1,51 @@
-<ion-header>
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
     <ion-title>Réservations</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true" class="ion-padding bg-light">
 
-  <div class="p-4 space-y-6">
+  <div class="flex flex-col h-full justify-center max-w-md mx-auto gap-6 mt-10">
 
-    <!-- LIST -->
-    <section>
-      <h2 class="text-lg font-semibold mb-2">Mes réservations</h2>
+    <div class="text-center mb-4">
+      <h2 class="text-xl font-bold text-gray-800">Choisissez un espace</h2>
+      <p class="text-gray-500 text-sm">Que souhaitez-vous consulter ?</p>
+    </div>
 
-      @if (loading) {
-        <div class="flex justify-center py-6">
-          <ion-spinner></ion-spinner>
+    <ion-card
+      (click)="onSelectContext('RENTER')"
+      class="m-0 cursor-pointer shadow-sm hover:shadow-md transition-all active:scale-95 bg-white rounded-xl"
+      style="border-left: 6px solid var(--ion-color-primary);">
+
+      <ion-card-content class="flex items-center gap-4 p-6">
+        <div class="h-14 w-14 rounded-full flex items-center justify-center bg-blue-50 text-blue-600">
+          <ion-icon name="car-sport-outline" class="text-3xl"></ion-icon>
         </div>
-      } @else if (bookings.length === 0) {
-        <p class="italic text-gray-500 text-sm">Aucune réservation.</p>
-      } @else {
-        <ion-list>
-          @for (b of bookings; track b.id) {
-            <ion-item class="rounded-xl shadow mb-2">
-              <ion-label class="flex flex-col gap-1">
+        <div class="flex-1">
+          <h3 class="font-bold text-lg text-gray-900">Côté Conducteur</h3>
+          <p class="text-gray-500 text-sm">Voir mes réservations et mes futurs voyages</p>
+        </div>
+        <ion-icon name="time-outline" class="text-gray-300 text-2xl"></ion-icon>
+      </ion-card-content>
+    </ion-card>
 
-                <span class="font-semibold">{{ b.stationName }}</span>
+    <ion-card
+      (click)="onSelectContext('OWNER')"
+      class="m-0 cursor-pointer shadow-sm hover:shadow-md transition-all active:scale-95 bg-white rounded-xl"
+      style="border-left: 6px solid var(--ion-color-tertiary);">
 
-                <span class="text-xs text-gray-500">
-                  Du {{ b.startDate | date:'short' }}
-                  au {{ b.endDate | date:'short' }}
-                </span>
-
-                <span class="text-xs font-medium" [ngClass]="{
-                  'text-green-600': b.statusLabel === 'ACCEPTED',
-                  'text-red-600': b.statusLabel === 'REJECTED',
-                  'text-yellow-600': b.statusLabel === 'PENDING'
-                }">
-                  {{ b.statusLabel }}
-                </span>
-
-              </ion-label>
-            </ion-item>
-          }
-        </ion-list>
-      }
-    </section>
+      <ion-card-content class="flex items-center gap-4 p-6">
+        <div class="h-14 w-14 rounded-full flex items-center justify-center bg-purple-50 text-purple-600">
+          <ion-icon name="ev-station-outline" class="text-3xl"></ion-icon>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-bold text-lg text-gray-900">Côté Propriétaire</h3>
+          <p class="text-gray-500 text-sm">Voir qui a réservé mes bornes</p>
+        </div>
+        <ion-icon name="list-outline" class="text-gray-300 text-2xl"></ion-icon>
+      </ion-card-content>
+    </ion-card>
 
   </div>
-
 </ion-content>

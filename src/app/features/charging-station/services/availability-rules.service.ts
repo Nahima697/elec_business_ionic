@@ -11,10 +11,6 @@ export class AvailabilityRulesService {
 
   private readonly PATH = '/availability_rules';
 
-  /**
-   * Récupère les règles via une ressource réactive.
-   * @param stationIdSignal Le signal contenant l'ID de la station sélectionnée
-   */
   getRulesByStation(stationIdSignal: Signal<string>) {
     return httpResource<AvailabilityRuleDTO[]>(() => {
       const id = stationIdSignal();

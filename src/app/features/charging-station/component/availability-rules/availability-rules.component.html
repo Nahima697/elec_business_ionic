@@ -22,7 +22,7 @@
           (ionChange)="selectedStationId.set($event.detail.value)"
           interface="popover"
         >
-          @for(station of stationsResource.value()?.content; track station.id) {
+          @for(station of stationsResource.value(); track station.id) {
             <ion-select-option [value]="station.id">{{ station.name }}</ion-select-option>
           }
         </ion-select>

@@ -6,17 +6,49 @@
 
 <ion-content class="bg-gray-50">
 
+  <div (click)="goBack()" class="inline-flex items-center gap-2 cursor-pointer transition py-4 px-4 hover:opacity-80"
+       style="color: var(--ion-color-medium);">
+    <ion-icon name="arrow-back-outline" class="text-xl"></ion-icon>
+    <span class="font-medium text-sm">Retour au dashboard</span>
+  </div>
+
   @if (station.value(); as state) {
 
     <div class="p-4 flex flex-col gap-6">
+
       <div class="max-w-md mx-auto w-full">
         <app-station-card [station]="state"></app-station-card>
       </div>
 
+      <div class="max-w-md mx-auto w-full bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <div class="flex items-start gap-3">
+          <div class="bg-blue-50 p-2 rounded-full">
+            <ion-icon name="location-outline" class="text-xl text-blue-600"></ion-icon>
+          </div>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm mb-1">Localisation</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              {{ state.locationDTO?.addressLine }}<br>
+              {{ state.locationDTO?.postalCode }} {{ state.locationDTO?.city }}<br>
+              <span class="text-gray-400 text-xs uppercase font-semibold">{{ state.locationDTO?.country }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div class="max-w-md mx-auto w-full">
-        <ion-button expand="block" (click)="openModal()" color="primary" class="rounded-xl shadow-md">
-          RÉSERVER
-        </ion-button>
+        @if (isOwner()) {
+          <ion-button expand="block" (click)="openAvailabilityModal()" color="secondary" class="rounded-xl shadow-md h-12 font-semibold">
+            <ion-icon name="calendar-outline" slot="start"></ion-icon>
+            Gérer les disponibilités
+          </ion-button>
+        }
+        @if(!isOwner()) {
+          <ion-button expand="block" (click)="openModal()" color="primary" class="rounded-xl shadow-md h-12 font-semibold">
+            RÉSERVER
+          </ion-button>
+        }
+
       </div>
 
       <div>
@@ -25,7 +57,7 @@
             Avis utilisateurs ({{ state.reviewsDTO?.length || 0 }})
           </h3>
 
-          @if (canReview()) {
+          @if (!isOwner() && canReview()) {
             <ion-button fill="clear" size="small" (click)="openReviewModal()">
               Laisser un avis
             </ion-button>
@@ -55,13 +87,14 @@
   }
 
   @else if (station.isLoading()) {
-    <div class="flex justify-center items-center h-full">
-      <ion-spinner></ion-spinner>
+    <div class="flex justify-center items-center h-64">
+      <ion-spinner color="primary"></ion-spinner>
     </div>
   }
   @else if (station.error()) {
-    <div class="flex flex-col items-center justify-center h-full text-red-500">
-      <p>Impossible de charger la station.</p>
+    <div class="flex flex-col items-center justify-center h-64 text-red-500 px-4 text-center">
+      <ion-icon name="alert-circle-outline" class="text-4xl mb-2"></ion-icon>
+      <p>Impossible de charger les détails de la station.</p>
     </div>
   }
 

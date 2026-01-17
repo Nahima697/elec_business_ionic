@@ -22,8 +22,10 @@
       <div routerLink="/profile"
            class="h-12 w-12 bg-white rounded-full p-1 cursor-pointer shadow-sm hover:scale-105 transition-transform"
            style="border: 1px solid rgba(var(--ion-text-color-rgb), 0.1);">
-        <img src="assets/images/avatar-placeholder.png" alt="Profile" class="h-full w-full rounded-full object-cover">
-      </div>
+        <img
+          [src]="user()?.profilePictureUrl || 'assets/images/default-avatar.png'"
+          alt="Avatar"
+        />      </div>
     </header>
 
     <div class="bg-white p-6 rounded-2xl shadow-sm"
@@ -59,7 +61,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-      <div routerLink="/user/renter/bookings"
+      <div routerLink="../bookings"
            class="bg-white p-5 rounded-xl shadow-sm flex items-center gap-4 cursor-pointer transition duration-200 hover:shadow-md hover:scale-[1.02] group"
            style="border: 1px solid rgba(var(--ion-text-color-rgb), 0.1);">
 
@@ -76,7 +78,7 @@
         <ion-icon name="chevron-forward" class="ml-auto" style="color: var(--ion-color-medium);"></ion-icon>
       </div>
 
-      <div routerLink="/map"
+      <div routerLink="/tabs/map"
            class="bg-white p-5 rounded-xl shadow-sm flex items-center gap-4 cursor-pointer transition duration-200 hover:shadow-md hover:scale-[1.02] group"
            style="border: 1px solid rgba(var(--ion-text-color-rgb), 0.1);">
 

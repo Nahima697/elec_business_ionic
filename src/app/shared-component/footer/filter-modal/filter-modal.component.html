@@ -1,0 +1,87 @@
+<div class="w-full flex justify-end px-4 pt-4 bg-white">
+  <ion-button fill="clear" size="small" (click)="dismiss()" color="medium">
+    <ion-icon name="close-outline" slot="icon-only" class="text-2xl"></ion-icon>
+  </ion-button>
+</div>
+
+<ion-content class="ion-padding">
+  <div class="flex flex-col h-full justify-between">
+
+    <ion-grid>
+      <ion-row class="gap-2 justify-center">
+
+        <ion-col size="6">
+          <ion-button
+            expand="block"
+            [fill]="openPlace ? 'solid' : 'outline'"
+            shape="round"
+            (click)="openPlace = !openPlace; openTrajet = false; openDate = false">
+            {{ selectedPlace || 'Lieu' }}
+          </ion-button>
+
+          @if (openPlace) {
+            <div class="mt-2 animate-fade-in">
+              <app-form-field
+                placeholder="Ville, Code postal..."
+                [controlType]="ControlType.Input"
+                [formControl]="placeControl"
+                type="text"
+              ></app-form-field>
+            </div>
+          }
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-button
+            expand="block"
+            [fill]="openTrajet ? 'solid' : 'outline'"
+            shape="round"
+            (click)="openTrajet = !openTrajet; openPlace = false; openDate = false">
+            {{ selectedTrajet || 'Trajet' }}
+          </ion-button>
+
+          @if (openTrajet) {
+            <div class="mt-2 animate-fade-in">
+              <app-form-field
+                placeholder="Destination..."
+                [controlType]="ControlType.Input"
+                [formControl]="trajetControl"
+                type="text"
+              ></app-form-field>
+            </div>
+          }
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-4">
+        <ion-col size="12">
+          <ion-button
+            expand="block"
+            [fill]="openDate ? 'solid' : 'outline'"
+            shape="round"
+            (click)="openDate = !openDate; openPlace = false; openTrajet = false">
+            {{ selectedDate ? selectedDate : 'Quand ?' }}
+          </ion-button>
+
+          @if (openDate) {
+            <div class="mt-2 animate-fade-in">
+              <app-form-field
+                label="Date de début"
+                [controlType]="ControlType.Date"
+                [formControl]="dateControl"
+              ></app-form-field>
+            </div>
+          }
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border p-4 bg-white">
+  <ion-button expand="block" shape="round" color="primary" (click)="applyFilters()">
+    Rechercher
+    <ion-icon name="filter-outline" slot="end"></ion-icon>
+  </ion-button>
+</ion-footer>
