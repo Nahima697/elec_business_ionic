@@ -21,10 +21,7 @@ export class ChargingStationService {
   getChargingStationDetail(id:string) :Observable<ChargingStationResponseDTO>   {
     return this.http.get<ChargingStationResponseDTO>(`/charging_stations/${id}`);
   }
-
-  createStation(station: ChargingStationRequestDTO, imageFile?: File): Observable<ChargingStationResponseDTO> {
-    const formData = new FormData();
-
+  private fillFormData(formData: FormData, station: ChargingStationRequestDTO) {
     formData.append('name', station.name);
     formData.append('description', station.description);
     formData.append('powerKw', station.powerKw.toString());
@@ -32,6 +29,11 @@ export class ChargingStationService {
     formData.append('lng', station.lng.toString());
     formData.append('lat', station.lat.toString());
     formData.append('locationId', station.locationId);
+  }
+
+  createStation(station: ChargingStationRequestDTO, imageFile?: File): Observable<ChargingStationResponseDTO> {
+    const formData = new FormData();
+    this.fillFormData(formData, station);
 
     if (imageFile) {
       formData.append('image', imageFile);
@@ -39,10 +41,18 @@ export class ChargingStationService {
     return this.http.post<ChargingStationResponseDTO>('/charging_stations', formData);
   }
 
-  updateChargingStation(station: ChargingStationRequestDTO) : Observable<ChargingStationResponseDTO> {
-    return this.http.put<ChargingStationRequestDTO>(`/charging_stations/${station.id}`,station);
-  }
+  updateChargingStation(station: ChargingStationRequestDTO, imageFile?: File) : Observable<ChargingStationResponseDTO> {
+    const formData = new FormData();
 
+    formData.append('id', station.id);
+    this.fillFormData(formData, station);
+
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+
+    return this.http.put<ChargingStationResponseDTO>(`/charging_stations/${station.id}`, formData);
+  }
   deleteChargingStation(id:string): Observable<void> {
     return this.http.delete<void>(`/charging_stations/${id}`);
   }

@@ -25,12 +25,12 @@ downloadBookingPdf(bookingId: string): Observable<Blob> {
 }
 // Accepter une réservation
   acceptBooking(bookingId: string): Observable<BookingResponseDTO> {
-    return this.http.put<BookingResponseDTO>(`/bookings/${bookingId}/accept`, {});
+    return this.http.post<BookingResponseDTO>(`/bookings/${bookingId}/accept`, {});
   }
 
   // Rejeter une réservation
   rejectBooking(bookingId: string): Observable<BookingResponseDTO> {
-    return this.http.put<BookingResponseDTO>(`/bookings/${bookingId}/reject`, {});
+    return this.http.post<BookingResponseDTO>(`/bookings/${bookingId}/reject`, {});
   }
 
 hasUserBookedStation(stationId: string) {
@@ -40,8 +40,7 @@ hasUserBookedStation(stationId: string) {
 }
 
 updateBookingStatus(bookingId: string, status: string): Observable<BookingResponseDTO> {
-  // status peut être 'ACCEPTED' ou 'REJECTED'
-  return this.http.put<BookingResponseDTO>(`/bookings/${bookingId}/status?status=${status}`, {});
+  return this.http.post<BookingResponseDTO>(`/bookings/${bookingId}/status?status=${status}`, {});
 }
 
 }

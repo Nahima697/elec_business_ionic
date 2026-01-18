@@ -10,10 +10,11 @@ import { Location } from '@angular/common';
 import { ReviewFormComponent } from '../../../review/components/review-form/review-form.component';
 import { ReviewListComponent } from 'src/app/features/review/components/review-list/review-list.component';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline, calendarOutline, locationOutline, alertCircleOutline } from 'ionicons/icons';
+import { arrowBackOutline, calendarOutline, locationOutline, alertCircleOutline, createOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { ModalController } from '@ionic/angular/standalone';
 import { AvailabilityRulesComponent } from '../../component/availability-rules/availability-rules.component';
+import { AppNavigationService } from 'src/app/core/services/app-navigation.service';
 @Component({
   selector: 'app-station-detail',
   templateUrl: './station-detail.component.html',
@@ -35,6 +36,7 @@ export class StationDetailComponent {
   private route = inject(ActivatedRoute);
   private location = inject(Location);
   protected station = this.stationApi.getOne(this.idSignal);
+  protected navService = inject(AppNavigationService);
 
   readonly toastVisible = signal(false);
   readonly toastMessage = signal('');
@@ -44,7 +46,7 @@ export class StationDetailComponent {
   @ViewChild('reviewModal', { read: IonModal }) reviewModal!: IonModal;
 
   constructor() {
-     addIcons({arrowBackOutline,locationOutline,calendarOutline,alertCircleOutline});
+     addIcons({arrowBackOutline,locationOutline,calendarOutline,createOutline,alertCircleOutline});
     const idFromInput = this.id();
     const idFromRoute = this.route.snapshot.paramMap.get('id');
     const realId = idFromInput ?? idFromRoute;

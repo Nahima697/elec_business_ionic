@@ -49,6 +49,10 @@ export const USER_ROUTES: Routes = [
         loadComponent: () => import('../charging-station/component/station-form/station-form.component').then(m => m.StationFormComponent)
       },
       {
+      path: 'stations/:id/edit',
+    loadComponent: () => import('../charging-station/component/station-form/station-form.component').then(m => m.StationFormComponent)
+      },
+      {
         path: 'availability-rules',
         loadComponent: () => import('../charging-station/component/availability-rules/availability-rules.component').then(m => m.AvailabilityRulesComponent)
       }

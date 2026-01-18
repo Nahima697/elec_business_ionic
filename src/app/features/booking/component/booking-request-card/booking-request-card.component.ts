@@ -46,7 +46,7 @@ import { BookingResponseDTO } from '../../models/booking';
 })
 export class BookingRequestCardComponent {
   readonly booking = input.required<BookingResponseDTO>();
-  readonly isOwner = input<boolean>(false); // Mode "Propriétaire" ou "Loueur"
+  readonly isOwner = input<boolean>(false); 
 
   // Outputs pour remonter l'action au parent
   readonly onAccept = output<BookingResponseDTO>();

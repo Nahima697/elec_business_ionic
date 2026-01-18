@@ -1,57 +1,45 @@
 
-.custom-search-field {
-  --background: #fff;
-  --border-radius: 0.75rem;
-  --box-shadow: none;
-  border: 1px solid var(--border-color);
-  padding: 0;
-
-  --padding-start: 0;
-  --inner-padding-end: 0;
-  --inner-border-radius: 0.75rem;
-  --icon-color: var(--color-secondary);
-
-  /* Cible l'input à l'intérieur de la barre de recherche pour un padding cohérent */
-  .searchbar-input-container {
-      padding-top: 1rem;
-      padding-bottom: 1rem;
-  }
-}
-
-/* Assurer que ion-datetime a une hauteur gérable sur mobile */
+.custom-search-field,
 .custom-datetime-field {
-  --background: #fff;
-  --border-radius: 0.75rem;
-  --padding-start: 1rem;
-  --padding-end: 1rem;
-  border: 1px solid var(--border-color);
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 
-  /* 1. Supprimer la hauteur fixe qui peut entrer en conflit avec le dimensionnement interne d'Ionic. */
-  height: auto;
-  min-height: auto;
-  /* 2. Assurer que la présentation est 'cover' dans la modale pour afficher le calendrier complet. */
-  --wheel-width: 100%;
-  --border-width: 0;
-
-  /* 3. Forcer l'affichage en mode calendrier pour garantir l'espace nécessaire */
-  --width: 100%;
-  display: block;
-
-  padding: 0;
-  overflow: visible;
-
-  /* Cibler l'élément calendrier interne et forcer un display:block */
-  .datetime-calendar {
-    display: block !important;
-  }
+  --border-width: 0px !important;
+  --inner-border-width: 0px !important;
+  --border-color: transparent !important;
+  --highlight-height: 0px !important;
 }
 
 ion-item {
-  --min-height: auto;
-  --padding-start: 0;
-  --inner-padding-end: 0;
+  --border-width: 0px !important;
+  --inner-border-width: 0px !important;
+  --highlight-height: 0px !important;
+  --background: transparent;
 
-  ion-label {
-    padding-bottom: 0.5rem;
-  }
+  border: none !important;
+  box-shadow: none !important;
+}
+
+ion-item::part(native) {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+ion-input::part(native),
+ion-textarea::part(native),
+ion-select::part(container) {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+ion-searchbar {
+  --box-shadow: none !important;
+  --border-radius: 0.75rem;
+  --background: #fff;
+}
+ion-searchbar::part(container) {
+  border: none !important;
+  box-shadow: none !important;
 }

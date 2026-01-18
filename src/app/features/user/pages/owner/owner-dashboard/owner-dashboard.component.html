@@ -5,7 +5,8 @@
     <div class="space-y-4">
       <div (click)="goBack()"
            class="inline-flex items-center gap-2 cursor-pointer transition py-1 hover:opacity-80"
-           style="color: var(--ion-color-medium);"> <ion-icon name="arrow-back-outline" class="text-xl"></ion-icon>
+           style="color: var(--ion-color-medium);">
+        <ion-icon name="arrow-back-outline" class="text-xl"></ion-icon>
         <span class="font-medium text-sm">Retour au dashboard</span>
       </div>
 
@@ -47,7 +48,7 @@
             <ion-icon name="calendar-outline" class="text-xl"></ion-icon>
           </div>
         </div>
-        <p class="text-3xl font-bold" style="color: var(--ion-text-color);">0</p>
+        <p class="text-3xl font-bold" style="color: var(--ion-text-color);">{{ pendingBookingsCount() }}</p>
       </div>
 
     </div>
@@ -59,7 +60,6 @@
 
         <div (click)="goToMyLocations()"
              class="group bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center text-center gap-3">
-
           <div class="h-14 w-14 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
                style="background: rgba(var(--ion-color-primary-rgb), 0.08); color: var(--ion-color-primary);">
             <ion-icon name="map-outline" class="text-xl"></ion-icon>
@@ -69,7 +69,6 @@
 
         <div (click)="openAddLocationModal()"
              class="group bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center text-center gap-3">
-
           <div class="h-14 w-14 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
                style="background: rgba(var(--ion-color-primary-rgb), 0.08); color: var(--ion-color-primary);">
             <ion-icon name="location-outline" class="text-2xl"></ion-icon>
@@ -79,7 +78,6 @@
 
         <div (click)="openAvailabilityModal()"
              class="group bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center text-center gap-3">
-
           <div class="h-14 w-14 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
                style="background: rgba(var(--ion-color-primary-rgb), 0.08); color: var(--ion-color-primary);">
             <ion-icon name="time-outline" class="text-2xl"></ion-icon>
@@ -89,7 +87,6 @@
 
         <div (click)="goToMyBookings()"
              class="group bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center text-center gap-3">
-
           <div class="h-14 w-14 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
                style="background: rgba(var(--ion-color-primary-rgb), 0.08); color: var(--ion-color-primary);">
             <ion-icon name="list-outline" class="text-2xl"></ion-icon>
@@ -99,5 +96,62 @@
 
       </div>
     </div>
+
+    <div>
+      <div class="flex justify-between items-end mb-4 px-1">
+        <h2 class="text-lg font-bold" style="color: var(--ion-text-color);">Mes Bornes</h2>
+        <span (click)="navService.go(['user', 'owner', 'stations'])" class="text-primary text-sm font-medium cursor-pointer hover:underline">Tout voir</span>
+      </div>
+
+      <div class="space-y-3">
+        @for (station of myStations(); track station.id) {
+          <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex gap-4 items-center">
+
+            <div class="h-20 w-20 bg-gray-100 rounded-lg flex-shrink-0 bg-cover bg-center relative border border-gray-200"
+                 [style.background-image]="'url(' + (station.imageUrl || 'assets/images/placeholder-ev.jpg') + ')'">
+            </div>
+
+            <div class="flex flex-col flex-grow justify-between h-full gap-2">
+              <div>
+                <h4 class="font-bold text-base line-clamp-1" style="color: var(--ion-text-color);">
+                  {{ station.name }}
+                </h4>
+                <p class="text-xs text-gray-500 line-clamp-1">
+                  {{ station.locationDTO?.addressLine || 'Adresse non renseignée' }}
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-2 justify-end mt-1">
+
+                <ion-button
+                  (click)="navService.go(['user', 'owner', 'stations', station.id, 'edit'])"
+                  color="medium"
+                  class="rounded-xl shadow-md h-12 font-semibold">
+                  <ion-icon name="create-outline" slot="start"></ion-icon>
+                  Modifier
+                </ion-button>
+
+                <ion-button
+                    (click)="navService.go(['user', 'owner', 'availability-rules'])"
+                    class="rounded-xl shadow-md h-12 font-semibold">
+                  <ion-icon name="calendar-outline" slot="start"></ion-icon>
+                  Dispo
+                </ion-button>
+
+              </div>
+            </div>
+          </div>
+        } @empty {
+           <div class="text-center p-8 bg-white border border-gray-100 rounded-xl">
+            <ion-icon name="ev-station-outline" class="text-4xl text-gray-300 mb-2"></ion-icon>
+            <p class="text-gray-500 font-medium">Aucune borne enregistrée.</p>
+            <ion-button (click)="openAddStationModal()" fill="clear" size="small">
+              Commencer maintenant
+            </ion-button>
+          </div>
+        }
+      </div>
+    </div>
+
   </div>
 </ion-content>

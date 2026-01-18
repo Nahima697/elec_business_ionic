@@ -4,7 +4,7 @@ import {
   IonContent, IonHeader, IonToolbar, IonTitle,
   IonCard, IonCardContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { carSportOutline, timeOutline, listOutline } from 'ionicons/icons';
+import { carSportOutline, timeOutline, listOutline, flashOutline } from 'ionicons/icons';
 
 // Services
 import { AuthService } from 'src/app/core/auth/services/auth.service';
@@ -29,7 +29,7 @@ export class BookingPageComponent {
   private navService = inject(AppNavigationService);
 
   constructor() {
-    addIcons({ carSportOutline,  timeOutline, listOutline });
+    addIcons({ carSportOutline, flashOutline, timeOutline, listOutline });
   }
 
   onSelectContext(roleName: 'RENTER' | 'OWNER') {

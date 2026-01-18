@@ -42,6 +42,11 @@
             <ion-icon name="calendar-outline" slot="start"></ion-icon>
             Gérer les disponibilités
           </ion-button>
+          <ion-button expand="block" fill="outline" class="mb-3"
+            (click)="navService.go(['owner', 'stations', state.id, 'edit'])" color="medium" class="rounded-xl shadow-md h-12 font-semibold">
+           <ion-icon name="create-outline" slot="start"></ion-icon>
+              Modifier les infos & Photo
+          </ion-button>
         }
         @if(!isOwner()) {
           <ion-button expand="block" (click)="openModal()" color="primary" class="rounded-xl shadow-md h-12 font-semibold">
