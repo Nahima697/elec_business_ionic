@@ -1,38 +1,71 @@
-import { Component, inject, signal, computed, input, model } from '@angular/core';
+import { Component, inject, signal, computed, input, model, OnInit } from '@angular/core';
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
 import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
 import { PlatformService } from 'src/app/core/services/platform.service';
+import { CommonModule } from '@angular/common';
+import { NotificationService } from 'src/app/features/notification/service/notification.service';
+import { Notification } from 'src/app/features/notification/model/notification.model';
+import { PopoverController, IonPopover} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { ellipse } from 'ionicons/icons';
+import { NotificationPopoverComponent } from 'src/app/features/notification/component/notification-popover/notification-popover.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ RouterModule],
+  imports: [RouterModule, CommonModule, IonPopover, NotificationPopoverComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   private router = inject(Router);
   private platformService = inject(PlatformService);
-  readonly stations = input<any>();
+  private notifService = inject(NotificationService);
+  private popoverCtrl = inject(PopoverController);
 
+  readonly stations = input<any>();
   ControlType = ControlType;
   open = model.required<boolean>();
 
   protected readonly searchFilter = signal('');
+  protected unreadCount = this.notifService.unreadCount;
+  protected notifications: Notification[] = [];
+
+  constructor() {
+    addIcons({ ellipse });
+  }
+
+  ngOnInit() {
+    this.refreshNotifications();
+    if (this.platformService.isBrowser()) {
+      setInterval(() => this.refreshNotifications(), 30000);
+    }
+  }
+
+  refreshNotifications() {
+    this.notifService.getMyNotifications().subscribe(data => {
+      this.notifications = data;
+    });
+  }
+
+  onNotifClick(n: Notification) {
+    if (!n.isRead) {
+      this.notifService.markAsRead(n.id).subscribe();
+      n.isRead = true;
+    }
+  }
 
   protected readonly filteredStations = computed(() => {
     const rawData = this.stations();
     let list: ChargingStationResponseDTO[] = [];
 
-    // 1. Extraction intelligente (Tableau ou Page)
     if (rawData?.content && Array.isArray(rawData.content)) {
       list = rawData.content;
     } else if (Array.isArray(rawData)) {
       list = rawData;
     }
 
-    // 2. Filtrage
     const filter = this.searchFilter()?.toLowerCase() ?? '';
     if (!filter) return list;
 
@@ -73,3 +106,5 @@ export class HeaderComponent {
     }
   }
 }
+
+

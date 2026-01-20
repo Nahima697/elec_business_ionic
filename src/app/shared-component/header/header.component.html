@@ -2,125 +2,35 @@
   <nav class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
 
-      <!-- Logo -->
-      <div
-        class="flex items-center gap-2 cursor-pointer"
-        routerLink="/"
-      >
-        <img
-          class="h-9 w-auto object-contain"
-          src="assets/images/eb-logo.png"
-          alt="Elec Business"
-        />
-        <span class="hidden sm:inline-block text-lg font-semibold text-primary">
-          Elec Business
-        </span>
-      </div>
+      <div class="flex items-center gap-2 cursor-pointer" routerLink="/">
+         </div>
 
-      <!-- Navigation desktop -->
-      <div class="hidden md:flex items-center gap-6">
-        @for (item of links(); track $index) {
-          <a
-            [routerLink]="item.path"
-            routerLinkActive="text-primary font-semibold"
-            [routerLinkActiveOptions]="{ exact: item.path === '/' }"
-            class="text-sm text-gray-600 hover:text-primary transition-colors"
-          >
-            {{ item.name }}
-          </a>
-        }
-      </div>
-
-      <!-- Actions -->
       <div class="flex items-center gap-3">
 
-        <!-- Search desktop -->
-        <div class="hidden sm:block relative">
-          <input
-            type="text"
-            (keydown.enter)="onLocalSearch($event)"
-            placeholder="Ville, code postal..."
-            class="w-56 py-2 pl-4 pr-9 text-sm rounded-full border border-gray-200
-                   focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-          />
-          <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-            <svg
-              class="w-4 h-4 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
+        <button id="notif-trigger"
+                class="relative flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-primary transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+
+          @if (unreadCount() > 0) {
+            <span class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[9px] font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-500 rounded-full">
+              {{ unreadCount() }}
+            </span>
+          }
+        </button>
+
+        <ion-popover trigger="notif-trigger" triggerAction="click" [dismissOnSelect]="true">
+          <ng-template>
+            <app-notification-popover
+              [data]="notifications"
+              (notificationClicked)="onNotifClick($event)">
+            </app-notification-popover>
+          </ng-template>
+        </ion-popover>
+
         </div>
-
-        <!-- Profile -->
-        <button
-          routerLink="/profile"
-          class="flex items-center justify-center w-9 h-9 rounded-full
-                 bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-primary
-                 transition-colors"
-        >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-        </button>
-
-        <!-- Burger mobile -->
-        <button
-          (click)="toggleMenu()"
-          class="md:hidden p-2 text-gray-600 hover:text-primary transition-colors"
-        >
-          <svg
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </div>
     </div>
   </nav>
-
-  <!-- Menu mobile -->
-  @if (open()) {
-    <div
-      class="md:hidden bg-white border-t border-gray-100 px-4 py-4 shadow-sm"
-    >
-      <div class="mb-4">
-        <input
-          type="text"
-          (keydown.enter)="onLocalSearch($event)"
-          placeholder="Rechercher une borne..."
-          class="w-full p-3 rounded-lg border border-gray-200
-                 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-        />
-      </div>
-
-      <div class="flex flex-col gap-2">
-        @for (item of links(); track $index) {
-          <a
-            [routerLink]="item.path"
-            (click)="toggleMenu()"
-            class="px-4 py-2 rounded-lg text-sm font-medium
-                   text-gray-700 hover:bg-blue-50 hover:text-primary
-                   transition-colors"
-          >
-            {{ item.name }}
-          </a>
-        }
-      </div>
-    </div>
-  }
-</header>
+  </header>

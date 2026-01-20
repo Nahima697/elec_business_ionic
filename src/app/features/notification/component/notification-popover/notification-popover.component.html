@@ -1,0 +1,37 @@
+<ion-content class="ion-padding-vertical">
+  <div class="px-4 pb-2 border-b border-gray-100 mb-2">
+    <h3 class="font-bold text-sm text-gray-800">Notifications</h3>
+  </div>
+
+  @if (data().length === 0) {
+    <div class="text-center p-4 text-gray-400 text-xs">
+      Rien à signaler.
+    </div>
+  }
+
+  <ion-list lines="none">
+    @for (n of data(); track n.id) {
+      <div (click)="onItemClick(n)"
+           class="px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
+           [class.bg-blue-50]="!n.isRead">
+
+        <div class="flex justify-between items-start">
+          <span class="text-xs font-bold truncate w-3/4"
+                [class.text-primary]="!n.isRead"
+                [class.text-gray-700]="n.isRead">
+              {{ n.type === 'RESERVATION_CONFIRMED' ? 'Réservation validée' :
+                 n.type === 'RESERVATION_REJECTED' ? 'Réservation refusée' : 'Nouvelle notification' }}
+          </span>
+          @if (!n.isRead) {
+            <ion-icon name="ellipse" class="text-[8px] text-primary"></ion-icon>
+          }
+        </div>
+
+        <p class="text-xs text-gray-600 mt-1 line-clamp-2">{{ n.message }}</p>
+        <p class="text-[10px] text-gray-400 mt-1 text-right">
+          {{ n.createdAt | date:'short' }}
+        </p>
+      </div>
+    }
+  </ion-list>
+</ion-content>

@@ -5,7 +5,7 @@ import { BookingRequestCardComponent } from 'src/app/features/booking/component/
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonRefresher,
   IonRefresherContent, IonBackButton, IonButtons, IonButton, IonIcon,
-  ToastController 
+  ToastController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { documentTextOutline, alertCircleOutline } from 'ionicons/icons'; // Optionnel : icone d'alerte
@@ -101,8 +101,6 @@ export class RenterBookingPage {
       },
       error: async (err) => {
         console.error('Erreur PDF:', err);
-
-        // Affichage de l'erreur à l'utilisateur
         const toast = await this.toastCtrl.create({
           message: 'Impossible de télécharger le reçu. Veuillez réessayer plus tard.',
           duration: 3000,

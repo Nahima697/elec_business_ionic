@@ -21,5 +21,17 @@
       </ion-button>
     </div>
   }
+  @if (booking.statusLabel === 'ACCEPTED') {
+              <ion-button
+                expand="block"
+                fill="outline"
+                color="primary"
+                class="mx-1"
+                (click)="downloadPdf(booking.id)"
+              >
+                <ion-icon slot="start" name="document-text-outline"></ion-icon>
+                Télécharger le reçu
+              </ion-button>
+            }
 </ion-card>
 </ion-content>

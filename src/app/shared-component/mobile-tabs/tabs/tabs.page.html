@@ -7,9 +7,15 @@
       <ion-label>Recherche</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="messages" [routerLink]="['/tabs/user/dashboard']">
+    <ion-tab-button tab="messages" [routerLink]="['/tabs/user/dashboard']" class="relative">
       <ion-icon name="chatbox-ellipses-outline"></ion-icon>
       <ion-label>Dashboard</ion-label>
+
+      @if (unreadCount() > 0) {
+        <ion-badge color="danger" class="absolute top-2 right-4 text-[10px] rounded-full px-1.5">
+          {{ unreadCount() }}
+        </ion-badge>
+      }
     </ion-tab-button>
 
     <ion-tab-button tab="reservations" [routerLink]="['/tabs/reservations']">

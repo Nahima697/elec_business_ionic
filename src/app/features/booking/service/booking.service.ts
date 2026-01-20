@@ -21,7 +21,7 @@ export class BookingService {
   return this.http.get<BookingResponseDTO[]>('/bookings/renter/me');
 }
 downloadBookingPdf(bookingId: string): Observable<Blob> {
-  return this.http.get(`/'pdf/booking/${bookingId}`, { responseType: 'blob' });
+return this.http.get(`/bookings/${bookingId}/pdf`, { responseType: 'blob' });
 }
 // Accepter une réservation
   acceptBooking(bookingId: string): Observable<BookingResponseDTO> {
