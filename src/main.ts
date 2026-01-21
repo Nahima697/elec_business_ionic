@@ -10,5 +10,5 @@ import { appConfig } from './app/app.config';
 
 registerSwiperElements();
 
-bootstrapApplication(AppComponent, appConfig) 
+bootstrapApplication(AppComponent, appConfig)
   .catch((err) => console.error(err));
