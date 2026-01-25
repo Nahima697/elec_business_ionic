@@ -10,6 +10,7 @@ import { addIcons } from 'ionicons';
 import { personCircleOutline, saveOutline, logOutOutline, cameraOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { Router } from '@angular/router';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 @Component({
   selector: 'app-profile',
@@ -29,6 +30,7 @@ export class ProfilePage implements OnInit {
   private authService = inject(AuthService);
   private toastCtrl = inject(ToastController);
   private router = inject(Router);
+  private userProfileService = inject(UserProfileService);
 
   profileForm!: FormGroup;
   isLoading = signal<boolean>(true);
@@ -47,9 +49,7 @@ export class ProfilePage implements OnInit {
   private initForm() {
     this.profileForm = this.fb.group({
       username: ['', Validators.required],
-      email: [{ value: '', disabled: true }, [Validators.required, Validators.email]], // Email souvent non modifiable directement
-
-      // Adresse
+      email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
       addressLine: [''],
       city: [''],
       postalCode: [''],
@@ -109,5 +109,49 @@ export class ProfilePage implements OnInit {
       position: 'bottom'
     });
     await toast.present();
+  }
+
+  async changeProfilePicture() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Base64,
+        source: CameraSource.Prompt
+      });
+
+      if (image.base64String) {
+        // 1. Conversion Base64 -> Blob -> File
+        const blob = this.base64ToBlob(image.base64String, `image/${image.format}`);
+        const file = new File([blob], "avatar.jpg", { type: `image/${image.format}` });
+
+        // 2. Envoi au service qui attend un File
+        this.userProfileService.uploadAvatar(file).subscribe({
+          next: (updatedProfile) => {
+            this.user.set(updatedProfile);
+            this.showToast('Photo de profil mise à jour', 'success');},
+          error: (err) => console.error("Erreur upload", err)
+        });
+      }
+    } catch (e) {
+      console.log('User cancelled photo', e);
+    }
+  }
+
+  private base64ToBlob(base64: string, contentType: string = '', sliceSize: number = 512): Blob {
+    const byteCharacters = atob(base64);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, { type: contentType });
   }
 }

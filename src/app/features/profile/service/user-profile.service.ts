@@ -21,6 +21,6 @@ private http = inject(HttpClient);
   uploadAvatar(file: File): Observable<UserProfileDto> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<UserProfileDto>(`/me/avatar`, formData);
+    return this.http.post<UserProfileDto>(`/profile/avatar`, formData);
   }
 }

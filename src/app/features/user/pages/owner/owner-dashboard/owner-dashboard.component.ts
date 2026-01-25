@@ -1,7 +1,6 @@
 import { Component, OnInit, inject, computed, signal } from '@angular/core';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
-import { Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { AlertController, ToastController } from '@ionic/angular/standalone';
 import {
   IonContent, IonButton, IonIcon, ModalController,
 } from '@ionic/angular/standalone';
@@ -10,8 +9,7 @@ import {
   addCircleOutline, mapOutline, listOutline,
   timeOutline, statsChartOutline, storefrontOutline,
   arrowBackOutline, flashOutline, cashOutline, calendarOutline,
-  locationOutline, createOutline
-} from 'ionicons/icons';
+  locationOutline, createOutline, trashOutline,batteryChargingOutline } from 'ionicons/icons';
 
 // Components
 import { LocationFormComponent } from 'src/app/features/charging-station/component/location-form/location-form.component';
@@ -31,10 +29,10 @@ import { BookingService } from 'src/app/features/booking/service/booking.service
   styleUrls: ['./owner-dashboard.component.scss']
 })
 export class OwnerDashboardComponent implements OnInit {
-
-  // --- INJECTIONS ---
   private auth = inject(AuthService);
   private modalCtrl = inject(ModalController);
+  private alertCtrl = inject(AlertController);
+  private toastCtrl = inject(ToastController);
 
   public navService = inject(AppNavigationService);
   private stationService = inject(ChargingStationService);
@@ -46,11 +44,7 @@ export class OwnerDashboardComponent implements OnInit {
   pendingBookingsCount = signal(0);
 
   constructor() {
-    addIcons({
-      arrowBackOutline, addCircleOutline, cashOutline, calendarOutline,
-      timeOutline, listOutline, mapOutline, statsChartOutline,
-      storefrontOutline, flashOutline, locationOutline, createOutline
-    });
+    addIcons({arrowBackOutline,addCircleOutline,cashOutline,calendarOutline,mapOutline,locationOutline,timeOutline,listOutline,createOutline,trashOutline,statsChartOutline,storefrontOutline,flashOutline,batteryChargingOutline});
   }
 
   ngOnInit() {
@@ -109,4 +103,52 @@ export class OwnerDashboardComponent implements OnInit {
     const modal = await this.modalCtrl.create({ component: AvailabilityRulesComponent });
     await modal.present();
   }
+
+  async confirmDeleteStation(stationId: string, event: Event) {
+    event.stopPropagation();
+
+    const alert = await this.alertCtrl.create({
+      header: 'Supprimer la borne ?',
+      message: 'Cette action est irréversible. Les réservations passées seront conservées, mais les futures seront annulées.',
+      buttons: [
+        {
+          text: 'Annuler',
+          role: 'cancel'
+        },
+        {
+          text: 'Supprimer',
+          role: 'destructive',
+          handler: () => {
+            this.deleteStation(stationId);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  private deleteStation(id: string) {
+    this.stationService.deleteChargingStation(id).subscribe({
+      next: () => {
+        this.myStationsResource.reload();
+        this.showToast('Borne supprimée avec succès', 'success');
+      },
+      error: (err) => {
+        console.error(err);
+        this.showToast('Impossible de supprimer la borne (peut-être a-t-elle des réservations en cours ?)', 'danger');
+      }
+    });
+  }
+
+  private async showToast(msg: string, color: 'success' | 'danger') {
+    const toast = await this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      color: color,
+      position: 'bottom'
+    });
+    toast.present();
+  }
 }
+

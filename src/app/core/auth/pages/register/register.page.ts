@@ -7,7 +7,7 @@ import {
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton,
   IonCardContent, IonItem, IonCheckbox, IonLabel, IonSpinner,
-  ToastController // <--- AJOUT
+  ToastController 
 } from '@ionic/angular/standalone';
 import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';

@@ -6,7 +6,7 @@ import { FormFieldComponent } from 'src/app/shared-component/form-field/form-fie
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { PlatformService } from 'src/app/core/services/platform.service';
+import { PlatformService } from '../../services/platform.service';
 
 @Component({
   selector: 'app-login',

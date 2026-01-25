@@ -1,12 +1,12 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router'; // + RouterLink
-import { CommonModule } from '@angular/common'; // + CommonModule (pour titlecase)
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { UserService } from '../../service/user.service';
 import { RoleSelectorComponent } from '../../components/role-selector/role-selector.component';
-import { IonContent, IonIcon, IonButton } from "@ionic/angular/standalone";
-import { PlatformService } from 'src/app/core/services/platform.service';
-import { addIcons } from 'ionicons'; // + addIcons
+import { IonContent, IonIcon} from "@ionic/angular/standalone";
+import { PlatformService } from 'src/app/core/auth/services/platform.service';
+import { addIcons } from 'ionicons';
 import { shieldCheckmarkOutline, helpBuoyOutline, flashOutline, arrowBackOutline, addCircleOutline, cashOutline, calendarOutline, mapOutline, timeOutline, listOutline, headsetOutline } from 'ionicons/icons'; // + Icons
 import { UserProfileDto } from '../../models/user.model';
 

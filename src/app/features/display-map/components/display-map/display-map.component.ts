@@ -4,7 +4,7 @@ import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import { LngLatLike, Map } from 'maplibre-gl';
 import { IonIcon, ModalController, IonSearchbar } from '@ionic/angular/standalone';
 import { FilterModalComponent } from 'src/app/shared-component/footer/filter-modal/filter-modal.component';
-import { PlatformService } from 'src/app/core/services/platform.service';
+import { PlatformService } from 'src/app/core/auth/services/platform.service';
 import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
 import { GeolocalisationService } from '../../service/geolocalisation.service';
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';

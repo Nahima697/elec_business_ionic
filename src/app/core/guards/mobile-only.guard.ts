@@ -1,7 +1,7 @@
 // guards/platform.guard.ts
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { PlatformService } from 'src/app/core/services/platform.service';
+import { PlatformService } from '../auth/services/platform.service';
 
 @Injectable({
   providedIn: 'root',

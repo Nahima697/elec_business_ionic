@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { PlatformService } from './platform.service';
+import { PlatformService } from '../auth/services/platform.service';
 
 @Injectable({ providedIn: 'root' })
 export class AppNavigationService {

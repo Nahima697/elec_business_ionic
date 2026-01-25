@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, input, model, OnInit } from '@angu
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
 import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
-import { PlatformService } from 'src/app/core/services/platform.service';
+import { PlatformService } from 'src/app/core/auth/services/platform.service';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from 'src/app/features/notification/service/notification.service';
 import { Notification } from 'src/app/features/notification/model/notification.model';
