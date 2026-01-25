@@ -8,7 +8,7 @@ import {
   ToastController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { documentTextOutline, alertCircleOutline } from 'ionicons/icons'; // Optionnel : icone d'alerte
+import { documentTextOutline, alertCircleOutline, checkmarkCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-renter-bookings',
@@ -41,7 +41,7 @@ import { documentTextOutline, alertCircleOutline } from 'ionicons/icons'; // Opt
               [isOwner]="false"
             />
 
-            @if (booking.statusLabel === 'ACCEPTED') {
+            @if (booking.statusLabel === 'ACCEPTED' || booking.statusLabel === 'COMPLETED') {
               <ion-button
                 expand="block"
                 fill="outline"
@@ -66,10 +66,12 @@ import { documentTextOutline, alertCircleOutline } from 'ionicons/icons'; // Opt
 export class RenterBookingPage {
   private bookingService = inject(BookingService);
   private toastCtrl = inject(ToastController);
+  // Plus besoin de PlatformService ni Filesystem
+
   bookings = signal<BookingResponseDTO[]>([]);
 
   constructor() {
-    addIcons({ documentTextOutline, alertCircleOutline });
+    addIcons({ documentTextOutline, alertCircleOutline, checkmarkCircleOutline });
     this.loadBookings();
   }
 
@@ -86,30 +88,38 @@ export class RenterBookingPage {
   refresh(event: any) {
     this.loadBookings(event);
   }
+
   downloadPdf(bookingId: string) {
     this.bookingService.downloadBookingPdf(bookingId).subscribe({
       next: (blob) => {
-
+        // Méthode universelle (Web standard)
+        // Sur mobile, cela demandera à l'utilisateur d'ouvrir ou enregistrer le fichier selon son navigateur
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         a.download = `reservation-${bookingId}.pdf`;
         document.body.appendChild(a);
         a.click();
+
+        // Nettoyage
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
       },
-      error: async (err) => {
-        console.error('Erreur PDF:', err);
-        const toast = await this.toastCtrl.create({
-          message: 'Impossible de télécharger le reçu. Veuillez réessayer plus tard.',
-          duration: 3000,
-          color: 'danger',
-          position: 'bottom',
-          icon: 'alert-circle-outline'
-        });
-        toast.present();
+      error: (err) => {
+        console.error('Erreur téléchargement API:', err);
+        this.showErrorToast('Impossible de télécharger le reçu.');
       }
     });
+  }
+
+  private async showErrorToast(msg: string) {
+    const toast = await this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      color: 'danger',
+      position: 'bottom',
+      icon: 'alert-circle-outline'
+    });
+    toast.present();
   }
 }
