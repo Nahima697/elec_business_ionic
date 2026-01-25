@@ -84,10 +84,8 @@ export class RegisterPage {
               });
               await toast.present();
 
-              // 2. Redirection vers Login pour qu'il se connecte une fois vérifié
               this.router.navigate(['/login']);
             } else {
-              // Cas rare où l'email n'est pas requis (ex: config dev)
               this.router.navigate(['/tabs']);
             }
           },

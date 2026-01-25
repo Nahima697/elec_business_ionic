@@ -5,38 +5,48 @@
     </ion-toolbar>
   </ion-header>
 
-  <swiper-container pagination="true" class="bg-light text-foreground ">
-    <swiper-slide class="flex flex-col h-full items-center">
-      <div class="w-full">
-        <img src="assets/images/slide1.png" class="w-full h-1/2 object-cover" />
-      </div>
-      <div class="flex flex-col justify-center items-center text-center px-6 py-8 grow">
-        <h2 class="text-2xl font-bold mb-4">Bienvenue sur <strong>Electricity Business</strong></h2>
-        <p>Louez ou proposez une borne de recharge entre particuliers.</p>
-      </div>
-    </swiper-slide>
+  <div class="scroller" (scroll)="onScroll($event)">
 
-    <swiper-slide class="flex flex-col h-full items-center">
-      <div class="w-full">
-        <img src="assets/images/slide2.png" class="w-full h-1/2 object-cover" />
+    <div class="slide">
+      <div class="image-container">
+        <img src="assets/images/slide1.png" alt="Bienvenue" />
       </div>
-      <div class="flex flex-col justify-center items-center text-center px-6 pb-8 grow">
-        <h2 class="text-2xl font-bold mb-4">Trouvez une borne partout</h2>
-        <p>Recherchez une borne selon votre localisation ou vos préférences.</p>
+      <div class="content">
+        <h2 class="title">Bienvenue sur <strong>Electricity Business</strong></h2>
+        <p class="description">Louez ou proposez une borne de recharge entre particuliers.</p>
       </div>
-    </swiper-slide>
+    </div>
 
-    <swiper-slide class="flex flex-col h-full items-center">
-      <div class="w-full">
-        <img src="assets/images/slide3.png" class="w-full h-1/2 object-cover" />
+    <div class="slide">
+      <div class="image-container">
+        <img src="assets/images/slide2.png" alt="Trouvez une borne" />
       </div>
-      <div class="flex flex-col justify-center items-center text-center px-6 py-8 grow">
-        <h2 class="text-2xl font-bold mb-4">Rechargez l’esprit léger</h2>
-        <p class="mb-6">Une communauté fiable et des réservations sécurisées.</p>
-        <ion-button routerLink="/login" class="mt-6">
+      <div class="content">
+        <h2 class="title">Trouvez une borne partout</h2>
+        <p class="description">Recherchez une borne selon votre localisation ou vos préférences.</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="image-container">
+        <img src="assets/images/slide3.png" alt="Rechargez" />
+      </div>
+      <div class="content">
+        <h2 class="title">Rechargez l’esprit léger</h2>
+        <p class="description">Une communauté fiable et des réservations sécurisées.</p>
+
+        <ion-button routerLink="/login" class="action-btn">
           Continuer
         </ion-button>
       </div>
-    </swiper-slide>
-  </swiper-container>
+    </div>
+
+  </div>
+
+  <div class="indicators">
+    <span class="dot" [class.active]="activeIndex === 0"></span>
+    <span class="dot" [class.active]="activeIndex === 1"></span>
+    <span class="dot" [class.active]="activeIndex === 2"></span>
+  </div>
+
 </ion-content>
