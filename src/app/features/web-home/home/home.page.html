@@ -1,31 +1,16 @@
 <ion-content>
-  @if (stations.isLoading()) {
-    <div class="flex justify-center items-center h-screen">
-      <ion-spinner name="crescent"></ion-spinner>
-    </div>
-  }
+  <app-header
+    [stations]="stations.error() ? [] : (stations.value() ?? [])"
+    [(open)]="openMenuMobile"
+  ></app-header>
 
-  @else if (stations.error()) {
-    <div class="flex flex-col justify-center items-center h-screen p-4 text-center">
-      <h2 class="text-xl font-bold text-red-500 mb-2">Erreur de connexion</h2>
-      <p class="text-gray-600 mb-4">Impossible de joindre le serveur.</p>
-      <button (click)="stations.reload()" class="bg-primary text-white px-4 py-2 rounded">
-        Réessayer
-      </button>
-    </div>
-  }
-
-  @else {
-    <app-header [stations]="stations.value() ?? []" [(open)]="openMenuMobile"></app-header>
-
-    <app-hero></app-hero>
-    <app-text-carousel></app-text-carousel>
-    <app-presentation></app-presentation>
-    <app-card></app-card>
-    <app-icon-card></app-icon-card>
-    <app-accordeon></app-accordeon>
-    <app-testimonial></app-testimonial>
-    <app-contact-banner></app-contact-banner>
-    <app-footer></app-footer>
-  }
+  <app-hero></app-hero>
+  <app-text-carousel></app-text-carousel>
+  <app-presentation></app-presentation>
+  <app-card></app-card>
+  <app-icon-card></app-icon-card>
+  <app-accordeon></app-accordeon>
+  <app-testimonial></app-testimonial>
+  <app-contact-banner></app-contact-banner>
+  <app-footer></app-footer>
 </ion-content>
