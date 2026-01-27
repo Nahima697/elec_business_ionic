@@ -67,7 +67,6 @@ export class FilterModalComponent implements OnInit {
       date: this.dateControl.value || this.selectedDate,
     };
 
-    console.log('Filtres appliqués :', filters);
 
     // On ferme la modale en renvoyant les données
     this.modalCtrl.dismiss(filters, 'confirm');

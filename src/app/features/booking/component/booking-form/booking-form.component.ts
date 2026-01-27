@@ -56,9 +56,7 @@ export class BookingFormComponent implements OnInit {
   });
 
   ngOnInit() {
-    console.log('BookingFormComponent initialisé');
     this.form.controls.date.valueChanges.subscribe(v => {
-      console.log('valueChanges date =>', v);
     });
   }
 
@@ -68,8 +66,6 @@ onDateChanged(ev: any) {
 
     const value = Array.isArray(raw) ? raw[0] : raw;
     const onlyDate = value.substring(0, 10);
-
-    console.log('Date sélectionnée:', onlyDate);
 
     this.form.patchValue({
       date: onlyDate,
@@ -84,7 +80,6 @@ onDateChanged(ev: any) {
 
     this.timeSlotService.getSlotsForDate(this.stationId(), date).subscribe({
       next: (slots) => {
-        console.log('Slots reçus :', slots);
         this.availableSlots.set(slots);
 
         const startTimes = new Set<string>();
@@ -132,11 +127,9 @@ onDateChanged(ev: any) {
 
   handleSubmit() {
     if (this.form.invalid) {
-      console.log('Formulaire invalide');
       return;
     }
     const raw = this.form.getRawValue();
-    console.log('Form submit =>', raw);
     const booking: BookingRequestDTO = {
       stationId: raw.stationId!,
       startDate: `${raw.date}T${raw.startHour}:00`,

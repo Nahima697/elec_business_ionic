@@ -18,8 +18,6 @@ export class GeolocalisationService {
         enableHighAccuracy: true
       });
 
-      console.log('Position actuelle:', coordinates);
-
       return {
         lat: coordinates.coords.latitude,
         lng: coordinates.coords.longitude

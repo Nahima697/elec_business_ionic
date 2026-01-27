@@ -74,7 +74,6 @@ export class LocationFormComponent implements OnInit {
 
       this.chargingLocationService.createLocation(locationData).subscribe({
         next: (response) => {
-          console.log("Location créée", response);
 
           // 1. Reset du form
           this.locationForm.reset();

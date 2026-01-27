@@ -75,7 +75,6 @@ export class DisplayMapComponent implements OnInit {
       setTimeout(() => {
         // CAS 1 : On a reçu des coordonnées directes (depuis le Dashboard)
         if (state.center) {
-          console.log('Centrage reçu du dashboard :', state.center);
           if (state.searchTerm) this.filterValue.set(state.searchTerm);
 
           // Vol vers la destination
@@ -87,7 +86,6 @@ export class DisplayMapComponent implements OnInit {
         }
         // CAS 2 : On a reçu juste un mot-clé
         else if (state.searchTerm) {
-          console.log('Recherche texte reçue :', state.searchTerm);
           this.handleSearch(state.searchTerm);
         }
         // CAS 3 : On a reçu une liste de stations
@@ -121,7 +119,6 @@ export class DisplayMapComponent implements OnInit {
 
   // LOGIQUE CENTRALE DE RECHERCHE
   private handleSearch(value: string) {
-    console.log('Filtre map:', value);
     this.updateFilter(value.toLowerCase());
 
     // 2. Si aucune station trouvée en local, on cherche la ville via API

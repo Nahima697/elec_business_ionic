@@ -10,6 +10,7 @@ import { PopoverController, IonPopover} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { ellipse } from 'ionicons/icons';
 import { NotificationPopoverComponent } from 'src/app/features/notification/component/notification-popover/notification-popover.component';
+import { AuthService } from 'src/app/core/auth/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -22,8 +23,7 @@ export class HeaderComponent implements OnInit {
   private router = inject(Router);
   private platformService = inject(PlatformService);
   private notifService = inject(NotificationService);
-  private popoverCtrl = inject(PopoverController);
-
+  private authService = inject(AuthService);
   readonly stations = input<any>();
   ControlType = ControlType;
   open = model.required<boolean>();
@@ -90,6 +90,14 @@ export class HeaderComponent implements OnInit {
     { path: '/profile', name: 'Mon Compte' }
   ]);
 
+  onProfileClick() {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/profile']);
+    } else {
+      this.router.navigate(['/register']);
+    }
+  }
+
   onLocalSearch(event: Event) {
     const target = event.target as HTMLInputElement;
     const inputValue = (event as CustomEvent).detail?.value || target.value || '';
@@ -99,7 +107,6 @@ export class HeaderComponent implements OnInit {
     if (!this.platformService.isBrowser()) return;
 
     if (inputValue.length > 2) {
-       console.log('Recherche header:', inputValue);
        this.router.navigate(['/map'], {
          state: { searchTerm: inputValue }
        });

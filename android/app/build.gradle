@@ -9,7 +9,7 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    namespace "io.ionic.starter" // ✅ C'est parfait
+    namespace "io.ionic.starter"
     compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {
@@ -19,12 +19,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        // ✅ J'ai remonté cette ligne ICI (elle ne doit pas être dans aaptOptions)
-        manifestPlaceholders = [googleMapsApiKey: localProperties.getProperty('MAPS_API_KEY', '')]
-
         aaptOptions {
-             // Files and dirs to omit from the packaged assets dir
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             manifestPlaceholders = [googleMapsApiKey: localProperties.getProperty('MAPS_API_KEY', '')]
              ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }

@@ -35,7 +35,6 @@ export class LoginPage {
 
       this.authservice.login(this.username.value, this.password.value).subscribe({
         next: (response) => {
-          console.log('Connexion réussie :', response);
           if (this.platformService.isDesktop()) {
             this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
           } else {

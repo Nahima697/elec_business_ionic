@@ -7,7 +7,7 @@ import {
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton,
   IonCardContent, IonItem, IonCheckbox, IonLabel, IonSpinner,
-  ToastController 
+  ToastController
 } from '@ionic/angular/standalone';
 import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
@@ -69,7 +69,6 @@ export class RegisterPage {
       if(username && email && password) {
         this.authService.register(username, email, password).subscribe({
           next: async (response) => {
-            console.log('Inscription réussie :', response);
             this.isLoading = false;
 
             if (response.emailVerificationRequired) {

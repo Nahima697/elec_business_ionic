@@ -63,7 +63,6 @@ export class StationFormComponent implements OnInit {
     this.loadLocations();
     const stationId = this.id();
     if (stationId) {
-      console.log("Mode Édition détecté pour ID:", stationId);
       this.isEditMode.set(true);
       this.loadStationData(stationId);
     }

@@ -98,7 +98,6 @@ export class AuthService {
           this.storeRefreshToken(response.refreshToken);
         }
 
-        console.log('✅ Token rafraîchi avec succès');
       }),
       catchError((error) => {
         this.isRefreshing = false;

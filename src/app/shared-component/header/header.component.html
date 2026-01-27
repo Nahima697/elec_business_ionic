@@ -54,13 +54,12 @@
           </ng-template>
         </ion-popover>
 
-        <button routerLink="/profile"
-                class="flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-primary transition-colors">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-          </svg>
-        </button>
-
+      <button (click)="onProfileClick()"
+        class="flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-primary transition-colors focus:outline-none">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+        </svg>
+      </button>
         <button (click)="toggleMenu()"
                 class="md:hidden p-2 text-gray-600 hover:text-primary transition-colors focus:outline-none">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,13 +82,11 @@
                class="w-full p-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
       </div>
 
-      <div class="flex flex-col gap-2">
-        @for (item of links(); track $index) {
+      <div class="hidden md:flex items-center gap-1"> @for (item of links(); track $index) {
           <a [routerLink]="item.path"
-             (click)="toggleMenu()"
-             routerLinkActive="bg-blue-50 text-primary font-semibold"
+             routerLinkActive="text-primary font-semibold bg-blue-50"
              [routerLinkActiveOptions]="{ exact: item.path === '/' }"
-             class="px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+             class="px-3 py-2 rounded-lg text-sm text-gray-600 hover:text-[#10B981] hover:bg-green-50 transition-colors cursor-pointer">
             {{ item.name }}
           </a>
         }

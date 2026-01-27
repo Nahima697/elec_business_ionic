@@ -134,8 +134,7 @@ export class ProfilePage implements OnInit {
         });
       }
     } catch (e) {
-      console.log('User cancelled photo', e);
-    }
+      console.error('Erreur changement photo de profil', e);}
   }
 
   private base64ToBlob(base64: string, contentType: string = '', sliceSize: number = 512): Blob {
