@@ -9,14 +9,14 @@ import { HeroComponent } from '../component/hero/hero.component';
 import { FooterComponent } from 'src/app/shared-component/footer/footer.component';
 import { TestimonialComponent } from '../component/testimonial/testimonial.component';
 import { RouterModule } from '@angular/router';
-import { IonContent } from "@ionic/angular/standalone";
+import { IonContent, IonSpinner } from "@ionic/angular/standalone";
 import { TextCarouselComponent } from '../component/text-carousel/text-carousel.component';
 import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [IonContent, HeaderComponent, PresentationComponent,
+  imports: [IonSpinner, IonContent, HeaderComponent, PresentationComponent,
     CardComponent, IconCardComponent, ContactBannerComponent, AccordeonComponent, HeroComponent, FooterComponent, TestimonialComponent, RouterModule, TextCarouselComponent],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss'
