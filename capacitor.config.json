@@ -1,0 +1,6 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "ElecBusiness",
+  "webDir": "www/browser",
+  "bundledWebRuntime": false
+}
