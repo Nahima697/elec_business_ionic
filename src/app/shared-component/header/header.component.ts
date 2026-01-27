@@ -1,16 +1,16 @@
 import { Component, inject, signal, computed, input, model, OnInit } from '@angular/core';
-import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { Router, RouterModule } from '@angular/router';
 import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
 import { PlatformService } from 'src/app/core/auth/services/platform.service';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from 'src/app/features/notification/service/notification.service';
 import { Notification } from 'src/app/features/notification/model/notification.model';
-import { PopoverController, IonPopover} from '@ionic/angular/standalone';
+import { IonPopover} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { ellipse } from 'ionicons/icons';
 import { NotificationPopoverComponent } from 'src/app/features/notification/component/notification-popover/notification-popover.component';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
+import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 
 @Component({
   selector: 'app-header',
@@ -24,6 +24,7 @@ export class HeaderComponent implements OnInit {
   private platformService = inject(PlatformService);
   private notifService = inject(NotificationService);
   private authService = inject(AuthService);
+
   readonly stations = input<any>();
   ControlType = ControlType;
   open = model.required<boolean>();
@@ -37,15 +38,27 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.refreshNotifications();
-    if (this.platformService.isBrowser()) {
-      setInterval(() => this.refreshNotifications(), 30000);
+    if (this.authService.isAuthenticated()) {
+      this.refreshNotifications();
+
+      if (this.platformService.isBrowser()) {
+        setInterval(() => {
+          if (this.authService.isAuthenticated()) {
+            this.refreshNotifications();
+          }
+        }, 30000);
+      }
     }
   }
 
   refreshNotifications() {
-    this.notifService.getMyNotifications().subscribe(data => {
-      this.notifications = data;
+    this.notifService.getMyNotifications().subscribe({
+      next: (data) => {
+        this.notifications = data;
+      },
+      error: () => {
+        console.log('Utilisateur non connecté ou erreur notif');
+      }
     });
   }
 
@@ -113,5 +126,3 @@ export class HeaderComponent implements OnInit {
     }
   }
 }
-
-
