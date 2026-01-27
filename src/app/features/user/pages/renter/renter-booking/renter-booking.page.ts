@@ -8,7 +8,8 @@ import {
   ToastController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { documentTextOutline, alertCircleOutline, checkmarkCircleOutline } from 'ionicons/icons';
+import { documentTextOutline, alertCircleOutline, checkmarkCircleOutline, starOutline } from 'ionicons/icons';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-renter-bookings',
@@ -16,7 +17,8 @@ import { documentTextOutline, alertCircleOutline, checkmarkCircleOutline } from 
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar,
     BookingRequestCardComponent, IonRefresher, IonRefresherContent,
-    IonBackButton, IonButtons, IonButton, IonIcon
+    IonBackButton, IonButtons, IonButton, IonIcon,
+    RouterLink
   ],
   template: `
     <ion-header>
@@ -41,18 +43,33 @@ import { documentTextOutline, alertCircleOutline, checkmarkCircleOutline } from 
               [isOwner]="false"
             />
 
-            @if (booking.statusLabel === 'ACCEPTED' || booking.statusLabel === 'COMPLETED') {
-              <ion-button
-                expand="block"
-                fill="outline"
-                color="primary"
-                class="mx-1"
-                (click)="downloadPdf(booking.id)"
-              >
-                <ion-icon slot="start" name="document-text-outline"></ion-icon>
-                Télécharger le reçu
-              </ion-button>
-            }
+            <div class="flex flex-wrap gap-2 mx-1">
+
+              @if (booking.statusLabel === 'ACCEPTED' || booking.statusLabel === 'COMPLETED') {
+                <ion-button
+                  fill="outline"
+                  color="primary"
+                  size="small"
+                  (click)="downloadPdf(booking.id)"
+                >
+                  <ion-icon slot="start" name="document-text-outline"></ion-icon>
+                  Reçu
+                </ion-button>
+              }
+
+              @if (booking.statusLabel === 'COMPLETED') {
+                <ion-button
+                  fill="outline"
+                  color="warning"
+                  size="small"
+                  [routerLink]="['/station', booking.stationId, 'review', booking.id]"
+                >
+                  <ion-icon slot="start" name="star-outline"></ion-icon>
+                  Laisser un avis
+                </ion-button>
+              }
+            </div>
+
           </div>
         } @empty {
           <div class="flex flex-col items-center justify-center h-64 text-gray-500">
@@ -66,12 +83,11 @@ import { documentTextOutline, alertCircleOutline, checkmarkCircleOutline } from 
 export class RenterBookingPage {
   private bookingService = inject(BookingService);
   private toastCtrl = inject(ToastController);
-  // Plus besoin de PlatformService ni Filesystem
 
   bookings = signal<BookingResponseDTO[]>([]);
 
   constructor() {
-    addIcons({ documentTextOutline, alertCircleOutline, checkmarkCircleOutline });
+    addIcons({ documentTextOutline, alertCircleOutline, checkmarkCircleOutline, starOutline });
     this.loadBookings();
   }
 
@@ -92,16 +108,12 @@ export class RenterBookingPage {
   downloadPdf(bookingId: string) {
     this.bookingService.downloadBookingPdf(bookingId).subscribe({
       next: (blob) => {
-        // Méthode universelle (Web standard)
-        // Sur mobile, cela demandera à l'utilisateur d'ouvrir ou enregistrer le fichier selon son navigateur
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         a.download = `reservation-${bookingId}.pdf`;
         document.body.appendChild(a);
         a.click();
-
-        // Nettoyage
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
       },

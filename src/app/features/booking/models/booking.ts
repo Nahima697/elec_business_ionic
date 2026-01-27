@@ -11,5 +11,6 @@ export interface BookingResponseDTO extends BookingRequestDTO {
   stationName: string,
   userName:string,
   stationOwnerName:string
+  stationId: string;
 
 }
