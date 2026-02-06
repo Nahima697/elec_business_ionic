@@ -9,7 +9,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { documentTextOutline, alertCircleOutline, checkmarkCircleOutline, starOutline } from 'ionicons/icons';
-import { RouterLink } from '@angular/router';
+import { AppNavigationService } from 'src/app/core/services/app-navigation.service';
 
 @Component({
   selector: 'app-renter-bookings',
@@ -18,7 +18,6 @@ import { RouterLink } from '@angular/router';
     IonContent, IonHeader, IonTitle, IonToolbar,
     BookingRequestCardComponent, IonRefresher, IonRefresherContent,
     IonBackButton, IonButtons, IonButton, IonIcon,
-    RouterLink
   ],
   template: `
     <ion-header>
@@ -28,11 +27,7 @@ import { RouterLink } from '@angular/router';
         </ion-buttons>
         <ion-title>Mes Réservations</ion-title>
       </ion-toolbar>
-        <ion-back-button
-        defaultHref="/user/renter/dashboard"
-        text="Retour"
-      ></ion-back-button>
-    </ion-header>
+      </ion-header>
 
     <ion-content class="ion-padding" color="light">
       <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
@@ -42,6 +37,7 @@ import { RouterLink } from '@angular/router';
       <div class="space-y-4">
         @for (booking of bookings(); track booking.id) {
           <div class="flex flex-col gap-2">
+
             <app-booking-request-card
               [booking]="booking"
               [isOwner]="false"
@@ -52,7 +48,7 @@ import { RouterLink } from '@angular/router';
               @if (booking.statusLabel === 'ACCEPTED' || booking.statusLabel === 'COMPLETED') {
                 <ion-button
                   fill="outline"
-                  color="primary"
+                  color="secondary"
                   size="small"
                   (click)="downloadPdf(booking.id)"
                 >
@@ -61,12 +57,12 @@ import { RouterLink } from '@angular/router';
                 </ion-button>
               }
 
-              @if (booking.statusLabel === 'COMPLETED') {
+              @if (booking.statusLabel === 'ACCEPTED' || booking.statusLabel === 'COMPLETED') {
                 <ion-button
                   fill="outline"
                   color="warning"
                   size="small"
-                  [routerLink]="['/station', booking.stationId, 'review', booking.id]"
+                  (click)="goToReview(booking)"
                 >
                   <ion-icon slot="start" name="star-outline"></ion-icon>
                   Laisser un avis
@@ -87,6 +83,7 @@ import { RouterLink } from '@angular/router';
 export class RenterBookingPage {
   private bookingService = inject(BookingService);
   private toastCtrl = inject(ToastController);
+  private navService = inject(AppNavigationService);
 
   bookings = signal<BookingResponseDTO[]>([]);
 
@@ -107,6 +104,10 @@ export class RenterBookingPage {
 
   refresh(event: any) {
     this.loadBookings(event);
+  }
+
+  goToReview(booking: BookingResponseDTO) {
+    this.navService.go(['station', booking.stationId]);
   }
 
   downloadPdf(bookingId: string) {

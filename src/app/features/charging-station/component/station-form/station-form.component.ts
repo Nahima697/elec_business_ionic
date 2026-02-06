@@ -34,9 +34,8 @@ export class StationFormComponent implements OnInit {
   private toastCtrl = inject(ToastController);
   private modalCtrl = inject(ModalController);
 
-  // Inputs signals
   id = input<string>('');
-  locationId = input<string>(''); // L'ID reçu depuis MyLocationsPage
+  locationId = input<string>('');
 
   stationCreated = output<void>();
   stationForm!: FormGroup;

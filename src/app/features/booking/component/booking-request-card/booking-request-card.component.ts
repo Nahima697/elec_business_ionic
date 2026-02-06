@@ -1,69 +1,140 @@
 import { Component, input, output } from '@angular/core';
-import { DatePipe, UpperCasePipe } from '@angular/common';
-import { IonCard, IonCardHeader, IonCardContent, IonChip, IonButton, IonIcon, IonItem, IonLabel } from "@ionic/angular/standalone";
+import { DatePipe, CurrencyPipe, CommonModule } from '@angular/common';
+import {
+  IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle,
+  IonButton, IonIcon, IonBadge,
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { documentTextOutline, checkmarkCircleOutline, closeCircleOutline, timeOutline, personOutline, starOutline } from 'ionicons/icons';
 import { BookingResponseDTO } from '../../models/booking';
 
 @Component({
   selector: 'app-booking-request-card',
   standalone: true,
-  imports: [DatePipe, IonCard, UpperCasePipe, IonCardHeader, IonCardContent, IonChip, IonButton, IonIcon],
+  imports: [
+    CommonModule, DatePipe, CurrencyPipe,
+    IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle,
+    IonButton, IonIcon, IonBadge,
+  ],
   template: `
-    <ion-card class="mb-4 shadow-sm border-l-4" [class.border-green-500]="booking().statusLabel === 'ACCEPTED'" [class.border-red-500]="booking().statusLabel === 'REJECTED'">
+    <ion-card class="mx-0 mb-4 border border-gray-100 shadow-sm rounded-xl">
       <ion-card-header class="pb-2">
-        <div class="flex justify-between items-center">
-          <span class="font-bold text-lg">{{ booking().stationId }}</span> <ion-chip [color]="getStatusColor(booking().statusLabel)">
-            {{ booking().statusLabel | uppercase }}
-          </ion-chip>
+        <div class="flex justify-between items-start">
+          <div class="flex flex-col">
+            <ion-card-title class="text-base font-bold text-gray-800">
+              {{ booking().stationName }}
+            </ion-card-title>
+
+            <ion-card-subtitle class="text-sm text-gray-500 mt-1 flex items-center gap-1">
+              <ion-icon name="time-outline"></ion-icon>
+              {{ booking().startDate | date:'dd/MM/yyyy à HH:mm' }}
+            </ion-card-subtitle>
+          </div>
+
+          <ion-badge [color]="getStatusColor(booking().statusLabel)">
+            {{ getStatusLabel(booking().statusLabel) }}
+          </ion-badge>
         </div>
       </ion-card-header>
 
       <ion-card-content>
-        <div class="flex flex-col gap-2 mb-3">
-          <div class="flex items-center text-gray-600">
-            <ion-icon name="calendar-outline" class="mr-2"></ion-icon>
-            <span>{{ booking().startDate | date:'dd MMM yyyy, HH:mm' }}</span>
+        <div class="flex justify-between items-center mb-4 bg-gray-50 p-3 rounded-lg">
+          <div class="flex items-center gap-2">
+            <ion-icon name="person-outline" class="text-gray-400"></ion-icon>
+            <span class="font-medium text-gray-700">{{ booking().userName }}</span>
           </div>
-
-          <div class="flex items-center text-gray-600">
-            <ion-icon name="time-outline" class="mr-2"></ion-icon>
-            <span>Durée : {{ getDuration(booking().startDate, booking().endDate) }}h</span>
-          </div>
+          <span class="font-bold text-lg text-primary">
+            {{ booking().totalPrice | currency:'EUR' }}
+          </span>
         </div>
 
-        @if (isOwner() && booking().statusLabel === 'PENDING') {
-          <div class="flex gap-2 mt-4 pt-3 border-t border-gray-100">
-            <ion-button size="small" color="success" class="flex-1" (click)="onAccept.emit(booking())">
+        @if (booking().statusLabel === 'PENDING') {
+          <div class="flex gap-3">
+            <ion-button
+              color="success"
+              expand="block"
+              class="flex-1 font-bold"
+              mode="ios"
+              (click)="onAccept.emit(booking())">
+              <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
               Accepter
             </ion-button>
-            <ion-button size="small" color="danger" fill="outline" class="flex-1" (click)="onReject.emit(booking())">
+
+            <ion-button
+              color="danger"
+              fill="outline"
+              expand="block"
+              class="flex-1 font-bold"
+              mode="ios"
+              (click)="onReject.emit(booking())">
+              <ion-icon slot="start" name="close-circle-outline"></ion-icon>
               Refuser
             </ion-button>
           </div>
         }
+
+        @if (booking().statusLabel === 'ACCEPTED') {
+          <div class="flex flex-col gap-2">
+
+            <ion-button
+              expand="block"
+              fill="outline"
+              color="secondary"
+              class="font-medium"
+              (click)="onDownload.emit(booking())">
+              <ion-icon slot="start" name="document-text-outline"></ion-icon>
+              Télécharger le reçu
+            </ion-button>
+
+            @if (!isOwner()) {
+              <ion-button
+                expand="block"
+                color="warning"
+                class="font-bold"
+                (click)="onReview.emit(booking())">
+                <ion-icon slot="start" name="star-outline"></ion-icon>
+                Laisser un avis
+              </ion-button>
+            }
+          </div>
+        }
+
+        @if (booking().statusLabel === 'REJECTED') {
+          <p class="text-center text-red-500 text-sm italic">Demande refusée</p>
+        }
+
       </ion-card-content>
     </ion-card>
   `
 })
 export class BookingRequestCardComponent {
-  readonly booking = input.required<BookingResponseDTO>();
-  readonly isOwner = input<boolean>(false); 
+  booking = input.required<BookingResponseDTO>();
+  isOwner = input<boolean>(false);
 
-  // Outputs pour remonter l'action au parent
-  readonly onAccept = output<BookingResponseDTO>();
-  readonly onReject = output<BookingResponseDTO>();
+  onAccept = output<BookingResponseDTO>();
+  onReject = output<BookingResponseDTO>();
+  onDownload = output<BookingResponseDTO>();
+  onReview = output<BookingResponseDTO>();
+
+  constructor() {
+    addIcons({ documentTextOutline, checkmarkCircleOutline, closeCircleOutline, timeOutline, personOutline, starOutline });
+  }
 
   getStatusColor(status: string): string {
     switch (status) {
+      case 'PENDING': return 'warning';
       case 'ACCEPTED': return 'success';
       case 'REJECTED': return 'danger';
-      case 'PENDING': return 'warning';
       default: return 'medium';
     }
   }
 
-  getDuration(start: string, end: string): number {
-    const s = new Date(start).getTime();
-    const e = new Date(end).getTime();
-    return Math.round((e - s) / (1000 * 60 * 60) * 10) / 10;
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case 'PENDING': return 'En attente';
+      case 'ACCEPTED': return 'Validée';
+      case 'REJECTED': return 'Refusée';
+      default: return status;
+    }
   }
 }

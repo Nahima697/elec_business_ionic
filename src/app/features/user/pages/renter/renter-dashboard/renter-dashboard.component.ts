@@ -18,7 +18,7 @@ import { AppNavigationService } from 'src/app/core/services/app-navigation.servi
 @Component({
   selector: 'app-renter-dashboard',
   standalone: true,
-  imports: [IonContent, IonIcon,RouterLink],
+  imports: [IonContent, IonIcon],
   templateUrl: './renter-dashboard.component.html',
   styleUrls: ['./renter-dashboard.component.scss']
 })
