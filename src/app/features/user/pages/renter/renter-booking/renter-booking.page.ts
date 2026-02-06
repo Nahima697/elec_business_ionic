@@ -28,6 +28,10 @@ import { RouterLink } from '@angular/router';
         </ion-buttons>
         <ion-title>Mes Réservations</ion-title>
       </ion-toolbar>
+        <ion-back-button
+        defaultHref="/user/renter/dashboard"
+        text="Retour"
+      ></ion-back-button>
     </ion-header>
 
     <ion-content class="ion-padding" color="light">

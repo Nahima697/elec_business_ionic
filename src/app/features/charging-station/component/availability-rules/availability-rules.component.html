@@ -12,7 +12,7 @@
 <ion-content class="ion-padding" color="light">
 
   <div class="max-w-xl mx-auto space-y-4">
-
+@if (!stationId()) {
     <ion-card class="bg-white m-0 shadow-sm border border-gray-100 rounded-xl">
       <ion-card-content>
         <ion-select
@@ -28,6 +28,7 @@
         </ion-select>
       </ion-card-content>
     </ion-card>
+  }
 
     @if (selectedStationId()) {
 

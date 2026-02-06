@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, output, signal, input, effect } from '@angular/core';
+import { Component, inject, OnInit, output, signal, input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChargingStationService } from '../../services/charging-station.service';
 import { ChargingLocationService } from '../../services/charging-location.service';
@@ -8,7 +8,8 @@ import { ControlType } from 'src/app/shared-component/form-field/form-field.enum
 import {
   IonList, IonItem, IonButton,
    IonSelect, IonSelectOption, IonIcon, IonText,IonContent,
-  ToastController, ModalController, IonHeader, IonButtons,IonToolbar,IonTitle, IonSpinner } from '@ionic/angular/standalone';
+  ToastController, ModalController, IonHeader, IonButtons,IonToolbar,IonTitle
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { cameraOutline, closeOutline, imageOutline, trashOutline, saveOutline } from 'ionicons/icons';
 import { GeolocalisationService } from 'src/app/features/display-map/service/geolocalisation.service';
@@ -33,7 +34,9 @@ export class StationFormComponent implements OnInit {
   private toastCtrl = inject(ToastController);
   private modalCtrl = inject(ModalController);
 
+  // Inputs signals
   id = input<string>('');
+  locationId = input<string>(''); // L'ID reçu depuis MyLocationsPage
 
   stationCreated = output<void>();
   stationForm!: FormGroup;
@@ -50,6 +53,7 @@ export class StationFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // 1. Initialisation du formulaire
     this.stationForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
@@ -60,14 +64,27 @@ export class StationFormComponent implements OnInit {
       lng: new FormControl(null, [Validators.required]),
     });
 
+    // 2. Chargement des lieux disponibles
     this.loadLocations();
+
+    if (this.locationId()) {
+      this.stationForm.patchValue({
+        locationId: this.locationId()
+      });
+
+       this.stationForm.get('locationId')?.disable();
+    }
+
+    // 3. Gestion du mode Édition (si on modifie une borne existante)
     const stationId = this.id();
     if (stationId) {
       this.isEditMode.set(true);
       this.loadStationData(stationId);
     }
 
+    // 4. Autocomplétion Lat/Lng quand on change de lieu
     this.stationForm.get('locationId')?.valueChanges.subscribe(async (locationId) => {
+      // On ne recalcule pas les coords si on est en train de charger une borne existante
       if (this.isLoading()) return;
 
       const selectedLocation = this.myLocations().find(l => l.id === locationId);
@@ -154,7 +171,8 @@ export class StationFormComponent implements OnInit {
     }
 
     this.isLoading.set(true);
-    const formValues = this.stationForm.value;
+    // Si le champ locationId était désactivé, il faut récupérer sa valeur via getRawValue()
+    const formValues = this.stationForm.getRawValue();
     const fileToUpload = this.selectedFile || undefined;
 
     if (this.isEditMode()) {

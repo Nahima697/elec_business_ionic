@@ -12,8 +12,9 @@ import {
   IonCardSubtitle, IonCardContent, IonCardTitle, IonList, IonItem,
   IonLabel, IonThumbnail, IonButton,IonBackButton,IonButtons, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addOutline } from 'ionicons/icons';
+import { addOutline, addCircleOutline } from 'ionicons/icons';
 import { ModalController } from '@ionic/angular/standalone';
+import { StationFormComponent } from '../../component/station-form/station-form.component';
 
 @Component({
   selector: 'app-location',
@@ -40,7 +41,7 @@ export class LocationComponent implements OnInit {
   user = this.authService.user;
 
   constructor() {
-    addIcons({ addOutline });
+    addIcons({addOutline,addCircleOutline});
 
     // Recharger les lieux lorsque l'utilisateur change (login/logout)
     effect(() => {
@@ -89,4 +90,19 @@ export class LocationComponent implements OnInit {
       }
     });
   }
+
+async openAddStationModal(locationId: string) {
+    const modal = await this.modalCtrl.create({
+      component: StationFormComponent,
+      componentProps: {
+        locationId: locationId
+      }
+    });
+
+    await modal.present();
+    modal.onDidDismiss().then(() => {
+      this.loadLocations();
+    });
+  }
 }
+

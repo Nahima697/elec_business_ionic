@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AvailabilityRulesService } from '../../services/availability-rules.service';
 import { ChargingStationService } from '../../services/charging-station.service';
@@ -31,6 +31,7 @@ export class AvailabilityRulesComponent {
   private stationService = inject(ChargingStationService);
   private modalCtrl = inject(ModalController);
   private toastCtrl = inject(ToastController);
+  stationId = input<string>('');
 
 
   // 1. Ressource des stations
@@ -51,6 +52,13 @@ export class AvailabilityRulesComponent {
   constructor() {
     addIcons({ trashOutline, closeOutline, timeOutline, calendarOutline, addCircleOutline, arrowUpOutline });
 
+  }
+
+  ngOnInit() {
+    // Si on a reçu un ID via l'input, on met à jour le signal sélectionné
+    if (this.stationId()) {
+      this.selectedStationId.set(this.stationId());
+    }
   }
 
   close() {

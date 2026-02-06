@@ -15,6 +15,7 @@ import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { ModalController } from '@ionic/angular/standalone';
 import { AvailabilityRulesComponent } from '../../component/availability-rules/availability-rules.component';
 import { AppNavigationService } from 'src/app/core/services/app-navigation.service';
+import { StationFormComponent } from '../../component/station-form/station-form.component';
 @Component({
   selector: 'app-station-detail',
   templateUrl: './station-detail.component.html',
@@ -73,13 +74,14 @@ export class StationDetailComponent {
 // si owner modal réservation désactivé/availability activé
 
 async openAvailabilityModal() {
-    const stationId = this.station.value()?.id;
-    if(!stationId) return;
+    const currentStation = this.station.value();
+
+    if (!currentStation) return;
 
     const modal = await this.modalCtrl.create({
       component: AvailabilityRulesComponent,
       componentProps: {
-        preselectedStationId: stationId
+       stationId: currentStation.id
       }
     });
     await modal.present();
@@ -116,4 +118,27 @@ async openAvailabilityModal() {
   goBack() {
     this.location.back();
   }
+
+  async openEditModal() {
+    const currentStation = this.station.value();
+    if (!currentStation) return;
+
+    const modal = await this.modalCtrl.create({
+      component: StationFormComponent,
+      componentProps: {
+        id: currentStation.id, 
+        locationId: currentStation.locationDTO?.id
+      }
+    });
+
+    await modal.present();
+
+    const { role } = await modal.onDidDismiss();
+    if (role === 'confirm') {
+      this.station.reload();
+      this.toastMessage.set('Station mise à jour ✅');
+      this.toastVisible.set(true);
+    }
+  }
 }
+

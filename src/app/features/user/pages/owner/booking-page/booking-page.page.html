@@ -2,6 +2,7 @@
   <ion-toolbar>
     <ion-title>booking-page</ion-title>
   </ion-toolbar>
+
 </ion-header>
 
 <ion-content [fullscreen]="true">
@@ -9,6 +10,10 @@
     <ion-toolbar>
       <ion-title size="large">booking-page</ion-title>
     </ion-toolbar>
+      <ion-back-button
+        defaultHref="/user/owner/dashboard"
+        text="Retour"
+      ></ion-back-button>
   </ion-header>
   <ion-card>
   @if (booking.status === 'PENDING') {

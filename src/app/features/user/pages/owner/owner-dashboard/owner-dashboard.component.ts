@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, computed, signal } from '@angular/core';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
-import { AlertController, ToastController } from '@ionic/angular/standalone';
+import { AlertController, ToastController, IonBackButton } from '@ionic/angular/standalone';
 import {
   IonContent, IonButton, IonIcon, ModalController,
 } from '@ionic/angular/standalone';
@@ -24,7 +24,7 @@ import { BookingService } from 'src/app/features/booking/service/booking.service
 @Component({
   selector: 'app-owner-dashboard',
   standalone: true,
-  imports: [IonContent, IonButton, IonIcon],
+  imports: [IonBackButton, IonContent, IonButton, IonIcon],
   templateUrl: './owner-dashboard.component.html',
   styleUrls: ['./owner-dashboard.component.scss']
 })

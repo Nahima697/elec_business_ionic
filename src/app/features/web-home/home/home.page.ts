@@ -16,7 +16,7 @@ import { StationApiService } from 'src/app/features/charging-station/services/st
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [IonSpinner, IonContent, HeaderComponent, PresentationComponent,
+  imports: [IonContent, HeaderComponent, PresentationComponent,
     CardComponent, IconCardComponent, ContactBannerComponent, AccordeonComponent, HeroComponent, FooterComponent, TestimonialComponent, RouterModule, TextCarouselComponent],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss'

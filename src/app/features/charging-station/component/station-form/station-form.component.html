@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Ajouter une borne</ion-title>
+    <ion-title>{{ isEditMode() ? 'Modifier la borne' : 'Ajouter une borne' }}</ion-title>
     <ion-buttons slot="end">
       <ion-button color="medium" (click)="cancel()">
         <ion-icon name="close-outline" slot="icon-only"></ion-icon>
@@ -80,7 +80,7 @@
           type="submit"
           class="flex-1"
           [disabled]="stationForm.invalid">
-          Créer
+          {{ isEditMode() ? 'Modifier' : 'Créer' }}
         </ion-button>
       </div>
 

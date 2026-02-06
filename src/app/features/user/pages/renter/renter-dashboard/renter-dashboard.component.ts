@@ -5,8 +5,7 @@ import { Location } from '@angular/common';
 import { GeolocalisationService } from 'src/app/features/display-map/service/geolocalisation.service';
 import {
   IonContent,
-  IonCard, IonCardHeader, IonCardTitle, IonCardContent,
-  IonButton, IonIcon, LoadingController, ToastController
+  IonIcon, LoadingController, ToastController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -14,6 +13,7 @@ import {
   navigate, search, time, map, arrowBackOutline
 } from 'ionicons/icons';
 import { UserProfileDto } from '../../../models/user.model';
+import { AppNavigationService } from 'src/app/core/services/app-navigation.service';
 
 @Component({
   selector: 'app-renter-dashboard',
@@ -30,7 +30,7 @@ export class RenterDashboardComponent implements OnInit {
   private loadingCtrl = inject(LoadingController);
   private toastCtrl = inject(ToastController);
   protected user = signal<UserProfileDto | null>(null);
-
+  private navService = inject(AppNavigationService);
 
   constructor() {
     addIcons({
@@ -41,8 +41,9 @@ export class RenterDashboardComponent implements OnInit {
 
   ngOnInit() {
     if (!this.auth.hasRole('ROLE_RENTER')) {
-      this.router.navigate(['/user/select-role']);
+      this.navService.go(['user', 'select-role']);
     }
+
   }
 
   goBack() {
@@ -56,7 +57,7 @@ export class RenterDashboardComponent implements OnInit {
     // 1. Afficher un chargement
     const loading = await this.loadingCtrl.create({
       message: 'Recherche de la destination...',
-      duration: 5000
+      duration: 3000
     });
     await loading.present();
 
@@ -93,7 +94,14 @@ export class RenterDashboardComponent implements OnInit {
     });
   }
 
+  goToProfile() {
+    this.navService.go('profile');
+  }
+
   goToMyBookings() {
-    this.router.navigate(['user/renter/bookings']);
+    this.navService.go(['user', 'renter', 'bookings']);
+  }
+  goToMap() {
+    this.navService.go('map');
   }
 }
