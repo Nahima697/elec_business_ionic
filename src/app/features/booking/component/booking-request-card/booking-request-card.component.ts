@@ -73,31 +73,6 @@ import { BookingResponseDTO } from '../../models/booking';
           </div>
         }
 
-        @if (booking().statusLabel === 'ACCEPTED') {
-          <div class="flex flex-col gap-2">
-
-            <ion-button
-              expand="block"
-              fill="outline"
-              color="secondary"
-              class="font-medium"
-              (click)="onDownload.emit(booking())">
-              <ion-icon slot="start" name="document-text-outline"></ion-icon>
-              Télécharger le reçu
-            </ion-button>
-
-            @if (!isOwner()) {
-              <ion-button
-                expand="block"
-                color="warning"
-                class="font-bold"
-                (click)="onReview.emit(booking())">
-                <ion-icon slot="start" name="star-outline"></ion-icon>
-                Laisser un avis
-              </ion-button>
-            }
-          </div>
-        }
 
         @if (booking().statusLabel === 'REJECTED') {
           <p class="text-center text-red-500 text-sm italic">Demande refusée</p>

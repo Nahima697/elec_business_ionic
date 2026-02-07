@@ -2,11 +2,11 @@
 
   <div class="max-w-3xl mx-auto p-4 md:p-8 space-y-6">
 
-    <div (click)="goBack()"
-         class="inline-flex items-center gap-2 cursor-pointer transition hover:opacity-80"
-         style="color: var(--ion-color-medium);">
-      <ion-icon name="arrow-back-outline" class="text-xl"></ion-icon>
-      <span class="font-medium text-sm">Retour</span>
+    <div class="flex justify-between items-center mb-2">
+       <ion-back-button
+        defaultHref="/user/dashboard"
+        text="Retour"
+      ></ion-back-button>
     </div>
 
     <header class="flex justify-between items-center mb-2">

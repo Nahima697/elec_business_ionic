@@ -1,5 +1,5 @@
 export interface CreateReviewDTO {
-  reviewtitle: string,
+  reviewTitle: string,
   reviewContent: string;
   reviewRating: number;
   stationId: string;
@@ -7,7 +7,7 @@ export interface CreateReviewDTO {
 
 export interface reviewResponseDTO {
   id: string;
-  reviewtitle: string,
+  reviewTitle: string,
   reviewContent: string;
   reviewRating: number;
   stationId: string;

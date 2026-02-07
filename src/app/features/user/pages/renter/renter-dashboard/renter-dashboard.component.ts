@@ -5,8 +5,7 @@ import { Location } from '@angular/common';
 import { GeolocalisationService } from 'src/app/features/display-map/service/geolocalisation.service';
 import {
   IonContent,
-  IonIcon, LoadingController, ToastController
-} from '@ionic/angular/standalone';
+  IonIcon, LoadingController, ToastController, IonBackButton } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   calendar, card, checkmarkCircle, chevronForward,
@@ -18,7 +17,7 @@ import { AppNavigationService } from 'src/app/core/services/app-navigation.servi
 @Component({
   selector: 'app-renter-dashboard',
   standalone: true,
-  imports: [IonContent, IonIcon],
+  imports: [IonBackButton, IonContent, IonIcon],
   templateUrl: './renter-dashboard.component.html',
   styleUrls: ['./renter-dashboard.component.scss']
 })

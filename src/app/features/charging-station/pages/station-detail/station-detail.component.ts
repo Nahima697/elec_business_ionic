@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, signal, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router'; // 👈 Ajout de Router
 import { IonButton, IonTitle, IonHeader, IonContent, IonToolbar, IonModal, IonToast, IonSpinner, IonIcon } from "@ionic/angular/standalone";
 import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
 import { BookingFormComponent } from '../../../booking/component/booking-form/booking-form.component';
@@ -16,6 +16,7 @@ import { ModalController } from '@ionic/angular/standalone';
 import { AvailabilityRulesComponent } from '../../component/availability-rules/availability-rules.component';
 import { AppNavigationService } from 'src/app/core/services/app-navigation.service';
 import { StationFormComponent } from '../../component/station-form/station-form.component';
+
 @Component({
   selector: 'app-station-detail',
   templateUrl: './station-detail.component.html',
@@ -35,6 +36,7 @@ export class StationDetailComponent {
   private readonly stationApi = inject(StationApiService);
   protected readonly bookingService = inject(BookingService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router); 
   private location = inject(Location);
   protected station = this.stationApi.getOne(this.idSignal);
   protected navService = inject(AppNavigationService);
@@ -47,7 +49,8 @@ export class StationDetailComponent {
   @ViewChild('reviewModal', { read: IonModal }) reviewModal!: IonModal;
 
   constructor() {
-     addIcons({arrowBackOutline,locationOutline,calendarOutline,createOutline,alertCircleOutline});
+    addIcons({ arrowBackOutline, locationOutline, calendarOutline, createOutline, alertCircleOutline });
+
     const idFromInput = this.id();
     const idFromRoute = this.route.snapshot.paramMap.get('id');
     const realId = idFromInput ?? idFromRoute;
@@ -56,9 +59,18 @@ export class StationDetailComponent {
 
     this.idSignal.set(realId);
     this.checkEligibility(realId);
+
+    const nav = this.router.getCurrentNavigation();
+    const state = nav?.extras.state as { openReview: boolean } | undefined;
+
+    if (state?.openReview) {
+      setTimeout(() => {
+        this.openReviewModal();
+      }, 500);
+    }
   }
 
-    isOwner = computed(() => {
+  isOwner = computed(() => {
     const user = this.authService.user();
     const currentStation = this.station.value();
 
@@ -71,9 +83,9 @@ export class StationDetailComponent {
       this.canReview.set(allowed);
     });
   }
-// si owner modal réservation désactivé/availability activé
 
-async openAvailabilityModal() {
+  // --- Gestion Disponibilités ---
+  async openAvailabilityModal() {
     const currentStation = this.station.value();
 
     if (!currentStation) return;
@@ -81,44 +93,13 @@ async openAvailabilityModal() {
     const modal = await this.modalCtrl.create({
       component: AvailabilityRulesComponent,
       componentProps: {
-       stationId: currentStation.id
+        stationId: currentStation.id
       }
     });
     await modal.present();
   }
 
-  // --- Gestion Réservation ---
-  openModal() { this.modal.present(); }
-
-  onFormSubmit($event: any) {
-    const booking: BookingRequestDTO = $event.booking;
-    this.bookingService.createBooking(booking).subscribe({
-      next: () => {
-        this.toastMessage.set('Réservation créée ✅');
-        this.toastVisible.set(true);
-        this.modal.dismiss(booking, 'confirm');
-      },
-      error: () => {
-        this.toastMessage.set('Erreur réservation ❌');
-        this.toastVisible.set(true);
-      }
-    });
-  }
-
-  // --- Gestion Avis ---
-  openReviewModal() { this.reviewModal.present(); }
-
-  onReviewSubmitSuccess() {
-    this.reviewModal.dismiss(null, 'confirm');
-    this.toastMessage.set('Avis publié ! ⭐');
-    this.toastVisible.set(true);
-
-    this.station.reload();
-  }
-  goBack() {
-    this.location.back();
-  }
-
+  // --- Gestion Édition (Modification) ---
   async openEditModal() {
     const currentStation = this.station.value();
     if (!currentStation) return;
@@ -126,7 +107,7 @@ async openAvailabilityModal() {
     const modal = await this.modalCtrl.create({
       component: StationFormComponent,
       componentProps: {
-        id: currentStation.id, 
+        id: currentStation.id,
         locationId: currentStation.locationDTO?.id
       }
     });
@@ -136,9 +117,45 @@ async openAvailabilityModal() {
     const { role } = await modal.onDidDismiss();
     if (role === 'confirm') {
       this.station.reload();
-      this.toastMessage.set('Station mise à jour ✅');
+      this.toastMessage.set('Station mise à jour ');
       this.toastVisible.set(true);
     }
   }
-}
 
+  // --- Gestion Réservation ---
+  openModal() { this.modal.present(); }
+
+  onFormSubmit($event: any) {
+    const booking: BookingRequestDTO = $event.booking;
+    this.bookingService.createBooking(booking).subscribe({
+      next: () => {
+        this.toastMessage.set('Réservation créée ');
+        this.toastVisible.set(true);
+        this.modal.dismiss(booking, 'confirm');
+      },
+      error: () => {
+        this.toastMessage.set('Erreur réservation ');
+        this.toastVisible.set(true);
+      }
+    });
+  }
+
+  // --- Gestion Avis ---
+  openReviewModal() {
+    if (this.reviewModal) {
+      this.reviewModal.present();
+    }
+  }
+
+  onReviewSubmitSuccess() {
+    this.reviewModal.dismiss(null, 'confirm');
+    this.toastMessage.set('Avis publié ! ⭐');
+    this.toastVisible.set(true);
+
+    this.station.reload();
+  }
+
+  goBack() {
+    this.location.back();
+  }
+}

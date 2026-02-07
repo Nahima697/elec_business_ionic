@@ -6,8 +6,7 @@ import {
   IonCardContent,
   IonAvatar,
   IonIcon,
-  IonItem,
-  IonLabel
+
 } from "@ionic/angular/standalone";
 import { reviewResponseDTO } from '../../models/review.model';
 

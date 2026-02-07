@@ -106,8 +106,10 @@ export class RenterBookingPage {
     this.loadBookings(event);
   }
 
-  goToReview(booking: BookingResponseDTO) {
-    this.navService.go(['station', booking.stationId]);
+ goToReview(booking: BookingResponseDTO) {
+    this.navService.go(['station', booking.stationId], {
+      state: { openReview: true }
+    });
   }
 
   downloadPdf(bookingId: string) {

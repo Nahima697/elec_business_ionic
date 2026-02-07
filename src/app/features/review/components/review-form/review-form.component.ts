@@ -1,138 +1,123 @@
 import { Component, inject, input, output, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
-import { IonIcon, IonButton, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonText } from '@ionic/angular/standalone';
-import { ReviewService } from '../../service/review.service';
-import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
-import { CommonModule } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { IonButton, IonIcon, IonText, IonTextarea, IonItem, IonLabel, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { star, starOutline, close } from 'ionicons/icons';
+import { star, starOutline } from 'ionicons/icons';
+import { ReviewService } from '../../service/review.service';
 
 @Component({
   selector: 'app-review-form',
   standalone: true,
-  imports: [
-    CommonModule, ReactiveFormsModule,
-    IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon,
-    FormFieldComponent
-  ],
+  imports: [ReactiveFormsModule, IonButton, IonIcon, IonTextarea],
   template: `
-    <ion-header class="ion-no-border shadow-sm">
-      <ion-toolbar color="white">
-        <ion-title>Noter la station</ion-title>
-        <ion-buttons slot="end">
-           <ion-button (click)="cancel.emit()">
-             <ion-icon name="close" slot="icon-only"></ion-icon>
-           </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+    <div class="p-4 text-center">
+      <h2 class="text-xl font-bold mb-4">Notez votre expérience</h2>
 
-    <ion-content class="ion-padding bg-gray-50">
-      <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-6 mt-4">
+      <div class="flex justify-center gap-2 mb-6">
+        @for (star of [1, 2, 3, 4, 5]; track star) {
+          <ion-icon
+            [name]="star <= rating() ? 'star' : 'star-outline'"
+            class="text-4xl cursor-pointer transition-transform active:scale-110"
+            [class.text-yellow-400]="star <= rating()"
+            [class.text-gray-300]="star > rating()"
+            (click)="setRating(star)">
+          </ion-icon>
+        }
+      </div>
 
-        <div class="flex flex-col items-center gap-2">
-          <p class="text-sm font-medium text-gray-500">Votre note globale</p>
-          <div class="flex gap-2">
-            @for(star of [1,2,3,4,5]; track star) {
-              <ion-icon
-                [name]="star <= selectedRating() ? 'star' : 'star-outline'"
-                class="text-4xl transition-transform active:scale-90 cursor-pointer"
-                [class.text-yellow-400]="star <= selectedRating()"
-                [class.text-gray-300]="star > selectedRating()"
-                (click)="selectRating(star)"
-              ></ion-icon>
-            }
-          </div>
-          @if (form.controls.reviewRating.invalid && form.controls.reviewRating.touched) {
-            <span class="text-xs text-red-500">Une note est requise.</span>
-          }
+      <p class="mb-4 font-medium text-gray-600">
+        {{ rating() }}/5 - {{ getRatingLabel() }}
+      </p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <ion-textarea
+          formControlName="reviewContent"
+          label="Votre avis (optionnel)"
+          label-placement="floating"
+          fill="outline"
+          rows="4"
+          placeholder="Dites-nous ce que vous en avez pensé..."
+          class="mb-4"
+        ></ion-textarea>
+
+        <div class="flex gap-3">
+          <ion-button fill="outline" color="medium" class="flex-1" (click)="cancel.emit()">
+            Annuler
+          </ion-button>
+          <ion-button type="submit" class="flex-1" [disabled]="rating() === 0">
+            Envoyer
+          </ion-button>
         </div>
-
-        <div class="bg-white p-4 rounded-2xl shadow-sm space-y-4">
-          <app-form-field
-            label="Titre de votre avis"
-            placeholder="Ex: Super recharge !"
-            [controlType]="ControlType.Input"
-            [formControl]="form.controls.reviewtitle"
-          ></app-form-field>
-
-          <app-form-field
-            label="Votre expérience"
-            placeholder="Racontez-nous comment s'est passée la recharge..."
-            [controlType]="ControlType.Textarea"
-            [formControl]="form.controls.reviewContent"
-          ></app-form-field>
-        </div>
-
-        <ion-button
-          type="submit"
-          expand="block"
-          class="mt-4 h-12 rounded-xl font-bold"
-          color="primary"
-          [disabled]="form.invalid || submitting()"
-        >
-          @if (submitting()) {
-            Publication...
-          } @else {
-            Publier mon avis
-          }
-        </ion-button>
-
       </form>
-    </ion-content>
-  `,
-  styles: [`
-    ion-toolbar { --background: white; }
-    ion-content { --background: #f9fafb; }
-  `]
+    </div>
+  `
 })
 export class ReviewFormComponent {
+  private fb = inject(FormBuilder);
+  private reviewService = inject(ReviewService);
+  private toastCtrl = inject(ToastController);
+
   stationId = input.required<string>();
 
   formSubmit = output<void>();
   cancel = output<void>();
 
-  selectedRating = signal(0);
-  submitting = signal(false);
-  ControlType = ControlType;
+  rating = signal(0);
 
-  form = new FormGroup({
-    reviewtitle: new FormControl('', Validators.required),
-    reviewRating: new FormControl(0, [Validators.required, Validators.min(1)]),
-    reviewContent: new FormControl('', Validators.required)
+  form = this.fb.group({
+    reviewContent: ['']
   });
 
-  private reviewService = inject(ReviewService);
-
   constructor() {
-    addIcons({ star, starOutline, close });
+    addIcons({ star, starOutline });
   }
 
-  selectRating(rating: number) {
-    this.selectedRating.set(rating);
-    this.form.controls.reviewRating.setValue(rating);
-    this.form.controls.reviewRating.markAsTouched();
+  setRating(value: number) {
+    this.rating.set(value);
+  }
+
+  getRatingLabel() {
+    const r = this.rating();
+    if (r === 5) return 'Excellent ! 🤩';
+    if (r === 4) return 'Très bien 🙂';
+    if (r === 3) return 'Moyen 😐';
+    if (r === 2) return 'Décevant 😕';
+    if (r === 1) return 'À éviter 😡';
+    return 'Notez pour commencer';
   }
 
   submit() {
-    if (this.form.invalid) return;
+    if (this.rating() === 0) return;
 
-    this.submitting.set(true);
+    const reviewDTO = {
+      reviewTitle: 'Avis utilisateur',
+      reviewContent: this.form.value.reviewContent || '',
+      reviewRating: this.rating(),
+      stationId: this.stationId()
+    };
 
-    this.reviewService.submitReview({
-      stationId: this.stationId(),
-      reviewtitle: this.form.value.reviewtitle!,
-      reviewRating: this.form.value.reviewRating!,
-      reviewContent: this.form.value.reviewContent!
-    }).subscribe({
-      next: () => {
-        this.submitting.set(false);
-        this.form.reset();
-        this.selectedRating.set(0);
+    // Appel à submitReview
+    this.reviewService.submitReview(reviewDTO).subscribe({
+      next: async () => {
+        const toast = await this.toastCtrl.create({
+          message: 'Merci pour votre avis !',
+          duration: 2000,
+          color: 'success',
+          position: 'top'
+        });
+        toast.present();
         this.formSubmit.emit();
       },
-      error: () => this.submitting.set(false)
+      error: async (err) => {
+        console.error(err);
+        const toast = await this.toastCtrl.create({
+          message: 'Erreur lors de l\'envoi de l\'avis.',
+          duration: 3000,
+          color: 'danger',
+          position: 'top'
+        });
+        toast.present();
+      }
     });
   }
 }

@@ -10,11 +10,10 @@ import { reviewResponseDTO } from '../models/review.model';
 export class ReviewService {
 
  private http = inject(HttpClient);
-  private router = inject(Router);
   private apiUrl = '/reviews';
-  submitReview(CreateReviewDTO: { reviewtitle: string; reviewContent: string; reviewRating: number; stationId: string; }) :Observable<reviewResponseDTO> {
-    const body = { reviewtitle: CreateReviewDTO.reviewtitle, reviewContent: CreateReviewDTO.reviewContent, reviewRating: CreateReviewDTO.reviewRating, stationId: CreateReviewDTO.stationId };
-    return this.http.post<reviewResponseDTO>(`${this.apiUrl}/submit`, body);
+  submitReview(CreateReviewDTO: { reviewTitle: string; reviewContent: string; reviewRating: number; stationId: string; }) :Observable<reviewResponseDTO> {
+    const body = { reviewTitle: CreateReviewDTO.reviewTitle, reviewContent: CreateReviewDTO.reviewContent, reviewRating: CreateReviewDTO.reviewRating, stationId: CreateReviewDTO.stationId };
+    return this.http.post<reviewResponseDTO>(`${this.apiUrl}`, body);
   }
 
   getReviewsByStation(stationId: string): Observable<reviewResponseDTO[]> {

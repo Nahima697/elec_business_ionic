@@ -8,13 +8,13 @@ export class AppNavigationService {
     private platform = inject(PlatformService);
 
 
-  go(path: string | string[]) {
+  go(path: string | string[], extras?: any) {
     const segments = Array.isArray(path) ? path : [path];
 
     if (this.platform.isMobile()) {
-      this.router.navigate(['/tabs', ...segments]);
+      this.router.navigate(['/tabs', ...segments,extras]);
     } else {
-      this.router.navigate(segments);
+     this.router.navigate(segments, extras);
     }
   }
 
