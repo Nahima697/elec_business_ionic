@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, signal, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router'; // 👈 Ajout de Router
-import { IonButton, IonTitle, IonHeader, IonContent, IonToolbar, IonModal, IonToast, IonSpinner, IonIcon } from "@ionic/angular/standalone";
+import { ActivatedRoute, Router } from '@angular/router';
+import { IonButton, IonTitle, IonHeader, IonContent, IonToolbar, IonModal, IonToast, IonSpinner, IonIcon, ViewDidEnter } from "@ionic/angular/standalone";
 import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
 import { BookingFormComponent } from '../../../booking/component/booking-form/booking-form.component';
 import { BookingService } from '../../../booking/service/booking.service';
@@ -27,7 +27,7 @@ import { StationFormComponent } from '../../component/station-form/station-form.
     BookingFormComponent, StationCardComponent, ReviewFormComponent, ReviewListComponent, IonIcon
   ]
 })
-export class StationDetailComponent {
+export class StationDetailComponent implements ViewDidEnter {
 
   readonly id = input<string>();
   private readonly idSignal = signal('');
@@ -45,6 +45,8 @@ export class StationDetailComponent {
   readonly toastMessage = signal('');
   canReview = signal(false);
 
+  private shouldOpenReviewModal = false;
+
   @ViewChild('modal', { read: IonModal }) modal!: IonModal;
   @ViewChild('reviewModal', { read: IonModal }) reviewModal!: IonModal;
 
@@ -61,13 +63,18 @@ export class StationDetailComponent {
     this.checkEligibility(realId);
 
     const nav = this.router.getCurrentNavigation();
-  const state = nav?.extras.state as { openReview: boolean } | undefined;
+    const state = nav?.extras.state as { openReview: boolean } | undefined;
 
-  if (state?.openReview) {
-    setTimeout(() => {
-      this.openReviewModal();
-    }, 500);
+    if (state?.openReview) {
+      this.shouldOpenReviewModal = true;
+    }
   }
+
+  ionViewDidEnter() {
+    if (this.shouldOpenReviewModal) {
+      this.shouldOpenReviewModal = false;
+      this.openReviewModal();
+    }
   }
 
   isOwner = computed(() => {
@@ -84,7 +91,6 @@ export class StationDetailComponent {
     });
   }
 
-  // --- Gestion Disponibilités ---
   async openAvailabilityModal() {
     const currentStation = this.station.value();
 
@@ -99,7 +105,6 @@ export class StationDetailComponent {
     await modal.present();
   }
 
-  // --- Gestion Édition (Modification) ---
   async openEditModal() {
     const currentStation = this.station.value();
     if (!currentStation) return;
@@ -117,30 +122,28 @@ export class StationDetailComponent {
     const { role } = await modal.onDidDismiss();
     if (role === 'confirm') {
       this.station.reload();
-      this.toastMessage.set('Station mise à jour ');
+      this.toastMessage.set('Station mise à jour');
       this.toastVisible.set(true);
     }
   }
 
-  // --- Gestion Réservation ---
   openModal() { this.modal.present(); }
 
   onFormSubmit($event: any) {
     const booking: BookingRequestDTO = $event.booking;
     this.bookingService.createBooking(booking).subscribe({
       next: () => {
-        this.toastMessage.set('Réservation créée ');
+        this.toastMessage.set('Réservation créée');
         this.toastVisible.set(true);
         this.modal.dismiss(booking, 'confirm');
       },
       error: () => {
-        this.toastMessage.set('Erreur réservation ');
+        this.toastMessage.set('Erreur réservation');
         this.toastVisible.set(true);
       }
     });
   }
 
-  // --- Gestion Avis ---
   openReviewModal() {
     if (this.reviewModal) {
       this.reviewModal.present();
@@ -149,7 +152,7 @@ export class StationDetailComponent {
 
   onReviewSubmitSuccess() {
     this.reviewModal.dismiss(null, 'confirm');
-    this.toastMessage.set('Avis publié ! ⭐');
+    this.toastMessage.set('Avis publié !');
     this.toastVisible.set(true);
 
     this.station.reload();
