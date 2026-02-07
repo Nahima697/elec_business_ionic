@@ -36,7 +36,7 @@ export class StationDetailComponent {
   private readonly stationApi = inject(StationApiService);
   protected readonly bookingService = inject(BookingService);
   private route = inject(ActivatedRoute);
-  private router = inject(Router); 
+  private router = inject(Router);
   private location = inject(Location);
   protected station = this.stationApi.getOne(this.idSignal);
   protected navService = inject(AppNavigationService);
@@ -61,13 +61,13 @@ export class StationDetailComponent {
     this.checkEligibility(realId);
 
     const nav = this.router.getCurrentNavigation();
-    const state = nav?.extras.state as { openReview: boolean } | undefined;
+  const state = nav?.extras.state as { openReview: boolean } | undefined;
 
-    if (state?.openReview) {
-      setTimeout(() => {
-        this.openReviewModal();
-      }, 500);
-    }
+  if (state?.openReview) {
+    setTimeout(() => {
+      this.openReviewModal();
+    }, 500);
+  }
   }
 
   isOwner = computed(() => {

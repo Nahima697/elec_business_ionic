@@ -1,30 +1,31 @@
 import { inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router'; // Ajoute NavigationExtras pour le typage
 import { PlatformService } from '../auth/services/platform.service';
 
 @Injectable({ providedIn: 'root' })
 export class AppNavigationService {
-    private router = inject(Router);
-    private platform = inject(PlatformService);
+  private router = inject(Router);
+  private platform = inject(PlatformService);
 
-
-  go(path: string | string[], extras?: any) {
+  go(path: string | string[], extras?: NavigationExtras) {
     const segments = Array.isArray(path) ? path : [path];
 
     if (this.platform.isMobile()) {
-      this.router.navigate(['/tabs', ...segments,extras]);
+      this.router.navigate(['/tabs', ...segments], extras);
     } else {
-     this.router.navigate(segments, extras);
+      this.router.navigate(segments, extras);
     }
   }
 
   replace(path: string | string[]) {
     const segments = Array.isArray(path) ? path : [path];
 
+    const options: NavigationExtras = { replaceUrl: true };
+
     if (this.platform.isMobile()) {
-      this.router.navigate(['/tabs', ...segments], { replaceUrl: true });
+      this.router.navigate(['/tabs', ...segments], options);
     } else {
-      this.router.navigate(segments, { replaceUrl: true });
+      this.router.navigate(segments, options);
     }
   }
 }
