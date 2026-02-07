@@ -1,10 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button
-        defaultHref="/user/owner/dashboard"
-        text="Retour"
-      ></ion-back-button>
+      <ion-back-button defaultHref="/user/owner/dashboard" text="Retour"></ion-back-button>
     </ion-buttons>
     <ion-title>Mes Lieux</ion-title>
 
@@ -28,14 +25,19 @@
             <ion-card-title>{{ location.name }}</ion-card-title>
             <ion-card-subtitle>{{ location.city }}</ion-card-subtitle>
           </div>
+
+          <ion-button
+            fill="clear"
+            color="danger"
+            (click)="confirmDeleteLocation(location.id)"
+            class="-mr-2 -mt-2"> <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
         </div>
       </ion-card-header>
 
       <ion-card-content>
         <ion-list lines="none">
-          @for (station of stationsByLocation[location.id] ?? []; track
-          station.id) {
-
+          @for (station of stationsByLocation[location.id] ?? []; track station.id) {
           <ion-item
             [routerLink]="['/station', station.id]"
             detail="true"
@@ -46,8 +48,7 @@
               <img
                 [src]="
                   station.imageUrl && station.imageUrl !== 'default.png'
-                    ?
-                      station.imageUrl
+                    ? station.imageUrl
                     : 'assets/images/eleccar.png'
                 "
                 alt="Borne"
@@ -62,18 +63,17 @@
             </ion-label>
           </ion-item>
           } @empty {
-     <div class="text-center py-4 text-gray-400 text-sm">
-  <p>Aucune borne associée à ce lieu.</p>
+            <div class="text-center py-4 text-gray-400 text-sm">
+              <p>Aucune borne associée à ce lieu.</p>
 
-  <ion-button
-    fill="clear"
-    size="small"
-    (click)="openAddStationModal(location.id)">
-    <ion-icon slot="start" name="add-circle-outline"></ion-icon>
-    Ajouter une borne
-  </ion-button>
-
-</div>
+              <ion-button
+                fill="clear"
+                size="small"
+                (click)="openAddStationModal(location.id)">
+                <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+                Ajouter une borne
+              </ion-button>
+            </div>
           }
         </ion-list>
       </ion-card-content>

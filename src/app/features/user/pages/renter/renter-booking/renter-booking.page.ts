@@ -10,6 +10,7 @@ import {
 import { addIcons } from 'ionicons';
 import { documentTextOutline, alertCircleOutline, checkmarkCircleOutline, starOutline } from 'ionicons/icons';
 import { AppNavigationService } from 'src/app/core/services/app-navigation.service';
+import { AuthService } from 'src/app/core/auth/services/auth.service';
 
 @Component({
   selector: 'app-renter-bookings',
@@ -27,7 +28,7 @@ import { AppNavigationService } from 'src/app/core/services/app-navigation.servi
         </ion-buttons>
         <ion-title>Mes Réservations</ion-title>
       </ion-toolbar>
-      </ion-header>
+    </ion-header>
 
     <ion-content class="ion-padding" color="light">
       <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
@@ -45,7 +46,7 @@ import { AppNavigationService } from 'src/app/core/services/app-navigation.servi
 
             <div class="flex flex-wrap gap-2 mx-1">
 
-              @if (booking.statusLabel === 'ACCEPTED' || booking.statusLabel === 'COMPLETED') {
+              @if (isCompleted(booking)) {
                 <ion-button
                   fill="outline"
                   color="secondary"
@@ -57,7 +58,7 @@ import { AppNavigationService } from 'src/app/core/services/app-navigation.servi
                 </ion-button>
               }
 
-              @if (booking.statusLabel === 'ACCEPTED' || booking.statusLabel === 'COMPLETED') {
+              @if (isCompleted(booking)) {
                 <ion-button
                   fill="outline"
                   color="warning"
@@ -84,6 +85,7 @@ export class RenterBookingPage {
   private bookingService = inject(BookingService);
   private toastCtrl = inject(ToastController);
   private navService = inject(AppNavigationService);
+  private authService = inject(AuthService);
 
   bookings = signal<BookingResponseDTO[]>([]);
 
@@ -106,7 +108,12 @@ export class RenterBookingPage {
     this.loadBookings(event);
   }
 
- goToReview(booking: BookingResponseDTO) {
+  // Helper pour vérifier le statut
+  isCompleted(booking: BookingResponseDTO): boolean {
+    return booking.statusLabel === 'ACCEPTED' || booking.statusLabel === 'COMPLETED';
+  }
+
+  goToReview(booking: BookingResponseDTO) {
     this.navService.go(['station', booking.stationId], {
       state: { openReview: true }
     });

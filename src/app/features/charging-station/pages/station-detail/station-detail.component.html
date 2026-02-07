@@ -1,87 +1,88 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Détail de la station</ion-title>
+<ion-header class="ion-no-border shadow-sm">
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/user/dashboard" text="" icon="arrow-back-outline" color="dark"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="font-bold text-gray-800">Détails</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="bg-gray-50">
-
-  <div (click)="goBack()" class="inline-flex items-center gap-2 cursor-pointer transition py-4 px-4 hover:opacity-80"
-       style="color: var(--ion-color-medium);">
-    <ion-icon name="arrow-back-outline" class="text-xl"></ion-icon>
-    <span class="font-medium text-sm">Retour au dashboard</span>
-  </div>
+<ion-content class="bg-gray-50" [fullscreen]="true">
 
   @if (station.value(); as state) {
 
-    <div class="p-4 flex flex-col gap-6">
+    <div class="p-4 pb-28 flex flex-col gap-6 max-w-lg mx-auto">
 
-      <div class="max-w-md mx-auto w-full">
+      <div class="transform transition-all duration-300">
         <app-station-card [station]="state"></app-station-card>
       </div>
 
-      <div class="max-w-md mx-auto w-full bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-        <div class="flex items-start gap-3">
-          <div class="bg-blue-50 p-2 rounded-full">
-            <ion-icon name="location-outline" class="text-xl text-blue-600"></ion-icon>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 relative overflow-hidden">
+        <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full opacity-50 pointer-events-none"></div>
+
+        <div class="relative z-10 flex gap-4 items-center">
+          <div class="shrink-0 flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600 shadow-sm">
+            <ion-icon name="location" class="text-2xl"></ion-icon>
           </div>
-          <div>
-            <h3 class="font-bold text-gray-800 text-sm mb-1">Localisation</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">
-              {{ state.locationDTO?.addressLine }}<br>
-              {{ state.locationDTO?.postalCode }} {{ state.locationDTO?.city }}<br>
-              <span class="text-gray-400 text-xs uppercase font-semibold">{{ state.locationDTO?.country }}</span>
+          <div class="flex-1">
+            <h3 class="font-bold text-gray-800 text-base mb-1">Localisation</h3>
+            <p class="text-gray-600 text-sm font-medium">
+              {{ state.locationDTO?.addressLine }}
+            </p>
+            <p class="text-gray-400 text-sm">
+              {{ state.locationDTO?.postalCode }} {{ state.locationDTO?.city }}
             </p>
           </div>
         </div>
       </div>
 
-      <div class="max-w-md mx-auto w-full">
-        @if (isOwner()) {
-        <ion-button expand="block" (click)="openAvailabilityModal()" color="secondary" class="rounded-xl shadow-md h-12 font-semibold">
-        <ion-icon name="calendar-outline" slot="start"></ion-icon>
-        Gérer les disponibilités
-      </ion-button>
-
-      <ion-button expand="block" fill="outline" class="mb-3"
-        (click)="openEditModal()"
-        color="medium" class="rounded-xl shadow-md h-12 font-semibold">
-        <ion-icon name="create-outline" slot="start"></ion-icon>
-        Modifier les infos & Photo
-      </ion-button>
-        }
-        @if(!isOwner()) {
-          <ion-button expand="block" (click)="openModal()" color="primary" class="rounded-xl shadow-md h-12 font-semibold">
-            RÉSERVER
+      @if (isOwner()) {
+        <div class="grid grid-cols-2 gap-3">
+          <ion-button expand="block" (click)="openAvailabilityModal()" color="secondary" fill="solid" class="h-14 rounded-xl shadow-sm text-xs font-semibold normal-case">
+            <div class="flex flex-col items-center gap-1 py-1">
+              <ion-icon name="calendar-outline" class="text-xl"></ion-icon>
+              <span>Disponibilités</span>
+            </div>
           </ion-button>
-        }
 
-      </div>
+          <ion-button expand="block" (click)="openEditModal()" color="medium" fill="outline" class="h-14 rounded-xl shadow-sm text-xs font-semibold normal-case bg-white">
+            <div class="flex flex-col items-center gap-1 py-1">
+              <ion-icon name="create-outline" class="text-xl"></ion-icon>
+              <span>Modifier</span>
+            </div>
+          </ion-button>
+        </div>
+      }
 
-      <div>
-        <div class="flex justify-between items-center mb-4 px-1">
-          <h3 class="text-lg font-bold text-gray-800">
-            Avis utilisateurs ({{ state.reviewsDTO?.length || 0 }})
-          </h3>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-6 border-b border-gray-50 pb-4">
+          <div>
+            <h3 class="text-lg font-bold text-gray-800">Avis</h3>
+            <span class="text-xs text-gray-400 font-medium bg-gray-50 px-2 py-1 rounded-md">
+              {{ state.reviewsDTO?.length || 0 }} commentaires
+            </span>
+          </div>
 
           @if (!isOwner() && canReview()) {
-            <ion-button fill="clear" size="small" (click)="openReviewModal()">
-              Laisser un avis
+            <ion-button fill="outline" size="small" shape="round" color="dark" (click)="openReviewModal()">
+              <ion-icon name="star-outline" slot="start"></ion-icon>
+              Noter
             </ion-button>
           }
         </div>
 
         <app-review-list [reviews]="state.reviewsDTO ?? []"></app-review-list>
       </div>
+
     </div>
 
-    <ion-modal #modal>
+    <ion-modal #modal [initialBreakpoint]="0.75" [breakpoints]="[0, 0.5, 0.75, 1]">
       <ng-template>
         <app-booking-form [stationId]="state.id" (formSubmit)="onFormSubmit($event)"></app-booking-form>
       </ng-template>
     </ion-modal>
 
-    <ion-modal #reviewModal>
+    <ion-modal #reviewModal [initialBreakpoint]="0.6" [breakpoints]="[0, 0.6, 1]">
       <ng-template>
         <app-review-form
            [stationId]="state.id"
@@ -91,20 +92,44 @@
       </ng-template>
     </ion-modal>
 
-  }
-
-  @else if (station.isLoading()) {
-    <div class="flex justify-center items-center h-64">
-      <ion-spinner color="primary"></ion-spinner>
+  } @else if (station.isLoading()) {
+    <div class="flex flex-col justify-center items-center h-full gap-4 bg-white">
+      <ion-spinner color="primary" name="crescent" class="scale-150"></ion-spinner>
+      <p class="text-gray-400 text-sm animate-pulse">Chargement de la station...</p>
+    </div>
+  } @else if (station.error()) {
+    <div class="flex flex-col items-center justify-center h-full text-center px-6">
+      <div class="bg-red-50 p-6 rounded-full mb-4">
+        <ion-icon name="alert-circle" class="text-5xl text-red-500"></ion-icon>
+      </div>
+      <h3 class="text-lg font-bold text-gray-800">Oups !</h3>
+      <p class="text-gray-500 mt-2">Impossible de charger les détails de la station.</p>
+      <ion-button fill="clear" (click)="goBack()" class="mt-4">Retourner au tableau de bord</ion-button>
     </div>
   }
-  @else if (station.error()) {
-    <div class="flex flex-col items-center justify-center h-64 text-red-500 px-4 text-center">
-      <ion-icon name="alert-circle-outline" class="text-4xl mb-2"></ion-icon>
-      <p>Impossible de charger les détails de la station.</p>
-    </div>
-  }
 
-  <ion-toast [isOpen]="toastVisible()" [message]="toastMessage()" duration="2000" (didDismiss)="toastVisible.set(false)"></ion-toast>
+  <ion-toast [isOpen]="toastVisible()" [message]="toastMessage()" duration="2000" color="dark" (didDismiss)="toastVisible.set(false)"></ion-toast>
 
 </ion-content>
+
+@if (station.value(); as state) {
+  @if(!isOwner()) {
+    <ion-footer class="ion-no-border shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] bg-white">
+      <ion-toolbar class="px-4 py-3 bg-white">
+        <div class="flex items-center gap-4 w-full max-w-lg mx-auto">
+          @if(state.price) {
+          <div class="flex flex-col" style="color: var(--ion-text-color);">
+            <span class="text-xs text-gray-400 font-medium">Prix total</span>
+            <div class="text-xl font-bold text-gray-900 leading-none">
+              {{ state.price }}€<span class="text-sm text-gray-500 font-normal">/h</span>
+            </div>
+          </div>
+        }
+          <ion-button expand="block" (click)="openModal()" color="primary" class="flex-1 h-12 font-bold text-base shadow-md rounded-xl" shape="round">
+            Réserver
+          </ion-button>
+        </div>
+      </ion-toolbar>
+    </ion-footer>
+  }
+}

@@ -1,5 +1,4 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
-
 import { RouterLink } from '@angular/router';
 import { ChargingLocation } from 'src/app/features/charging-station/models/charging-location.model';
 import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
@@ -10,9 +9,11 @@ import { LocationFormComponent } from '../../component/location-form/location-fo
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader,
   IonCardSubtitle, IonCardContent, IonCardTitle, IonList, IonItem,
-  IonLabel, IonThumbnail, IonButton,IonBackButton,IonButtons, IonIcon } from '@ionic/angular/standalone';
+  IonLabel, IonThumbnail, IonButton, IonBackButton, IonButtons, IonIcon,
+  AlertController, ToastController 
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addOutline, addCircleOutline } from 'ionicons/icons';
+import { addOutline, addCircleOutline, trashOutline } from 'ionicons/icons'; // 👈 Ajout trashOutline
 import { ModalController } from '@ionic/angular/standalone';
 import { StationFormComponent } from '../../component/station-form/station-form.component';
 
@@ -24,7 +25,7 @@ import { StationFormComponent } from '../../component/station-form/station-form.
   imports: [IonIcon,
     IonButton, IonLabel, IonItem, IonList, IonCardTitle, IonCardContent,
     IonCardSubtitle, IonCardHeader, IonCard, IonContent, IonHeader,
-    IonTitle, IonToolbar, IonThumbnail,IonBackButton,IonButtons,
+    IonTitle, IonToolbar, IonThumbnail, IonBackButton, IonButtons,
     RouterLink
   ]
 })
@@ -34,6 +35,8 @@ export class LocationComponent implements OnInit {
   private chargingStationService = inject(ChargingStationService);
   private authService = inject(AuthService);
   private modalCtrl = inject(ModalController);
+  private alertCtrl = inject(AlertController);
+  private toastCtrl = inject(ToastController);
 
   isLoading = false;
   locations: ChargingLocation[] = [];
@@ -41,9 +44,8 @@ export class LocationComponent implements OnInit {
   user = this.authService.user;
 
   constructor() {
-    addIcons({addOutline,addCircleOutline});
+    addIcons({ addOutline, addCircleOutline, trashOutline }); // 👈 Enregistrement icône
 
-    // Recharger les lieux lorsque l'utilisateur change (login/logout)
     effect(() => {
       if (this.authService.user()) {
         this.loadLocations();
@@ -55,6 +57,53 @@ export class LocationComponent implements OnInit {
     if (this.user()) {
       this.loadLocations();
     }
+  }
+
+  async confirmDeleteLocation(locationId: string) {
+    const alert = await this.alertCtrl.create({
+      header: 'Supprimer ce lieu ?',
+      message: 'Cette action supprimera également toutes les bornes associées. Êtes-vous sûr ?',
+      buttons: [
+        {
+          text: 'Annuler',
+          role: 'cancel'
+        },
+        {
+          text: 'Supprimer',
+          role: 'destructive',
+          handler: () => {
+            this.deleteLocation(locationId);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  private deleteLocation(id: string) {
+    this.chargingLocationService.deleteChargingLocation(id).subscribe({
+      next: async () => {
+        this.locations = this.locations.filter(l => l.id !== id);
+        delete this.stationsByLocation[id];
+
+        const toast = await this.toastCtrl.create({
+          message: 'Lieu supprimé avec succès',
+          duration: 2000,
+          color: 'success'
+        });
+        toast.present();
+      },
+      error: async (err) => {
+        console.error('Erreur suppression', err);
+        const toast = await this.toastCtrl.create({
+          message: 'Impossible de supprimer ce lieu.',
+          duration: 2000,
+          color: 'danger'
+        });
+        toast.present();
+      }
+    });
   }
 
   async openAddLocationModal() {
@@ -91,12 +140,10 @@ export class LocationComponent implements OnInit {
     });
   }
 
-async openAddStationModal(locationId: string) {
+  async openAddStationModal(locationId: string) {
     const modal = await this.modalCtrl.create({
       component: StationFormComponent,
-      componentProps: {
-        locationId: locationId
-      }
+      componentProps: { locationId: locationId }
     });
 
     await modal.present();
@@ -105,4 +152,3 @@ async openAddStationModal(locationId: string) {
     });
   }
 }
-

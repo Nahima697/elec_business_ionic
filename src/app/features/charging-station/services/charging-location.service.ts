@@ -47,4 +47,8 @@ export class ChargingLocationService {
     return this.http.put<ChargingLocation>(`/charging_locations/${id}`,location);
   }
 
+  deleteChargingLocation(id:string) : Observable<void> {
+    return this.http.delete<void>(`/charging_locations/${id}`);
+  }
+
 }

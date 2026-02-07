@@ -1,5 +1,5 @@
-import { Component, inject, OnInit, signal, computed, input } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, inject, signal, computed, input } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import { LngLatLike, Map } from 'maplibre-gl';
 import { IonIcon, ModalController, IonSearchbar } from '@ionic/angular/standalone';
@@ -7,30 +7,27 @@ import { FilterModalComponent } from 'src/app/shared-component/footer/filter-mod
 import { PlatformService } from 'src/app/core/auth/services/platform.service';
 import { ChargingStationResponseDTO } from 'src/app/features/charging-station/models/charging-station.model';
 import { GeolocalisationService } from '../../service/geolocalisation.service';
-import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-display-map',
   standalone: true,
-  imports: [
-    RouterModule,
-    NgxMapLibreGLModule,
-    IonIcon,
-    IonSearchbar
-  ],
+  imports: [RouterModule, NgxMapLibreGLModule, IonIcon, IonSearchbar],
   templateUrl: './display-map.component.html',
   styleUrls: ['./display-map.component.scss'],
 })
-export class DisplayMapComponent implements OnInit {
-  private router = inject(Router);
+export class DisplayMapComponent {
   private modalCtrl = inject(ModalController);
   private platformService = inject(PlatformService);
   private geolocService = inject(GeolocalisationService);
   readonly mapStyle = `https://api.maptiler.com/maps/streets-v2/style.json?key=${environment.MAPTILER_KEY}`;
 
   protected readonly isBrowser = this.platformService.isBrowser();
+
+  // ✅ INPUTS : Reçoit les données du parent
   readonly stations = input.required<any>();
+  readonly initialCenter = input<[number, number]>();
+  readonly initialSearch = input<string>();
 
   protected readonly filterValue = signal('');
 
@@ -38,9 +35,7 @@ export class DisplayMapComponent implements OnInit {
     const rawData = this.stations();
     let list: ChargingStationResponseDTO[] = [];
 
-    if (!rawData) {
-      list = [];
-    } else if (rawData.content && Array.isArray(rawData.content)) {
+    if (rawData?.content && Array.isArray(rawData.content)) {
       list = rawData.content;
     } else if (Array.isArray(rawData)) {
       list = rawData;
@@ -56,83 +51,62 @@ export class DisplayMapComponent implements OnInit {
   });
 
   map: Map | undefined;
-  center: LngLatLike = [4.8522, 45.7566];
+  center: LngLatLike = [4.8522, 45.7566]; // Lyon par défaut
   hoverStation?: ChargingStationResponseDTO;
-  ControlType = ControlType;
 
-  ngOnInit(): void {
-    if (!this.isBrowser) return;
+  // Appelé quand la carte est PRÊTE
+  onMapLoad(map: Map): void {
+    this.map = map;
+    this.applyNavigationState();
+  }
 
-    const navigation = this.router.getCurrentNavigation();
+  private applyNavigationState() {
+    if (!this.map) return;
 
-    const state = navigation?.extras?.state as {
-      filteredStations?: ChargingStationResponseDTO[],
-      searchTerm?: string,
-      center?: [number, number]
-    };
+    const centerCoords = this.initialCenter();
+    const searchTerm = this.initialSearch();
 
-    if (state) {
-      setTimeout(() => {
-        // CAS 1 : On a reçu des coordonnées directes (depuis le Dashboard)
-        if (state.center) {
-          if (state.searchTerm) this.filterValue.set(state.searchTerm);
+    // Cas 1 : On a des coordonnées (venant du dashboard)
+    if (centerCoords) {
+      this.map.flyTo({
+        center: centerCoords, // Déjà au format [Lng, Lat] grâce au Dashboard
+        zoom: 13,
+        essential: true
+      });
 
-          // Vol vers la destination
-          this.map?.flyTo({
-            center: state.center,
-            zoom: 13,
-            essential: true
-          });
-        }
-        // CAS 2 : On a reçu juste un mot-clé
-        else if (state.searchTerm) {
-          this.handleSearch(state.searchTerm);
-        }
-        // CAS 3 : On a reçu une liste de stations
-        else if (state.filteredStations?.length) {
-          const firstStation = state.filteredStations![0];
-          this.filterValue.set(firstStation.name);
-          this.centerMapOnStation(firstStation);
-        }
-      }, 800);
+      if (searchTerm) this.filterValue.set(searchTerm);
+    }
+    // Cas 2 : Juste une recherche textuelle
+    else if (searchTerm) {
+      this.handleSearch(searchTerm);
     }
   }
 
-  onMapLoad(map: Map): void {
-    this.map = map;
-  }
+  // ... (Garde tes méthodes onHover, onLeave, etc.)
 
-  onHover(station: ChargingStationResponseDTO): void {
-    this.hoverStation = station;
-  }
-
-  onLeave(): void {
-    this.hoverStation = undefined;
-  }
-
-  // EVENT SEARCHBAR
   onLocalSearch(event: Event) {
     const target = event.target as HTMLIonSearchbarElement;
-    const value = target.value || '';
-    this.handleSearch(value);
+    this.handleSearch(target.value || '');
   }
 
-  // LOGIQUE CENTRALE DE RECHERCHE
   private handleSearch(value: string) {
-    this.updateFilter(value.toLowerCase());
+    this.filterValue.set(value);
+    const filter = value.toLowerCase();
 
-    // 2. Si aucune station trouvée en local, on cherche la ville via API
-    if (value.length > 2 && this.filteredStations().length === 0) {
-      this.geolocService.searchCity(value).subscribe(coords => {
+    // Si rien trouvé en local, on cherche via API
+    if (filter.length > 2 && this.filteredStations().length === 0) {
+      this.geolocService.searchCity(filter).subscribe(coords => {
         if (coords) {
-          console.log('Ville trouvée via API:', coords);
           this.map?.flyTo({
-            center: [coords.lng, coords.lat],
+            center: [coords.lng, coords.lat], // [Lng, Lat]
             zoom: 12,
             essential: true
           });
         }
       });
+    } else if (this.filteredStations().length > 0) {
+      // Si trouvé en local, on centre sur le premier
+      this.centerMapOnStation(this.filteredStations()[0]);
     }
   }
 
@@ -143,34 +117,15 @@ export class DisplayMapComponent implements OnInit {
       breakpoints: [0, 0.25, 0.5, 0.75],
       cssClass: 'bottom-sheet',
     });
-
     await modal.present();
     const { data } = await modal.onDidDismiss();
-
-    if (data) {
-      this.handleSearch(data);
-    }
-  }
-
-  private updateFilter(value: string) {
-    this.filterValue.set(value);
-
-    // On force la récupération de la liste filtrée
-    const currentList = this.filteredStations();
-
-    if (currentList.length > 0) {
-      // Si on a trouvé des bornes, on centre sur la première
-      this.centerMapOnStation(currentList[0]);
-    }
+    if (data) this.handleSearch(data);
   }
 
   private centerMapOnStation(station: ChargingStationResponseDTO): void {
     const lng = Number(station.lng) || 0;
     const lat = Number(station.lat) || 0;
-
     if (lng === 0 && lat === 0) return;
-
-    this.center = [lng, lat];
 
     if (this.map) {
       this.map.flyTo({

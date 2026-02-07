@@ -47,6 +47,10 @@ export const routes: Routes = [
       { path: 'reservations', component: BookingPageComponent },
       { path: 'profile', component: ProfilePage },
       { path: '', redirectTo: '/tabs/map', pathMatch: 'full' },
+      { path: 'location', component: LocationComponent },
+      { path: 'location/:id', component: LocationDetailComponent },
+      { path: 'station', component: ChargingStationComponent },
+      { path: 'station/:id', component: StationDetailComponent },
       {
         path: 'user',
         loadChildren: () => import('./features/user/user.routes').then(m => m.USER_ROUTES),

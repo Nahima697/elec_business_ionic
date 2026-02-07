@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonButton, IonTitle, IonHeader, IonContent, IonToolbar, IonModal, IonToast, IonSpinner, IonIcon, ViewDidEnter } from "@ionic/angular/standalone";
+import { IonButton, IonTitle, IonHeader, IonContent, IonToolbar, IonModal, IonToast, IonSpinner, IonIcon, ViewDidEnter,IonFooter, IonButtons, IonBackButton } from "@ionic/angular/standalone";
 import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
 import { BookingFormComponent } from '../../../booking/component/booking-form/booking-form.component';
 import { BookingService } from '../../../booking/service/booking.service';
@@ -10,7 +10,7 @@ import { Location } from '@angular/common';
 import { ReviewFormComponent } from '../../../review/components/review-form/review-form.component';
 import { ReviewListComponent } from 'src/app/features/review/components/review-list/review-list.component';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline, calendarOutline, locationOutline, alertCircleOutline, createOutline } from 'ionicons/icons';
+import { arrowBackOutline, calendarOutline, locationOutline, alertCircleOutline, createOutline, starOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { ModalController } from '@ionic/angular/standalone';
 import { AvailabilityRulesComponent } from '../../component/availability-rules/availability-rules.component';
@@ -22,9 +22,9 @@ import { StationFormComponent } from '../../component/station-form/station-form.
   templateUrl: './station-detail.component.html',
   styleUrls: ['./station-detail.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonBackButton, IonButtons,
     IonSpinner, IonToast, IonContent, IonHeader, IonTitle, IonButton, IonToolbar, IonModal,
-    BookingFormComponent, StationCardComponent, ReviewFormComponent, ReviewListComponent, IonIcon
+    BookingFormComponent, StationCardComponent, ReviewFormComponent, ReviewListComponent, IonIcon,IonFooter
   ]
 })
 export class StationDetailComponent implements ViewDidEnter {
@@ -51,7 +51,7 @@ export class StationDetailComponent implements ViewDidEnter {
   @ViewChild('reviewModal', { read: IonModal }) reviewModal!: IonModal;
 
   constructor() {
-    addIcons({ arrowBackOutline, locationOutline, calendarOutline, createOutline, alertCircleOutline });
+    addIcons({calendarOutline,createOutline,starOutline,locationOutline,alertCircleOutline,arrowBackOutline});
 
     const idFromInput = this.id();
     const idFromRoute = this.route.snapshot.paramMap.get('id');

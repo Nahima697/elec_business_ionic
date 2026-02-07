@@ -15,7 +15,11 @@
     <ion-list lines="none" class="flex flex-col gap-4">
 
       <ion-item class="rounded-lg border border-gray-300">
-        <ion-select label="Lieu de la borne" label-placement="floating" formControlName="locationId" placeholder="Choisir un lieu">
+        <ion-select
+          label="Lieu de la borne"
+          label-placement="floating"
+          formControlName="locationId"
+          placeholder="Choisir un lieu">
           @for (loc of myLocations(); track loc.id) {
             <ion-select-option [value]="loc.id">{{ loc.city }} - {{ loc.addressLine }}</ion-select-option>
           }
@@ -41,21 +45,39 @@
       </app-form-field>
 
       <div class="flex gap-2">
-        <app-form-field class="flex-1" label="Puissance (kW)" placeholder="7.4" type="number"
-          [controlType]="ControlType.Input" formControlName="powerKw">
+        <app-form-field
+          class="flex-1"
+          label="Puissance (kW)"
+          placeholder="7.4"
+          type="number"
+          [controlType]="ControlType.Input"
+          formControlName="powerKw">
         </app-form-field>
-        <app-form-field class="flex-1" label="Prix (€/h)" placeholder="2.50" type="number"
-          [controlType]="ControlType.Input" formControlName="price">
+
+        <app-form-field
+          class="flex-1"
+          label="Prix (€/h)"
+          placeholder="2.50"
+          type="number"
+          [controlType]="ControlType.Input"
+          formControlName="price">
         </app-form-field>
       </div>
 
-      <div class="flex flex-col items-center mt-2 p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 transition cursor-pointer" (click)="triggerFileInput()">
+      <div
+        class="flex flex-col items-center mt-2 p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 transition cursor-pointer relative"
+        (click)="triggerFileInput()">
+
         <input id="fileInput" type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden">
 
         @if (imagePreview) {
           <div class="relative w-full h-40 mb-2">
             <img [src]="imagePreview" class="w-full h-full object-cover rounded-md" alt="Prévisualisation">
-            <ion-button size="small" color="danger" class="absolute top-1 right-1" (click)="$event.stopPropagation(); imagePreview = null; selectedFile = null">
+            <ion-button
+              size="small"
+              color="danger"
+              class="absolute top-1 right-1"
+              (click)="$event.stopPropagation(); imagePreview = null; selectedFile = null">
               <ion-icon name="trash-outline"></ion-icon>
             </ion-button>
           </div>
@@ -69,6 +91,7 @@
 
       <div class="flex gap-3 mt-4 mb-6">
         <ion-button
+          type="button"
           fill="outline"
           color="medium"
           class="flex-1"
@@ -79,7 +102,10 @@
         <ion-button
           type="submit"
           class="flex-1"
-          [disabled]="stationForm.invalid">
+          [disabled]="stationForm.invalid || isLoading()">
+          @if (isLoading()) {
+            <ion-spinner name="crescent" class="mr-2"></ion-spinner>
+          }
           {{ isEditMode() ? 'Modifier' : 'Créer' }}
         </ion-button>
       </div>

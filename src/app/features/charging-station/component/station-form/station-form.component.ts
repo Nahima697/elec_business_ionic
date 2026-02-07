@@ -8,8 +8,7 @@ import { ControlType } from 'src/app/shared-component/form-field/form-field.enum
 import {
   IonList, IonItem, IonButton,
    IonSelect, IonSelectOption, IonIcon, IonText,IonContent,
-  ToastController, ModalController, IonHeader, IonButtons,IonToolbar,IonTitle
-} from '@ionic/angular/standalone';
+  ToastController, ModalController, IonHeader, IonButtons,IonToolbar,IonTitle, IonSpinner } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { cameraOutline, closeOutline, imageOutline, trashOutline, saveOutline } from 'ionicons/icons';
 import { GeolocalisationService } from 'src/app/features/display-map/service/geolocalisation.service';
@@ -18,11 +17,11 @@ import { ChargingStationRequestDTO } from '../../models/charging-station.model';
 @Component({
   selector: 'app-station-form',
   standalone: true,
-  imports: [IonButtons, IonHeader,
+  imports: [IonSpinner, IonButtons, IonHeader,
     ReactiveFormsModule,
     FormFieldComponent,
-    IonList, IonItem, IonContent,IonButton,IonTitle,
-    IonToolbar,IonSelect, IonSelectOption, IonIcon, IonText
+     IonItem, IonContent,IonButton,IonTitle,
+    IonToolbar,IonSelect, IonSelectOption, IonIcon, IonText,IonList
   ],
   templateUrl: './station-form.component.html',
   styleUrls: ['./station-form.component.scss'],
@@ -83,7 +82,6 @@ export class StationFormComponent implements OnInit {
 
     // 4. Autocomplétion Lat/Lng quand on change de lieu
     this.stationForm.get('locationId')?.valueChanges.subscribe(async (locationId) => {
-      // On ne recalcule pas les coords si on est en train de charger une borne existante
       if (this.isLoading()) return;
 
       const selectedLocation = this.myLocations().find(l => l.id === locationId);
@@ -209,6 +207,5 @@ export class StationFormComponent implements OnInit {
   }
 
   cancel() {
-    this.modalCtrl.dismiss(null, 'cancel');
-  }
+this.modalCtrl.dismiss(null, 'cancel');  }
 }
