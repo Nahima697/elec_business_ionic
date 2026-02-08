@@ -19,10 +19,10 @@ try:
     # 2. Trouver les éléments (Adapte les sélecteurs selon ton HTML !)
     print("Remplissage du formulaire...")
 
-    email_input = driver.find_element(By.CSS_SELECTOR, "ion-input[type='email'] input")
+    email_input = driver.find_element(By.CSS_SELECTOR, "#ion-input-0")
     email_input.send_keys("user1@test.com")
 
-    password_input = driver.find_element(By.CSS_SELECTOR, "ion-input[type='password'] input")
+    password_input = driver.find_element(By.CSS_SELECTOR, "#ion-input-1")
     password_input.send_keys("password123")
 
     # 3. Cliquer sur le bouton de connexion

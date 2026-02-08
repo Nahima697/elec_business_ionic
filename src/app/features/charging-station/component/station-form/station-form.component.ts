@@ -18,7 +18,6 @@ import { ChargingStationRequestDTO } from '../../models/charging-station.model';
 @Component({
   selector: 'app-station-form',
   standalone: true,
-  // ⚠️ IMPORTANT : Pas de ModalController ni ToastController ici !
   imports: [
     IonSpinner, IonButtons, IonHeader,
     ReactiveFormsModule,
@@ -187,7 +186,7 @@ export class StationFormComponent implements OnInit {
     if (this.isEditMode()) {
       const updateDto: ChargingStationRequestDTO = {
         ...formValues,
-        id: this.idSignal() // Utilisation du signal interne
+        id: this.idSignal()
       };
 
       this.stationService.updateChargingStation(updateDto, fileToUpload).subscribe({

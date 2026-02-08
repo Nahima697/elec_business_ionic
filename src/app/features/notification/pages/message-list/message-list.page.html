@@ -1,0 +1,32 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Mes Messages</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="loadData($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list lines="full">
+    @for (notif of notifications(); track notif.id) {
+      <ion-item button (click)="markAsRead(notif)" [class.bg-blue-50]="!notif.isRead">
+        <ion-icon slot="start"
+          [name]="notif.isRead ? 'mail-open-outline' : 'mail-outline'"
+          [color]="notif.isRead ? 'medium' : 'primary'">
+        </ion-icon>
+        <ion-label>
+          <h2>{{ notif.message }}</h2>
+          <p class="text-xs text-gray-400 mt-1">{{ notif.createdAt | date:'dd/MM HH:mm' }}</p>
+        </ion-label>
+        <div *ngIf="!notif.isRead" slot="end" class="w-2 h-2 bg-blue-600 rounded-full"></div>
+      </ion-item>
+    } @empty {
+      <div class="flex flex-col items-center justify-center h-64 text-gray-400">
+        <ion-icon name="notifications-off-outline" class="text-4xl mb-2"></ion-icon>
+        <p>Aucun message</p>
+      </div>
+    }
+  </ion-list>
+</ion-content>

@@ -1,6 +1,6 @@
-import { Component, computed, inject, input, signal, ViewChild } from '@angular/core';
+import { Component, computed, inject, input, signal, ViewChild, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonButton, IonTitle, IonHeader, IonContent, IonToolbar, IonModal, IonToast, IonSpinner, IonIcon, ViewDidEnter,IonFooter, IonButtons, IonBackButton } from "@ionic/angular/standalone";
+import { IonButton, IonTitle, IonHeader, IonContent, IonToolbar, IonModal, IonToast, IonSpinner, IonIcon, IonFooter, IonButtons, IonBackButton } from "@ionic/angular/standalone";
 import { StationApiService } from 'src/app/features/charging-station/services/station-api.service';
 import { BookingFormComponent } from '../../../booking/component/booking-form/booking-form.component';
 import { BookingService } from '../../../booking/service/booking.service';
@@ -27,7 +27,7 @@ import { StationFormComponent } from '../../component/station-form/station-form.
     BookingFormComponent, StationCardComponent, ReviewFormComponent, ReviewListComponent, IonIcon,IonFooter
   ]
 })
-export class StationDetailComponent implements ViewDidEnter {
+export class StationDetailComponent {
 
   readonly id = input<string>();
   private readonly idSignal = signal('');
@@ -68,13 +68,17 @@ export class StationDetailComponent implements ViewDidEnter {
     if (state?.openReview) {
       this.shouldOpenReviewModal = true;
     }
-  }
+    effect(() => {
+      const stationData = this.station.value();
 
-  ionViewDidEnter() {
-    if (this.shouldOpenReviewModal) {
-      this.shouldOpenReviewModal = false;
-      this.openReviewModal();
-    }
+      if (stationData && this.shouldOpenReviewModal) {
+
+        setTimeout(() => {
+          this.openReviewModal();
+          this.shouldOpenReviewModal = false;
+        }, 150);
+      }
+    });
   }
 
   isOwner = computed(() => {
@@ -147,6 +151,8 @@ export class StationDetailComponent implements ViewDidEnter {
   openReviewModal() {
     if (this.reviewModal) {
       this.reviewModal.present();
+    } else {
+      console.warn('La modale avis n\'est pas encore prête (données station en cours...)');
     }
   }
 

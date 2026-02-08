@@ -45,7 +45,6 @@ export class AvailabilityRulesComponent implements OnInit {
   // 3. Ressource des stations
   stationsResource = this.stationService.getMyStations();
 
-  // 4. Ressource des règles (se recharge automatiquement quand selectedStationId change)
   rulesResource = this.rulesService.getRulesByStation(this.selectedStationId);
 
   ruleForm = this.fb.group({
@@ -59,7 +58,6 @@ export class AvailabilityRulesComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Plus besoin de logique ici, le setter @Input s'en occupe avant ngOnInit
   }
 
   close() {
@@ -67,7 +65,7 @@ export class AvailabilityRulesComponent implements OnInit {
   }
 
   onSubmit() {
-    const currentId = this.selectedStationId(); // On utilise le signal interne
+    const currentId = this.selectedStationId();
 
     if (this.ruleForm.valid && currentId) {
       const formValue = this.ruleForm.value;

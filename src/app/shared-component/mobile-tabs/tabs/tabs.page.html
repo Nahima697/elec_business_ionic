@@ -1,18 +1,19 @@
-<ion-tabs >
+<ion-tabs>
   <ion-router-outlet></ion-router-outlet>
 
-  <ion-tab-bar slot="bottom" class="bg-white rounded-t-3xl shadow-lg h-20">
+  <ion-tab-bar slot="bottom" class="bg-white rounded-t-3xl shadow-lg h-20 border-t border-gray-100">
+
     <ion-tab-button tab="search" [routerLink]="['/tabs/map']">
       <ion-icon name="search-outline"></ion-icon>
       <ion-label>Recherche</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="messages" [routerLink]="['/tabs/user/dashboard']" class="relative">
-      <ion-icon name="chatbox-ellipses-outline"></ion-icon>
-      <ion-label>Dashboard</ion-label>
+    <ion-tab-button tab="messages" [routerLink]="['/tabs/messages']" class="relative">
+      <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+      <ion-label>Messages</ion-label>
 
       @if (unreadCount() > 0) {
-        <ion-badge color="danger" class="absolute top-2 right-4 text-[10px] rounded-full px-1.5">
+        <ion-badge color="danger" class="absolute top-1 right-3 text-[10px] rounded-full px-1.5 z-10 border border-white">
           {{ unreadCount() }}
         </ion-badge>
       }
@@ -27,5 +28,6 @@
       <ion-icon name="person-outline"></ion-icon>
       <ion-label>Profil</ion-label>
     </ion-tab-button>
+
   </ion-tab-bar>
 </ion-tabs>

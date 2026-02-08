@@ -52,6 +52,10 @@ export const routes: Routes = [
       { path: 'station', component: ChargingStationComponent },
       { path: 'station/:id', component: StationDetailComponent },
       {
+        path: 'messages',
+        loadComponent: () => import('./features/notification/pages/message-list/message-list.page').then(m => m.MessageListPage)
+      },
+      {
         path: 'user',
         loadChildren: () => import('./features/user/user.routes').then(m => m.USER_ROUTES),
         canActivate: [AuthGuard]
@@ -82,5 +86,9 @@ export const routes: Routes = [
   {
     path: 'profile',
     loadComponent: () => import('./features/profile/page/profile/profile.page').then( m => m.ProfilePage)
+  },
+  {
+    path: 'message-list',
+    loadComponent: () => import('./features/notification/pages/message-list/message-list.page').then( m => m.MessageListPage)
   },
 ];
