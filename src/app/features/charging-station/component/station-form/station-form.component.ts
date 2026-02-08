@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, output, signal, input } from '@angular/core';
+import { Component, inject, OnInit, output, signal, Input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChargingStationService } from '../../services/charging-station.service';
 import { ChargingLocationService } from '../../services/charging-location.service';
@@ -7,8 +7,9 @@ import { FormFieldComponent } from 'src/app/shared-component/form-field/form-fie
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import {
   IonList, IonItem, IonButton,
-   IonSelect, IonSelectOption, IonIcon, IonText,IonContent,
-  ToastController, ModalController, IonHeader, IonButtons,IonToolbar,IonTitle, IonSpinner } from '@ionic/angular/standalone';
+  IonSelect, IonSelectOption, IonIcon, IonText, IonContent,
+  ToastController, ModalController, IonHeader, IonButtons, IonToolbar, IonTitle, IonSpinner
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { cameraOutline, closeOutline, imageOutline, trashOutline, saveOutline } from 'ionicons/icons';
 import { GeolocalisationService } from 'src/app/features/display-map/service/geolocalisation.service';
@@ -17,11 +18,13 @@ import { ChargingStationRequestDTO } from '../../models/charging-station.model';
 @Component({
   selector: 'app-station-form',
   standalone: true,
-  imports: [IonSpinner, IonButtons, IonHeader,
+  // ⚠️ IMPORTANT : Pas de ModalController ni ToastController ici !
+  imports: [
+    IonSpinner, IonButtons, IonHeader,
     ReactiveFormsModule,
     FormFieldComponent,
-     IonItem, IonContent,IonButton,IonTitle,
-    IonToolbar,IonSelect, IonSelectOption, IonIcon, IonText,IonList
+    IonItem, IonContent, IonButton, IonTitle,
+    IonToolbar, IonSelect, IonSelectOption, IonIcon, IonText, IonList
   ],
   templateUrl: './station-form.component.html',
   styleUrls: ['./station-form.component.scss'],
@@ -33,8 +36,17 @@ export class StationFormComponent implements OnInit {
   private toastCtrl = inject(ToastController);
   private modalCtrl = inject(ModalController);
 
-  id = input<string>('');
-  locationId = input<string>('');
+  // 1. INPUTS : Ionic injecte les valeurs ici
+  @Input() set id(value: string) {
+    this.idSignal.set(value);
+  }
+  @Input() set locationId(value: string) {
+    this.locIdSignal.set(value);
+  }
+
+  // 2. SIGNAUX INTERNES : Pour la logique métier
+  private readonly idSignal = signal('');
+  private readonly locIdSignal = signal('');
 
   stationCreated = output<void>();
   stationForm!: FormGroup;
@@ -47,7 +59,7 @@ export class StationFormComponent implements OnInit {
   isLoading = signal(false);
 
   constructor() {
-    addIcons({ cameraOutline, imageOutline, trashOutline, closeOutline, saveOutline});
+    addIcons({ cameraOutline, imageOutline, trashOutline, closeOutline, saveOutline });
   }
 
   ngOnInit(): void {
@@ -65,26 +77,27 @@ export class StationFormComponent implements OnInit {
     // 2. Chargement des lieux disponibles
     this.loadLocations();
 
-    if (this.locationId()) {
-      this.stationForm.patchValue({
-        locationId: this.locationId()
-      });
+    // 3. Récupération des valeurs depuis les signaux
+    const currentLocId = this.locIdSignal();
+    const currentId = this.idSignal();
 
-       this.stationForm.get('locationId')?.disable();
+    if (currentLocId) {
+      this.stationForm.patchValue({
+        locationId: currentLocId
+      });
+      this.stationForm.get('locationId')?.disable();
     }
 
-    // 3. Gestion du mode Édition (si on modifie une borne existante)
-    const stationId = this.id();
-    if (stationId) {
+    if (currentId) {
       this.isEditMode.set(true);
-      this.loadStationData(stationId);
+      this.loadStationData(currentId);
     }
 
     // 4. Autocomplétion Lat/Lng quand on change de lieu
-    this.stationForm.get('locationId')?.valueChanges.subscribe(async (locationId) => {
+    this.stationForm.get('locationId')?.valueChanges.subscribe(async (locId) => {
       if (this.isLoading()) return;
 
-      const selectedLocation = this.myLocations().find(l => l.id === locationId);
+      const selectedLocation = this.myLocations().find(l => l.id === locId);
       if (selectedLocation) {
         const parts = [selectedLocation.addressLine, selectedLocation.postalCode, selectedLocation.city].filter(Boolean);
         const fullAddress = parts.join(', ');
@@ -168,14 +181,13 @@ export class StationFormComponent implements OnInit {
     }
 
     this.isLoading.set(true);
-    // Si le champ locationId était désactivé, il faut récupérer sa valeur via getRawValue()
     const formValues = this.stationForm.getRawValue();
     const fileToUpload = this.selectedFile || undefined;
 
     if (this.isEditMode()) {
       const updateDto: ChargingStationRequestDTO = {
         ...formValues,
-        id: this.id()
+        id: this.idSignal() // Utilisation du signal interne
       };
 
       this.stationService.updateChargingStation(updateDto, fileToUpload).subscribe({
@@ -207,5 +219,6 @@ export class StationFormComponent implements OnInit {
   }
 
   cancel() {
-this.modalCtrl.dismiss(null, 'cancel');  }
+    this.modalCtrl.dismiss(null, 'cancel');
+  }
 }

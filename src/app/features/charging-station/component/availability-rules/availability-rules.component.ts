@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AvailabilityRulesService } from '../../services/availability-rules.service';
 import { ChargingStationService } from '../../services/charging-station.service';
@@ -7,7 +7,7 @@ import {
   IonHeader, IonToolbar, IonButtons, IonTitle, IonContent,
   IonItem, IonSelect, IonSelectOption, IonCard, IonCardHeader, IonCardTitle,
   IonCardContent, IonInput, IonButton, IonLabel, IonIcon, IonList,
-  IonSpinner, ModalController, ToastController, IonListHeader
+  IonSpinner, ModalController, ToastController
 } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { trashOutline, closeOutline, timeOutline, calendarOutline, addCircleOutline, arrowUpOutline } from 'ionicons/icons';
@@ -25,24 +25,29 @@ import { trashOutline, closeOutline, timeOutline, calendarOutline, addCircleOutl
     IonSpinner
   ]
 })
-export class AvailabilityRulesComponent {
+export class AvailabilityRulesComponent implements OnInit {
   private fb = inject(FormBuilder);
   private rulesService = inject(AvailabilityRulesService);
   private stationService = inject(ChargingStationService);
   private modalCtrl = inject(ModalController);
   private toastCtrl = inject(ToastController);
-  stationId = input<string>('');
 
-
-  // 1. Ressource des stations
-  stationsResource = this.stationService.getMyStations();
-
-  // 2. Signal pour l'ID sélectionné
+  // 1. Signal interne pour l'ID sélectionné
   selectedStationId = signal<string>('');
 
-  // 3. Ressource des règles (se recharge quand selectedStationId change)
+  // 2. Input Setter : C'est LUI qui reçoit la valeur de la Modale et met à jour le signal
+  @Input() set stationId(value: string) {
+    if (value) {
+      this.selectedStationId.set(value);
+    }
+  }
+
+  // 3. Ressource des stations
+  stationsResource = this.stationService.getMyStations();
+
+  // 4. Ressource des règles (se recharge automatiquement quand selectedStationId change)
   rulesResource = this.rulesService.getRulesByStation(this.selectedStationId);
-  // 4. Formulaire pour ajouter une règle
+
   ruleForm = this.fb.group({
     dayOfWeek: [1, Validators.required],
     startTime: ['', Validators.required],
@@ -51,14 +56,10 @@ export class AvailabilityRulesComponent {
 
   constructor() {
     addIcons({ trashOutline, closeOutline, timeOutline, calendarOutline, addCircleOutline, arrowUpOutline });
-
   }
 
   ngOnInit() {
-    // Si on a reçu un ID via l'input, on met à jour le signal sélectionné
-    if (this.stationId()) {
-      this.selectedStationId.set(this.stationId());
-    }
+    // Plus besoin de logique ici, le setter @Input s'en occupe avant ngOnInit
   }
 
   close() {
@@ -66,13 +67,13 @@ export class AvailabilityRulesComponent {
   }
 
   onSubmit() {
-    const stationId = this.selectedStationId();
+    const currentId = this.selectedStationId(); // On utilise le signal interne
 
-    if (this.ruleForm.valid && stationId) {
+    if (this.ruleForm.valid && currentId) {
       const formValue = this.ruleForm.value;
 
       const newRule: AvailabilityRuleDTO = {
-        stationId: stationId,
+        stationId: currentId,
         dayOfWeek: Number(formValue.dayOfWeek),
         startTime: this.formatTime(formValue.startTime!),
         endTime: this.formatTime(formValue.endTime!)
@@ -80,13 +81,8 @@ export class AvailabilityRulesComponent {
 
       this.rulesService.createRules(newRule).subscribe({
         next: async () => {
-          // 1. Recharger la liste pour voir la nouvelle règle
           this.rulesResource.reload();
-
-          // 2. Vider le formulaire (sauf le jour pour enchainer)
           this.ruleForm.patchValue({ startTime: '', endTime: '' });
-
-          // 3. Feedback utilisateur
           const toast = await this.toastCtrl.create({
             message: 'Disponibilité ajoutée avec succès !',
             duration: 2000,
@@ -108,8 +104,7 @@ export class AvailabilityRulesComponent {
     }
   }
 
-
-deleteRule(ruleId: string) {
+  deleteRule(ruleId: string) {
     this.rulesService.deleteRule(ruleId).subscribe({
       next: async () => {
         this.rulesResource.reload();
@@ -139,7 +134,6 @@ deleteRule(ruleId: string) {
 
   getDayName(day: number): string {
     const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-
     return days[day - 1] || 'Jour ' + day;
   }
 }
