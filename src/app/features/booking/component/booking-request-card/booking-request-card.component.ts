@@ -48,7 +48,7 @@ import { BookingResponseDTO } from '../../models/booking';
           </span>
         </div>
 
-        @if (booking().statusLabel === 'PENDING') {
+        @if (booking().statusLabel === 'PENDING' && isOwner()) {
           <div class="flex gap-3">
             <ion-button
               color="success"
@@ -72,7 +72,6 @@ import { BookingResponseDTO } from '../../models/booking';
             </ion-button>
           </div>
         }
-
 
         @if (booking().statusLabel === 'REJECTED') {
           <p class="text-center text-red-500 text-sm italic">Demande refusée</p>

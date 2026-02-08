@@ -129,18 +129,19 @@
                 </ion-button>
 
                 <ion-button
-                    (click)="navService.go(['user', 'owner', 'availability-rules'])"
+                    (click)="openAvailabilityModal(station.id)"
                     class="rounded-xl shadow-md h-12 font-semibold">
                   <ion-icon name="calendar-outline" slot="start"></ion-icon>
                   Dispo
                 </ion-button>
+
                 <ion-button
-                fill="clear"
-                color="danger"
-                size="small"
-                (click)="confirmDeleteStation(station.id, $event)">
-                <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-              </ion-button>
+                  fill="clear"
+                  color="danger"
+                  size="small"
+                  (click)="confirmDeleteStation(station.id, $event)">
+                  <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+                </ion-button>
 
               </div>
             </div>

@@ -9,14 +9,13 @@ import {
   addCircleOutline, mapOutline, listOutline,
   timeOutline, statsChartOutline, storefrontOutline,
   arrowBackOutline, flashOutline, cashOutline, calendarOutline,
-  locationOutline, createOutline, trashOutline,batteryChargingOutline } from 'ionicons/icons';
+  locationOutline, createOutline, trashOutline, batteryChargingOutline
+} from 'ionicons/icons';
 
-// Components
 import { LocationFormComponent } from 'src/app/features/charging-station/component/location-form/location-form.component';
 import { StationFormComponent } from 'src/app/features/charging-station/component/station-form/station-form.component';
 import { AvailabilityRulesComponent } from 'src/app/features/charging-station/component/availability-rules/availability-rules.component';
 
-// Services
 import { AppNavigationService } from 'src/app/core/services/app-navigation.service';
 import { ChargingStationService } from 'src/app/features/charging-station/services/charging-station.service';
 import { BookingService } from 'src/app/features/booking/service/booking.service';
@@ -99,8 +98,11 @@ export class OwnerDashboardComponent implements OnInit {
     });
   }
 
-  async openAvailabilityModal() {
-    const modal = await this.modalCtrl.create({ component: AvailabilityRulesComponent });
+ async openAvailabilityModal(stationId?: string) {
+    const modal = await this.modalCtrl.create({
+      component: AvailabilityRulesComponent,
+      componentProps: stationId ? { stationId } : {}
+    });
     await modal.present();
   }
 
@@ -151,4 +153,3 @@ export class OwnerDashboardComponent implements OnInit {
     toast.present();
   }
 }
-
