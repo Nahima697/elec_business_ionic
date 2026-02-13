@@ -19,7 +19,7 @@ export const globalInterceptor: HttpInterceptorFn = (req, next) => {
     await toast.present();
   };
 
-  // 1. Injection de l'URL (C'est correct, on ne touche pas)
+  // 1. Injection de l'URL 
   const url = req.url.startsWith('http') ? req.url : environment.apiUrl + req.url;
   const clone = req.clone({ url });
 
@@ -35,7 +35,6 @@ export const globalInterceptor: HttpInterceptorFn = (req, next) => {
         }
 
         // CAS B : Erreur lors du REFRESH (Le refresh token est aussi expiré)
-        // C'est la fin de session réelle.
         else if (req.url.includes('/refresh-token')) {
            authService.logout();
            showToast("Votre session a expiré, veuillez vous reconnecter.");

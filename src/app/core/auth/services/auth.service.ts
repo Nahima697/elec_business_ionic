@@ -1,7 +1,16 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Observable, tap, catchError, of, BehaviorSubject, filter, take, switchMap } from 'rxjs';
+import {
+  Observable,
+  tap,
+  catchError,
+  of,
+  BehaviorSubject,
+  filter,
+  take,
+  switchMap,
+} from 'rxjs';
 import { AuthResponse, UserDTO } from '../models/auth.model';
 import { Router } from '@angular/router';
 
@@ -21,7 +30,6 @@ export class AuthService {
   private tokenKey = 'authToken';
   private refreshTokenKey = 'refreshToken';
 
-  // 🔒 Protection contre les refreshs multiples simultanés
   private isRefreshing = false;
   private refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
@@ -51,17 +59,12 @@ export class AuthService {
       localStorage.removeItem(this.tokenKey);
     }
   }
-
-  /**
-   * 🔥 Méthode de refresh corrigée pour éviter la boucle infinie
-   */
   refreshToken(): Observable<any> {
-    // Si un refresh est déjà en cours, on attend qu'il se termine
     if (this.isRefreshing) {
       return this.refreshTokenSubject.pipe(
-        filter(token => token !== null),
+        filter((token) => token !== null),
         take(1),
-        switchMap(token => of({ token }))
+        switchMap((token) => of({ token }))
       );
     }
 
@@ -75,42 +78,41 @@ export class AuthService {
       this.logout();
       throw new Error('No refresh token available');
     }
-    return this.http.post<{ token: string; refreshToken?: string }>(
-      `/refresh-token`,
-      { refreshToken },
-      {
-        withCredentials: true,
-        // On peut aussi ajouter un header spécial pour skip l'interceptor
-        headers: new HttpHeaders({ 'X-Skip-Interceptor': 'true' })
-      }
-    ).pipe(
-      tap((response) => {
-        this.isRefreshing = false;
-
-        // Stocker le nouveau token
-        if (response.token) {
-          this.storeToken(response.token);
-          this.refreshTokenSubject.next(response.token);
+    return this.http
+      .post<{ token: string; refreshToken?: string }>(
+        `/refresh-token`,
+        { refreshToken },
+        {
+          withCredentials: true,
+          headers: new HttpHeaders({ 'X-Skip-Interceptor': 'true' }),
         }
+      )
+      .pipe(
+        tap((response) => {
+          this.isRefreshing = false;
 
-        // Si un nouveau refresh token est fourni
-        if (response.refreshToken) {
-          this.storeRefreshToken(response.refreshToken);
-        }
+          // Stocker le nouveau token
+          if (response.token) {
+            this.storeToken(response.token);
+            this.refreshTokenSubject.next(response.token);
+          }
 
-      }),
-      catchError((error) => {
-        this.isRefreshing = false;
-        this.refreshTokenSubject.next(null);
+          // Si un nouveau refresh token est fourni
+          if (response.refreshToken) {
+            this.storeRefreshToken(response.refreshToken);
+          }
+        }),
+        catchError((error) => {
+          this.isRefreshing = false;
+          this.refreshTokenSubject.next(null);
 
-        console.error('❌ Échec du refresh token', error);
+          console.error('❌ Échec du refresh token', error);
 
-        // Déconnecter l'utilisateur si le refresh échoue
-        this.logout();
+          this.logout();
 
-        throw error;
-      })
-    );
+          throw error;
+        })
+      );
   }
 
   // ------------------------
@@ -120,29 +122,36 @@ export class AuthService {
     const body = { username, password };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, body, { headers }).pipe(
-      tap((response) => {
-        this.storeToken(response.token);
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/login`, body, { headers })
+      .pipe(
+        tap((response) => {
+          this.storeToken(response.token);
 
-        // Stocker le refresh token s'il est fourni
-        if ((response as any).refreshToken) {
-          this.storeRefreshToken((response as any).refreshToken);
-        }
+          if ((response as any).refreshToken) {
+            this.storeRefreshToken((response as any).refreshToken);
+          }
 
-        this._user.set(response.user);
-        this._isLoggedIn.set(true);
-      })
-    );
+          this._user.set(response.user);
+          this._isLoggedIn.set(true);
+        })
+      );
   }
 
   // ------------------------
   // REGISTER
   // ------------------------
-  register(username: string, email: string, password: string): Observable<AuthResponse> {
+  register(
+    username: string,
+    email: string,
+    password: string
+  ): Observable<AuthResponse> {
     const body = { username, email, password };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, body, { headers });
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, body, {
+      headers,
+    });
   }
 
   // ------------------------
@@ -159,11 +168,28 @@ export class AuthService {
   }
 
   // ------------------------
+  // RESET PASSWORD
+  // ------------------------
+  resetPassword(email: string): Observable<any> {
+    const body = { email };
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.post(`${this.apiUrl}/reset-password`, body, { headers });
+  }
+  confirmResetPassword(userId: string, token: string, newPassword: string) {
+    return this.http.post(`${this.apiUrl}/reset-password/confirm`, {
+      userId,
+      token,
+      newPassword,
+    });
+  }
+
+  // ------------------------
   // FETCH CURRENT USER
   // ------------------------
   fetchCurrentUser(): Observable<UserDTO | null> {
     return this.http.get<UserDTO>(`${this.apiUrl}/me`).pipe(
-      tap(user => {
+      tap((user) => {
         this._user.set(user);
         this._isLoggedIn.set(true);
       }),
@@ -181,16 +207,16 @@ export class AuthService {
   hasRole(role: string): boolean {
     const u = this._user();
     if (!u) return false;
-    return u.roles.some(r => r.name === role);
+    return u.roles.some((r) => r.name === role);
   }
 
   // ------------------------
   // PROFILE UPDATE
   // ------------------------
   updateProfile(data: Partial<UserDTO>) {
-    return this.http.put<UserDTO>(`${this.apiUrl}/me`, data).pipe(
-      tap(updated => this._user.set(updated))
-    );
+    return this.http
+      .put<UserDTO>(`${this.apiUrl}/me`, data)
+      .pipe(tap((updated) => this._user.set(updated)));
   }
 
   // ------------------------

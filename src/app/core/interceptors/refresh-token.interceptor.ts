@@ -17,11 +17,10 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
 
       // 2. On intercepte uniquement les erreurs 401 (Unauthorized)
       if (error.status === 401) {
-        console.warn('⚠️ 401 détectée, tentative de refresh...');
+        console.warn('401 détectée, tentative de refresh...');
 
         return authService.refreshToken().pipe(
           switchMap((response) => {
-            // Le token peut être dans response.token ou directement dans la réponse selon le format
             const newToken = response?.token || response;
 
             // 3. On clone la requête initiale avec le nouveau token

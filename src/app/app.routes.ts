@@ -55,6 +55,10 @@ export const routes: Routes = [
         path: 'messages',
         loadComponent: () => import('./features/notification/pages/message-list/message-list.page').then(m => m.MessageListPage)
       },
+        {
+        path: 'reset-password',
+        loadComponent: () => import('./core/auth/pages/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+      },
       {
         path: 'user',
         loadChildren: () => import('./features/user/user.routes').then(m => m.USER_ROUTES),
@@ -66,6 +70,10 @@ export const routes: Routes = [
   // AUTH
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegisterPage },
+  {
+   path: 'reset-password',
+        loadComponent: () => import('./core/auth/pages/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+  },
 
   // USER MODULE
   {

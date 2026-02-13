@@ -45,8 +45,8 @@ export class RegisterPage {
 
   ControlType: typeof ControlType = ControlType;
   router = inject(Router);
-  authService = inject(AuthService); // J'ai renommé en camelCase standard
-  toastCtrl = inject(ToastController); // <--- Injection du Toast
+  authService = inject(AuthService); 
+  toastCtrl = inject(ToastController);
 
   isLoading = false;
   errorMessage: string | null = null;
