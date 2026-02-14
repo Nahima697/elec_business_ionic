@@ -28,7 +28,10 @@ export const routes: Routes = [
   {
     path: 'reservations',
     canActivate: [WebOnlyGuard],
-    loadComponent: () => import('./features/booking/page/booking-page.component').then(m => m.BookingPageComponent)
+    loadComponent: () =>
+      import('./features/booking/page/booking-page.component').then(
+        (m) => m.BookingPageComponent
+      ),
   },
 
   // MOBILE
@@ -53,16 +56,30 @@ export const routes: Routes = [
       { path: 'station/:id', component: StationDetailComponent },
       {
         path: 'messages',
-        loadComponent: () => import('./features/notification/pages/message-list/message-list.page').then(m => m.MessageListPage)
+        loadComponent: () =>
+          import(
+            './features/notification/pages/message-list/message-list.page'
+          ).then((m) => m.MessageListPage),
       },
-        {
+      {
         path: 'reset-password',
-        loadComponent: () => import('./core/auth/pages/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+        loadComponent: () =>
+          import(
+            './core/auth/pages/reset-password/reset-password.component'
+          ).then((m) => m.ResetPasswordComponent),
+      },
+      {
+        path: 'forgot-password',
+        loadComponent: () =>
+          import(
+            './core/auth/pages/forgot-password/forgot-password.component'
+          ).then((m) => m.ForgotPasswordComponent),
       },
       {
         path: 'user',
-        loadChildren: () => import('./features/user/user.routes').then(m => m.USER_ROUTES),
-        canActivate: [AuthGuard]
+        loadChildren: () =>
+          import('./features/user/user.routes').then((m) => m.USER_ROUTES),
+        canActivate: [AuthGuard],
       },
     ],
   },
@@ -71,16 +88,26 @@ export const routes: Routes = [
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegisterPage },
   {
-   path: 'reset-password',
-        loadComponent: () => import('./core/auth/pages/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+    path: 'reset-password',
+    loadComponent: () =>
+      import('./core/auth/pages/reset-password/reset-password.component').then(
+        (m) => m.ResetPasswordComponent
+      ),
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import(
+        './core/auth/pages/forgot-password/forgot-password.component'
+      ).then((m) => m.ForgotPasswordComponent),
   },
 
   // USER MODULE
   {
     path: 'user',
-    loadChildren: () => import('./features/user/user.routes')
-      .then(m => m.USER_ROUTES),
-    canActivate: [AuthGuard]
+    loadChildren: () =>
+      import('./features/user/user.routes').then((m) => m.USER_ROUTES),
+    canActivate: [AuthGuard],
   },
 
   // STATIONS
@@ -90,13 +117,19 @@ export const routes: Routes = [
   { path: 'station/:id', component: StationDetailComponent },
 
   // WEB MAP
-  { path: 'map', component: MapPage},
+  { path: 'map', component: MapPage },
   {
     path: 'profile',
-    loadComponent: () => import('./features/profile/page/profile/profile.page').then( m => m.ProfilePage)
+    loadComponent: () =>
+      import('./features/profile/page/profile/profile.page').then(
+        (m) => m.ProfilePage
+      ),
   },
   {
     path: 'message-list',
-    loadComponent: () => import('./features/notification/pages/message-list/message-list.page').then( m => m.MessageListPage)
+    loadComponent: () =>
+      import(
+        './features/notification/pages/message-list/message-list.page'
+      ).then((m) => m.MessageListPage),
   },
 ];
