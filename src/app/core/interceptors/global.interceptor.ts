@@ -19,7 +19,7 @@ export const globalInterceptor: HttpInterceptorFn = (req, next) => {
     await toast.present();
   };
 
-  // 1. Injection de l'URL 
+  // 1. Injection de l'URL
   const url = req.url.startsWith('http') ? req.url : environment.apiUrl + req.url;
   const clone = req.clone({ url });
 
@@ -33,13 +33,10 @@ export const globalInterceptor: HttpInterceptorFn = (req, next) => {
         if (req.url.includes('/login')) {
            showToast("Identifiants incorrects.");
         }
-
-        // CAS B : Erreur lors du REFRESH (Le refresh token est aussi expiré)
         else if (req.url.includes('/refresh-token')) {
            authService.logout();
            showToast("Votre session a expiré, veuillez vous reconnecter.");
         }
-
 
       } else if (error.status === 403) {
         showToast("Vous n'avez pas les droits pour effectuer cette action.");
@@ -48,6 +45,10 @@ export const globalInterceptor: HttpInterceptorFn = (req, next) => {
            showToast("Ressource introuvable.");
         }
       }
+      else if (error.status === 409) {
+      const backendMessage = error.error?.message || "Conflit détecté.";
+      showToast(backendMessage);
+    }
       return throwError(() => error);
     })
   );
