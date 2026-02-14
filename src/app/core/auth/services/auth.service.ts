@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+
   private http = inject(HttpClient);
   private router = inject(Router);
   private apiUrl = environment.apiUrl;
@@ -27,87 +28,44 @@ export class AuthService {
   private _user = signal<UserDTO | null>(null);
   user = computed(() => this._user());
 
-  private tokenKey = 'authToken';
-  private refreshTokenKey = 'refreshToken';
-
   private isRefreshing = false;
   private refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
   // ------------------------
-  // TOKEN MANAGEMENT
+  // REFRESH TOKEN (cookie only)
   // ------------------------
-  private storeToken(token: string) {
-    localStorage.setItem(this.tokenKey, token);
-  }
-
-  private storeRefreshToken(token: string) {
-    localStorage.setItem(this.refreshTokenKey, token);
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
-  }
-
-  private getRefreshTokenFromStorage(): string | null {
-    return localStorage.getItem(this.refreshTokenKey);
-  }
-
-  set token(value: string | null) {
-    if (value) {
-      this.storeToken(value);
-    } else {
-      localStorage.removeItem(this.tokenKey);
-    }
-  }
   refreshToken(): Observable<any> {
+
     if (this.isRefreshing) {
       return this.refreshTokenSubject.pipe(
-        filter((token) => token !== null),
+        filter(token => token !== null),
         take(1),
-        switchMap((token) => of({ token }))
+        switchMap(token => of({ token }))
       );
     }
 
     this.isRefreshing = true;
     this.refreshTokenSubject.next(null);
 
-    const refreshToken = this.getRefreshTokenFromStorage();
-
-    if (!refreshToken) {
-      this.isRefreshing = false;
-      this.logout();
-      throw new Error('No refresh token available');
-    }
     return this.http
-      .post<{ token: string; refreshToken?: string }>(
+      .post<{ token: string }>(
         `/refresh-token`,
-        { refreshToken },
-        {
-          withCredentials: true,
-          headers: new HttpHeaders({ 'X-Skip-Interceptor': 'true' }),
-        }
+        {},
+        { withCredentials: true } // le refresh token est dans le cookie
       )
       .pipe(
-        tap((response) => {
+        tap(response => {
           this.isRefreshing = false;
 
-          // Stocker le nouveau token
           if (response.token) {
-            this.storeToken(response.token);
             this.refreshTokenSubject.next(response.token);
           }
-
-          // Si un nouveau refresh token est fourni
-          if (response.refreshToken) {
-            this.storeRefreshToken(response.refreshToken);
-          }
         }),
-        catchError((error) => {
+        catchError(error => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(null);
 
           console.error('❌ Échec du refresh token', error);
-
           this.logout();
 
           throw error;
@@ -119,19 +77,15 @@ export class AuthService {
   // LOGIN
   // ------------------------
   login(username: string, password: string): Observable<AuthResponse> {
+
     const body = { username, password };
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     return this.http
-      .post<AuthResponse>(`${this.apiUrl}/login`, body, { headers })
+      .post<AuthResponse>(`${this.apiUrl}/login`, body, {
+        withCredentials: true // pour que le backend pose le refresh cookie
+      })
       .pipe(
-        tap((response) => {
-          this.storeToken(response.token);
-
-          if ((response as any).refreshToken) {
-            this.storeRefreshToken((response as any).refreshToken);
-          }
-
+        tap(response => {
           this._user.set(response.user);
           this._isLoggedIn.set(true);
         })
@@ -146,24 +100,25 @@ export class AuthService {
     email: string,
     password: string
   ): Observable<AuthResponse> {
-    const body = { username, email, password };
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, body, {
-      headers,
-    });
+    const body = { username, email, password };
+
+    return this.http.post<AuthResponse>(
+      `${this.apiUrl}/register`,
+      body,
+      { withCredentials: true }
+    );
   }
 
   // ------------------------
   // LOGOUT
   // ------------------------
   logout(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.refreshTokenKey);
     this._user.set(null);
     this._isLoggedIn.set(false);
     this.isRefreshing = false;
     this.refreshTokenSubject.next(null);
+
     this.router.navigate(['/login']);
   }
 
@@ -171,11 +126,9 @@ export class AuthService {
   // RESET PASSWORD
   // ------------------------
   resetPassword(email: string): Observable<any> {
-    const body = { email };
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-    return this.http.post(`${this.apiUrl}/reset-password`, body, { headers });
+    return this.http.post(`${this.apiUrl}/reset-password`, { email });
   }
+
   confirmResetPassword(userId: string, token: string, newPassword: string) {
     return this.http.post(`${this.apiUrl}/reset-password/confirm`, {
       userId,
@@ -188,8 +141,10 @@ export class AuthService {
   // FETCH CURRENT USER
   // ------------------------
   fetchCurrentUser(): Observable<UserDTO | null> {
-    return this.http.get<UserDTO>(`${this.apiUrl}/me`).pipe(
-      tap((user) => {
+    return this.http.get<UserDTO>(`${this.apiUrl}/me`, {
+      withCredentials: true
+    }).pipe(
+      tap(user => {
         this._user.set(user);
         this._isLoggedIn.set(true);
       }),
@@ -207,7 +162,7 @@ export class AuthService {
   hasRole(role: string): boolean {
     const u = this._user();
     if (!u) return false;
-    return u.roles.some((r) => r.name === role);
+    return u.roles.some(r => r.name === role);
   }
 
   // ------------------------
@@ -215,14 +170,14 @@ export class AuthService {
   // ------------------------
   updateProfile(data: Partial<UserDTO>) {
     return this.http
-      .put<UserDTO>(`${this.apiUrl}/me`, data)
-      .pipe(tap((updated) => this._user.set(updated)));
+      .put<UserDTO>(`${this.apiUrl}/me`, data, { withCredentials: true })
+      .pipe(tap(updated => this._user.set(updated)));
   }
 
   // ------------------------
   // AUTH CHECK
   // ------------------------
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    return this._isLoggedIn();
   }
 }
