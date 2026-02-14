@@ -13,42 +13,47 @@ export const globalInterceptor: HttpInterceptorFn = (req, next) => {
     const toast = await toastCtrl.create({
       message: msg,
       duration: 3000,
-      color: color,
+      color,
       position: 'bottom'
     });
     await toast.present();
   };
 
-  // 1. Injection de l'URL
-  const url = req.url.startsWith('http') ? req.url : environment.apiUrl + req.url;
-  const clone = req.clone({ url });
+  const url = req.url.startsWith('http')
+    ? req.url
+    : environment.apiUrl + req.url;
+
+  const clone = req.clone({
+    url,
+    withCredentials: true
+  });
 
   return next(clone).pipe(
     catchError((error: HttpErrorResponse) => {
 
-      // 2. Gestion intelligente des erreurs
       if (error.status === 401) {
 
-        // CAS A : Erreur lors du LOGIN (Mauvais mot de passe)
         if (req.url.includes('/login')) {
-           showToast("Identifiants incorrects.");
+          showToast("Identifiants incorrects.");
         }
         else if (req.url.includes('/refresh-token')) {
-           authService.logout();
-           showToast("Votre session a expiré, veuillez vous reconnecter.");
+          authService.logout();
+          showToast("Votre session a expiré, veuillez vous reconnecter.");
         }
 
       } else if (error.status === 403) {
         showToast("Vous n'avez pas les droits pour effectuer cette action.");
+
       } else if (error.status === 404) {
         if (!req.url.includes('/login') && !req.url.includes('/refresh-token')) {
-           showToast("Ressource introuvable.");
+          showToast("Ressource introuvable.");
         }
+
+      } else if (error.status === 409) {
+        const backendMessage = error.error?.message || "Conflit détecté.";
+        showToast(backendMessage);
       }
-      else if (error.status === 409) {
-      const backendMessage = error.error?.message || "Conflit détecté.";
-      showToast(backendMessage);
-    }
+
       return throwError(() => error);
     })
   );
