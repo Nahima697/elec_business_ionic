@@ -1,5 +1,17 @@
-import { Component, inject, OnInit, output, signal, Input } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  inject,
+  OnInit,
+  output,
+  signal,
+  Input,
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { ChargingStationService } from '../../services/charging-station.service';
@@ -8,12 +20,30 @@ import { ChargingLocation } from '../../models/charging-location.model';
 import { FormFieldComponent } from 'src/app/shared-component/form-field/form-field.component';
 import { ControlType } from 'src/app/shared-component/form-field/form-field.enum.';
 import {
-  IonList, IonItem, IonButton,
-  IonSelect, IonSelectOption, IonIcon, IonText, IonContent,
-  ToastController, ModalController, IonHeader, IonButtons, IonToolbar, IonTitle, IonSpinner
+  IonList,
+  IonItem,
+  IonButton,
+  IonSelect,
+  IonSelectOption,
+  IonIcon,
+  IonText,
+  IonContent,
+  ToastController,
+  ModalController,
+  IonHeader,
+  IonButtons,
+  IonToolbar,
+  IonTitle,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { cameraOutline, closeOutline, imageOutline, trashOutline, saveOutline } from 'ionicons/icons';
+import {
+  cameraOutline,
+  closeOutline,
+  imageOutline,
+  trashOutline,
+  saveOutline,
+} from 'ionicons/icons';
 import { GeolocalisationService } from 'src/app/features/display-map/service/geolocalisation.service';
 import { ChargingStationRequestDTO } from '../../models/charging-station.model';
 
@@ -21,17 +51,26 @@ import { ChargingStationRequestDTO } from '../../models/charging-station.model';
   selector: 'app-station-form',
   standalone: true,
   imports: [
-    IonSpinner, IonButtons, IonHeader,
+    IonSpinner,
+    IonButtons,
+    IonHeader,
     ReactiveFormsModule,
     FormFieldComponent,
-    IonItem, IonContent, IonButton, IonTitle,
-    IonToolbar, IonSelect, IonSelectOption, IonIcon, IonText, IonList
+    IonItem,
+    IonContent,
+    IonButton,
+    IonTitle,
+    IonToolbar,
+    IonSelect,
+    IonSelectOption,
+    IonIcon,
+    IonText,
+    IonList,
   ],
   templateUrl: './station-form.component.html',
   styleUrls: ['./station-form.component.scss'],
 })
 export class StationFormComponent implements OnInit {
-
   private stationService = inject(ChargingStationService);
   private locationService = inject(ChargingLocationService);
   private geoService = inject(GeolocalisationService);
@@ -62,11 +101,19 @@ export class StationFormComponent implements OnInit {
   isLoading = signal(false);
 
   constructor() {
-    addIcons({ cameraOutline, imageOutline, trashOutline, closeOutline, saveOutline });
+    addIcons({
+      cameraOutline,
+      imageOutline,
+      trashOutline,
+      closeOutline,
+      saveOutline,
+    });
   }
+  compareById = (o1: any, o2: any) => {
+    return String(o1) === String(o2);
+  };
 
   ngOnInit(): void {
-
     this.stationForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
@@ -77,45 +124,18 @@ export class StationFormComponent implements OnInit {
       lng: new FormControl(null, [Validators.required]),
     });
 
-    this.loadLocations();
-
     const currentLocId = this.locIdSignal();
     const currentId = this.idSignal();
 
-    if (currentLocId) {
-      this.stationForm.patchValue({ locationId: currentLocId });
-      this.stationForm.get('locationId')?.disable();
-    }
+    this.locationService.getLocationByUser().subscribe({
+      next: (locs) => {
+        this.myLocations.set(locs);
 
-    if (currentId) {
-      this.isEditMode.set(true);
-      this.loadStationData(currentId);
-    }
-
-    this.stationForm.get('locationId')?.valueChanges.subscribe((locId) => {
-      if (this.isLoading()) return;
-
-      const selectedLocation = this.myLocations().find(l => l.id === locId);
-      if (selectedLocation) {
-        const parts = [
-          selectedLocation.addressLine,
-          selectedLocation.postalCode,
-          selectedLocation.city
-        ].filter(Boolean);
-
-        const fullAddress = parts.join(', ');
-
-        this.geoService.geocodeAddress(fullAddress).subscribe({
-          next: (coords) => {
-            if (coords) {
-              this.stationForm.patchValue({
-                lat: coords.lat,
-                lng: coords.lng
-              });
-            }
-          }
-        });
-      }
+        if (currentId) {
+          this.isEditMode.set(true);
+          this.loadStationData(currentId);
+        }
+      },
     });
   }
 
@@ -124,14 +144,20 @@ export class StationFormComponent implements OnInit {
 
     this.stationService.getChargingStationDetail(id).subscribe({
       next: (station) => {
+        const locationId = String(station.locationDTO?.id);
+
         this.stationForm.patchValue({
           name: station.name,
           description: station.description,
           powerKw: station.powerKw,
           price: station.price,
-          locationId: station.locationDTO?.id,
           lat: station.lat,
-          lng: station.lng
+          lng: station.lng,
+          locationId: locationId,
+        });
+
+        setTimeout(() => {
+          this.stationForm.get('locationId')?.setValue(locationId);
         });
 
         if (station.imageUrl) {
@@ -143,13 +169,13 @@ export class StationFormComponent implements OnInit {
       error: () => {
         this.presentToast('Impossible de charger la borne', 'danger');
         this.cancel();
-      }
+      },
     });
   }
 
   loadLocations() {
     this.locationService.getLocationByUser().subscribe({
-      next: (locs) => this.myLocations.set(locs)
+      next: (locs) => this.myLocations.set(locs),
     });
   }
 
@@ -158,7 +184,7 @@ export class StationFormComponent implements OnInit {
     if (file) {
       this.selectedFile = file;
       const reader = new FileReader();
-      reader.onload = () => this.imagePreview = reader.result as string;
+      reader.onload = () => (this.imagePreview = reader.result as string);
       reader.readAsDataURL(file);
     }
   }
@@ -172,7 +198,7 @@ export class StationFormComponent implements OnInit {
       message,
       duration: 3000,
       color,
-      position: 'bottom'
+      position: 'bottom',
     });
     await toast.present();
   }
@@ -180,7 +206,10 @@ export class StationFormComponent implements OnInit {
   onSubmit() {
     if (this.stationForm.invalid) {
       this.stationForm.markAllAsTouched();
-      this.presentToast('Veuillez remplir tous les champs obligatoires', 'danger');
+      this.presentToast(
+        'Veuillez remplir tous les champs obligatoires',
+        'danger'
+      );
       return;
     }
 
@@ -192,21 +221,20 @@ export class StationFormComponent implements OnInit {
     if (this.isEditMode()) {
       const updateDto: ChargingStationRequestDTO = {
         ...formValues,
-        id: this.idSignal()
+        id: this.idSignal(),
       };
 
-      this.stationService.updateChargingStation(updateDto, fileToUpload)
+      this.stationService
+        .updateChargingStation(updateDto, fileToUpload)
         .subscribe({
           next: () => this.handleSuccess('Borne modifiée avec succès !'),
-          error: () => this.handleError()
+          error: () => this.handleError(),
         });
-
     } else {
-      this.stationService.createStation(formValues, fileToUpload)
-        .subscribe({
-          next: () => this.handleSuccess('Borne créée avec succès !'),
-          error: () => this.handleError()
-        });
+      this.stationService.createStation(formValues, fileToUpload).subscribe({
+        next: () => this.handleSuccess('Borne créée avec succès !'),
+        error: () => this.handleError(),
+      });
     }
   }
 

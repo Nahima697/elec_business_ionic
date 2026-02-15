@@ -19,6 +19,7 @@
           label="Lieu de la borne"
           label-placement="floating"
           formControlName="locationId"
+          [compareWith]="compareById"
           placeholder="Choisir un lieu">
           @for (loc of myLocations(); track loc.id) {
             <ion-select-option [value]="loc.id">{{ loc.city }} - {{ loc.addressLine }}</ion-select-option>
