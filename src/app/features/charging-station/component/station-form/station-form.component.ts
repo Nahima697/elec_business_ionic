@@ -1,5 +1,7 @@
 import { Component, inject, OnInit, output, signal, Input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { ChargingStationService } from '../../services/charging-station.service';
 import { ChargingLocationService } from '../../services/charging-location.service';
 import { ChargingLocation } from '../../models/charging-location.model';
@@ -29,21 +31,23 @@ import { ChargingStationRequestDTO } from '../../models/charging-station.model';
   styleUrls: ['./station-form.component.scss'],
 })
 export class StationFormComponent implements OnInit {
+
   private stationService = inject(ChargingStationService);
   private locationService = inject(ChargingLocationService);
   private geoService = inject(GeolocalisationService);
   private toastCtrl = inject(ToastController);
   private modalCtrl = inject(ModalController);
+  private router = inject(Router);
+  private navCtrl = inject(NavController);
 
-  // 1. INPUTS : Ionic injecte les valeurs ici
   @Input() set id(value: string) {
     this.idSignal.set(value);
   }
+
   @Input() set locationId(value: string) {
     this.locIdSignal.set(value);
   }
 
-  // 2. SIGNAUX INTERNES : Pour la logique métier
   private readonly idSignal = signal('');
   private readonly locIdSignal = signal('');
 
@@ -62,7 +66,7 @@ export class StationFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // 1. Initialisation du formulaire
+
     this.stationForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
@@ -73,17 +77,13 @@ export class StationFormComponent implements OnInit {
       lng: new FormControl(null, [Validators.required]),
     });
 
-    // 2. Chargement des lieux disponibles
     this.loadLocations();
 
-    // 3. Récupération des valeurs depuis les signaux
     const currentLocId = this.locIdSignal();
     const currentId = this.idSignal();
 
     if (currentLocId) {
-      this.stationForm.patchValue({
-        locationId: currentLocId
-      });
+      this.stationForm.patchValue({ locationId: currentLocId });
       this.stationForm.get('locationId')?.disable();
     }
 
@@ -92,19 +92,26 @@ export class StationFormComponent implements OnInit {
       this.loadStationData(currentId);
     }
 
-    // 4. Autocomplétion Lat/Lng quand on change de lieu
-    this.stationForm.get('locationId')?.valueChanges.subscribe(async (locId) => {
+    this.stationForm.get('locationId')?.valueChanges.subscribe((locId) => {
       if (this.isLoading()) return;
 
       const selectedLocation = this.myLocations().find(l => l.id === locId);
       if (selectedLocation) {
-        const parts = [selectedLocation.addressLine, selectedLocation.postalCode, selectedLocation.city].filter(Boolean);
+        const parts = [
+          selectedLocation.addressLine,
+          selectedLocation.postalCode,
+          selectedLocation.city
+        ].filter(Boolean);
+
         const fullAddress = parts.join(', ');
 
         this.geoService.geocodeAddress(fullAddress).subscribe({
           next: (coords) => {
             if (coords) {
-              this.stationForm.patchValue({ lat: coords.lat, lng: coords.lng });
+              this.stationForm.patchValue({
+                lat: coords.lat,
+                lng: coords.lng
+              });
             }
           }
         });
@@ -114,6 +121,7 @@ export class StationFormComponent implements OnInit {
 
   loadStationData(id: string) {
     this.isLoading.set(true);
+
     this.stationService.getChargingStationDetail(id).subscribe({
       next: (station) => {
         this.stationForm.patchValue({
@@ -132,8 +140,7 @@ export class StationFormComponent implements OnInit {
 
         this.isLoading.set(false);
       },
-      error: (err) => {
-        console.error(err);
+      error: () => {
         this.presentToast('Impossible de charger la borne', 'danger');
         this.cancel();
       }
@@ -142,8 +149,7 @@ export class StationFormComponent implements OnInit {
 
   loadLocations() {
     this.locationService.getLocationByUser().subscribe({
-      next: (locs) => this.myLocations.set(locs),
-      error: (err) => console.error("Erreur API :", err)
+      next: (locs) => this.myLocations.set(locs)
     });
   }
 
@@ -163,11 +169,10 @@ export class StationFormComponent implements OnInit {
 
   async presentToast(message: string, color: 'success' | 'danger') {
     const toast = await this.toastCtrl.create({
-      message: message,
+      message,
       duration: 3000,
-      color: color,
-      position: 'bottom',
-      buttons: [{ text: 'OK', role: 'cancel' }]
+      color,
+      position: 'bottom'
     });
     await toast.present();
   }
@@ -180,6 +185,7 @@ export class StationFormComponent implements OnInit {
     }
 
     this.isLoading.set(true);
+
     const formValues = this.stationForm.getRawValue();
     const fileToUpload = this.selectedFile || undefined;
 
@@ -189,35 +195,48 @@ export class StationFormComponent implements OnInit {
         id: this.idSignal()
       };
 
-      this.stationService.updateChargingStation(updateDto, fileToUpload).subscribe({
-        next: () => this.handleSuccess('Borne modifiée avec succès !'),
-        error: (err) => this.handleError(err)
-      });
+      this.stationService.updateChargingStation(updateDto, fileToUpload)
+        .subscribe({
+          next: () => this.handleSuccess('Borne modifiée avec succès !'),
+          error: () => this.handleError()
+        });
 
     } else {
       this.stationService.createStation(formValues, fileToUpload)
         .subscribe({
           next: () => this.handleSuccess('Borne créée avec succès !'),
-          error: (err) => this.handleError(err)
+          error: () => this.handleError()
         });
     }
   }
 
-  handleSuccess(msg: string) {
+  async handleSuccess(msg: string) {
     this.isLoading.set(false);
-    this.presentToast(msg, 'success');
+    await this.presentToast(msg, 'success');
     this.stationForm.reset();
     this.stationCreated.emit();
-    this.modalCtrl.dismiss(true, 'confirm');
+
+    const top = await this.modalCtrl.getTop();
+
+    if (top) {
+      this.modalCtrl.dismiss(true, 'confirm');
+    } else {
+      this.navCtrl.back();
+    }
   }
 
-  handleError(err: any) {
-    console.error(err);
+  handleError() {
     this.isLoading.set(false);
     this.presentToast('Une erreur est survenue.', 'danger');
   }
 
-  cancel() {
-    this.modalCtrl.dismiss(null, 'cancel');
+  async cancel() {
+    const top = await this.modalCtrl.getTop();
+
+    if (top) {
+      this.modalCtrl.dismiss(null, 'cancel');
+    } else {
+      this.navCtrl.back();
+    }
   }
 }
